@@ -4,13 +4,10 @@
 #print(client.containers.run("ubuntu", "echo 'hello world'"))
 
 import subprocess
-import pyautogui
 
-subprocess.call(['gnome-terminal'])
+subprocess.run(["xterm", "-hold", "-e", "python3 /home/tricky/Documents/video_automation/recording.py"])
 
-# start recording
 
-# start typing
-
-pyautogui.write(" echo 'Hello world!' ", interval=0.25)
-pyautogui.press('enter')
+#screen_rec()
+#pyautogui.write(" echo 'Hello world!' ", interval=0.25)
+#pyautogui.press('enter')
