@@ -1,10 +1,3 @@
-from functions import instruction_executer
+from functions import instruction_finder
 
-instructions = {
-        "command": 'echo hello world',
-        "media_type": 'static',
-        "file_name": 'test'
-        }
-hello = [instructions]
-
-instruction_executer(hello)
+print(instruction_finder())

@@ -1,5 +1,6 @@
 # This file contains functions used by other scripts
 import time
+import sys
 import os
 import pyautogui
 import subprocess
@@ -14,21 +15,23 @@ def instruction_finder():
     {command: , media_format: , file_name: }
     '''
     todo = []
-    with open('script.md') as f:
+    with open('script/script.md') as f:
         datafile = [line for line in f.readlines() if line.strip()]
 
         # Here the program should also skip the header.
         for line in datafile:
-            if '---' in line and '(instructions:' in line +1:
+            index = datafile.index(line)
+            if '---' in line and '(instructions:' in datafile[index+1]:
                 to_add = {
-                        "command": line+2,
-                        "media_format": line+3,
-                        "file_name": line +4
+                        "command": datafile[index+2].rstrip().lstrip(),
+                        "media_format": datafile[index+3].rstrip().lstrip(),
+                        "file_name": datafile[index+4].rstrip().lstrip()
                         }
+                todo.append(to_add)
 
-            elif '---' in line and '(instructions:' not in line +1:
+            elif '---' in line and '(instructions:' not in datafile[index+1]:
 
-                print("Line %s has no instructions")%(line+1)
+                print("Line %s has no instructions")%(datafile[index+1])
                 
                 break
 
@@ -50,6 +53,8 @@ def start_rec(instructions):
         'asciinema',
         'rec',
         title])
+    
+    return 'Sould be recording'
 
 
 def stop_rec():
@@ -59,6 +64,8 @@ def stop_rec():
     pyautogui.hotkey('ctrl', 'd')
 
     return 'Sould have stopped'
+
+
 # ----------------------------------------------------------------------- #
 #                         Instrucion executer
 # ----------------------------------------------------------------------- #
@@ -99,7 +106,7 @@ def instruction_executer(instructions_list):
     Returns: A string saying 'Done!'.
     '''
     for i in instructions_list:
-        if i["media_type"] == 'gif':
+        if i["media_format"] == 'gif':
             run_command(i)
 
     return 'Done!'
