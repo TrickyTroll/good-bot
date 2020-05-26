@@ -1,5 +1,8 @@
 # This file contains functions used by other scripts
+import time
+import os
 import pyautogui
+import subprocess
 
 def instruction_finder():
     '''
@@ -19,7 +22,7 @@ def instruction_finder():
             if '---' in line and '(instructions:' in line +1:
                 to_add = {
                         "command": line+2,
-                        "media_format": line+3
+                        "media_format": line+3,
                         "file_name": line +4
                         }
 
@@ -33,31 +36,57 @@ def instruction_finder():
 
 
 # ----------------------------------------------------------------------- #
+#                             Recording
+# ----------------------------------------------------------------------- #
+
+def start_rec(instructions):
+    '''
+    Starts asciinema and sets the name of the
+    recording to the file_name variable.
+    Returns: Should be recording.
+    '''
+    title = instructions["file_name"]
+    subprocess.Popen([
+        'asciinema',
+        'rec',
+        title])
+
+
+def stop_rec():
+    '''
+    Stops asciinema using 'ctrl + d'
+    '''
+    pyautogui.hotkey('ctrl', 'd')
+
+    return 'Sould have stopped'
+# ----------------------------------------------------------------------- #
 #                         Instrucion executer
 # ----------------------------------------------------------------------- #
 
-def run_command(command):
+def run_command(instructions):
     '''
     Input: some text to type in the
     terminal. Must be of type string
     Returns: The string 'Done!'.
     '''
+    command = instructions["command"]
     # The typing should only be done inside of the terminal window
-    pyautogui.hotkey('ctrl', 'l')
+    os.system('clear')
 
     start_rec(instructions)
+    time.sleep(1)
 
     pyautogui.write(command, interval=0.1) #The interval shoud be randomized at some point. 
 
-    pyautogui.write
+    pyautogui.press('enter')
 
-    stop_rec(instructions)
+    stop_rec()
 
     return 'Done!'
 
 
 
-def instruction_executer(instructions):
+def instruction_executer(instructions_list):
     '''
     Writes functions in a terminal using 
     pyautogui.
@@ -69,9 +98,9 @@ def instruction_executer(instructions):
 
     Returns: A string saying 'Done!'.
     '''
-    for i in instructions:
-        if i["media_format"] == 'gif':
-            run_command(i["command"])
+    for i in instructions_list:
+        if i["media_type"] == 'gif':
+            run_command(i)
 
     return 'Done!'
         
