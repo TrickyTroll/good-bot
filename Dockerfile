@@ -1,15 +1,18 @@
-#Instruction for building the video automation.
+FROM ubuntu:20.04
 
-#Sets the base image to python3
-FROM python:3
 
-#Sets the working directory for other instructions.
-WORKDIR /usr/src/app
+ADD ./* $HOME/src/
 
-#Installs the requirements for the program.
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt update; apt upgrade -y
 
-COPY . .
+#RUN apt install -y python3-dev build-essential libssl-dev libffi-dev python python3-pip python3.8 vim 
 
-CMD [ "python", "./app.py" ]
+ADD . /home/tutorial
+# The previous add command should be replaced by something else.
+WORKDIR /home/tutorial
+#RUN pip3 install -r requirements.txt
+
+COPY . . 
+
+#RUN chmod +x ./app/app.py
+#CMD /home/myapp/app/app.py
