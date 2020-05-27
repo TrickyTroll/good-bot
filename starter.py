@@ -1,19 +1,19 @@
-# This function should be used if the docker is already created and running.
-import sys
-import time
-import subprocess
 sys.path.insert(1, './app')
 from functions import *
 sys.path.insert(1, './script')
-
+name = 'helloWorld'
 subprocess.Popen([
     'docker',
-    'attach',
-    'rocket-raccoon'])
+    'run',
+    '--name',
+    name,
+    '--rm',
+    '-it',
+    'toto',
+    'bash'
+    ])
 
-time.sleep(1)
-
-instruction_executer(instruction_finder())
+instruction_executer(name, instruction_finder())
 
 
 

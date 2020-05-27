@@ -50,6 +50,11 @@ def start_rec(instructions):
     '''
     title = instructions["file_name"]
     subprocess.Popen([
+        'docker',
+        'run',
+        '-it',
+        '--tag',
+        'toto',
         'asciinema',
         'rec',
         title])
@@ -78,10 +83,12 @@ def run_command(instructions):
     '''
     command = instructions["command"]
     # The typing should only be done inside of the terminal window
-    os.system('clear')
 
     start_rec(instructions)
-    time.sleep(1)
+
+
+    os.system('clear')
+    time.sleep(1) # This should be replaced by wait until return signal.
 
     pyautogui.write(command, interval=0.1) #The interval shoud be randomized at some point. 
 
@@ -93,7 +100,7 @@ def run_command(instructions):
 
 
 
-def instruction_executer(instructions_list):
+def instruction_executer(container_name, instructions_list):
     '''
     Writes functions in a terminal using 
     pyautogui.
