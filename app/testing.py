@@ -1,9 +1,4 @@
-from functions import script_maker
+from functions import *
+import time
 
-instructions_list = [{
-    "command" : "echo 'hello world'",
-    "media_format": "gif",
-    "file_name": 'toto'
-    }]
-
-script_maker(instructions_list)
+start_rec('toto.sh')

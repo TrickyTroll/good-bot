@@ -2,7 +2,7 @@
 
 # including demo-magic
 
-. ../demo-magic.sh
+. ./app/demo-magic.sh
 
 # speed (defined by the user)
 
@@ -18,7 +18,7 @@ clear
 
 # The commands go here
 
-pe "echo 'hello world'"
+pe "echo 'Hello world'"
 
 # The end (shows a prompt at the end)
 
