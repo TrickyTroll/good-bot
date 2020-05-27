@@ -14,5 +14,5 @@ RUN pip3 install -r requirements.txt
 
 COPY . . 
 
-#RUN chmod +x ./app/app.py
-#CMD /home/myapp/app/app.py
+RUN chmod +x ./app/app.py
+CMD ["python3", "/home/tutorial/app/app.py"]
