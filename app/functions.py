@@ -52,9 +52,10 @@ def instruction_finder():
 def new_script(instructions_list):
     '''
     '''
-    with open('script/script.md', 'r') as f:
+    print(os.getcwd())
+    with open('../script/script.md', 'r') as f:
         lines = f.readlines()
-    with open('script/toto.md', 'w') as f:
+    with open('../script/toto.md', 'w') as f:
         index = 0
         title_index = 0
 
@@ -194,7 +195,6 @@ def instruction_executer(path_to_scripts):
 
     # Creating the new directory
 
-    print(os.getcwd())
     os.chdir('..')
 
     newpath = os.getcwd()+ "/recordings"
@@ -203,6 +203,7 @@ def instruction_executer(path_to_scripts):
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     # Executing start_rec for each.
+    print(os.getcwd())
 
     for filename in os.listdir(path_to_scripts):
 
@@ -248,6 +249,53 @@ def asciicast_2gif(path_to_asciicasts):
 #                               Transfer 
 # ----------------------------------------------------------------------- #
 
+def transfer_init():
+    '''
+    Begins the transfer by initiating Docker
+    '''
+    subprocess.run([
+        'docker',
+        'pull',
+        'asciinema/asciicast2gif'
+        ])
+    return 'Done!'
 
+def asciicast_transfer(containers_name):
+    '''
 
+    '''
+    x=(os.path.dirname(os.path.realpath(__file__)))
+    subprocess.run([
+        'docker',
+        'cp',
+        '%s:/home/tutorial/app/recordings'%(containers_name),
+        '.'
+        ])
 
+    for filename in os.listdir('./recordings'):
+        print(os.getcwd())
+        subprocess.run([
+            'docker',
+            'run',
+            '--rm',
+            '-v',
+            '%s:/data'%(x),
+            'asciinema/asciicast2gif',
+            'recordings/' + filename,
+            'your_video/' + filename + '.gif'
+            ])
+    return 'Done'
+
+def script_transfer(containers_name):
+    '''
+    '''
+    subprocess.run([
+        'docker',
+        'cp',
+        '%s:/home/tutorial/script/script.md'%(containers_name),
+        './your_video'
+        ])
+    return 'Done!'
+
+def cleanup():
+    return None
