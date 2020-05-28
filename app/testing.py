@@ -1,4 +1,6 @@
 from functions import *
 import time
 
-start_rec('toto.sh')
+instructions_list = instruction_finder()
+print(instructions_list)
+

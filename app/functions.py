@@ -1,4 +1,6 @@
 # This file contains functions used by other scripts
+import shutil
+from pathlib import Path
 import shlex
 import time
 import stat
@@ -20,12 +22,12 @@ def instruction_finder():
     {command: , media_format: , file_name: }
     '''
     todo = []
-    with open('script/script.md') as f:
+    with open('script/script.md', "r") as f:
         datafile = [line for line in f.readlines() if line.strip()]
 
         # Here the program should also skip the header.
+        index = 0
         for line in datafile:
-            index = datafile.index(line)
             if '---' in line and '(instructions:' in datafile[index+1]:
                 to_add = {
                         "command": datafile[index+2].rstrip().lstrip(),
@@ -36,96 +38,45 @@ def instruction_finder():
 
             elif '---' in line and '(instructions:' not in datafile[index+1]:
 
-                print("Line %s has no instructions")%(datafile[index+1])
+                print("Line %s has no instructions"%(index+1))
                 
                 break
 
+            index += 1
+
     return todo
 
-
 # ----------------------------------------------------------------------- #
-#                             Recording
+#                        Editing the script 
 # ----------------------------------------------------------------------- #
-
-
-def start_rec(to_record):
+def new_script(instructions_list):
     '''
-    Creates a new directory and saves the video inside of the 
-    directory.
-    Records to_record using asciinema.
-    to_record: shoud be a shell script created by script_maker.
-    Returns: 'Sould be recording...'
     '''
+    with open('script/script.md', 'r') as f:
+        lines = f.readlines()
+    with open('script/toto.md', 'w') as f:
+        index = 0
+        title_index = 0
 
-    # Creating the new directory
+        while index < len(lines):
 
-    parent = os.getcwd()
-    newpath = parent + "/recordings"
-    
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
+            current_line_edited = lines[index].rstrip().lstrip()
+            current_line = lines[index]
 
-    # Defines the title of the video to the shell script's name
-    # and the path to the new directory.
-    
-    title = newpath + '/' + to_record.replace('.sh', '')
+            if current_line_edited != "---":
+                f.write(current_line)
+                index += 1
+            
+            elif current_line_edited == "---":
+                current_title = instructions_list[title_index]["file_name"]
+                media_format = instructions_list[title_index]["media_format"]
+                f.write(current_line)
+                f.write("![freeze](%s.%s)\n"%(current_title, media_format))
 
-    # Starting asciinema
+                index += 6
+                title_index += 1 
 
-    subprocess.Popen([
-        'asciinema',
-        'rec',
-        '-c',
-        './app/shell_scripts/' + to_record,
-        title
-        ])
-    return 'Should be recording...'
-    
-
-
-# ----------------------------------------------------------------------- #
-#                         Instrucion executer
-# ----------------------------------------------------------------------- #
-
-def run_command(instructions):
-    '''
-    Input: some text to type in the
-    terminal. Must be of type string
-    Returns: The string 'Done!'.
-    '''
-    command = instructions["command"]
-
-    start_rec(instructions)
-
-    os.system('clear')
-    time.sleep(.5)
-
-    subprocess.Popen(shlex.split(command)) 
-
-    stop_rec()
-
-    return 'Done!'
-
-
-
-def instruction_executer(container_name, instructions_list):
-    '''
-    Writes functions in a terminal using 
-    pyautogui.
-
-    Input: A list of instructions to execute.
-    The format of each instruction is a dict
-    containing: the command, the media format 
-    and the file name.
-
-    Returns: A string saying 'Done!'.
-    '''
-    for i in instructions_list:
-        if i["media_format"] == 'gif':
-            run_command(i)
-
-    return 'Done!'
-        
+    return 'New file created!'
 
 # ----------------------------------------------------------------------- #
 #                       Bash scripts creation
@@ -141,7 +92,7 @@ def script_maker(instructions_list):
     # Making a new directory for the scripts.
 
     parent = os.getcwd()
-    newpath = parent + "/shell_scripts"
+    newpath = parent + "/app/shell_scripts"
     
     if not os.path.exists(newpath):
         os.makedirs(newpath)
@@ -160,7 +111,7 @@ def script_maker(instructions_list):
 
 # including demo-magic
 
-. ../demo-magic.sh
+. ./demo-magic.sh
 
 # speed (defined by the user)
 
@@ -190,3 +141,113 @@ p ""
 
 
     return 'Done!'
+
+# ----------------------------------------------------------------------- #
+#                             Recording
+# ----------------------------------------------------------------------- #
+
+
+def start_rec(to_record):
+    '''
+    Creates a new directory and saves the video inside of the 
+    directory.
+    Records to_record using asciinema.
+    to_record: shoud be a shell script created by script_maker.
+    Returns: 'Sould be recording...'
+    '''
+
+
+
+    # Defines the title of the video to the shell script's name
+    # and the path to the new directory.
+    
+    title = './recordings' + '/' + to_record.replace('.sh', '')
+
+    # Starting asciinema
+
+    subprocess.run([
+        'asciinema',
+        'rec',
+        '--overwrite',
+        '-q',
+        '-c',
+        './shell_scripts/' + to_record,
+        title
+        ])
+    return 'Should be recording...'
+    
+
+
+# ----------------------------------------------------------------------- #
+#                         Instrucion executer
+# ----------------------------------------------------------------------- #
+
+def instruction_executer(path_to_scripts):
+    '''
+    loops through every scripts inside to the folder provided by
+    path_to_scripts. Runs the function start_rec for each script.
+
+    The path is relative to the app folder.
+
+    Returns 'Everything has been executed!'
+    '''
+
+    # Creating the new directory
+
+    print(os.getcwd())
+    os.chdir('..')
+
+    newpath = os.getcwd()+ "/recordings"
+    print(newpath)
+    
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+    # Executing start_rec for each.
+
+    for filename in os.listdir(path_to_scripts):
+
+        start_rec(filename)
+
+    return 'Everything has been executed!' 
+
+
+# ----------------------------------------------------------------------- #
+#                         Asciicast converting
+# ----------------------------------------------------------------------- #
+
+def asciicast_2gif(path_to_asciicasts):
+    '''
+    path_to_asciicasts: the path of the folder where the asciicasts
+    are saved.
+
+    Creates a new repository inside of the main folder (the one that has
+    the Dockerfile). It then converts the asciicasts in path_to_asciicasts
+    into gifs, and saves them inside of the new folder.
+
+    Returns 'Done!'
+    '''
+
+    current = os.getcwd()
+    parent = Path(current).parent
+    newpath = parent / "your_video"
+    
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+
+    for filename in os.listdir(path_to_asciicasts):
+
+        subprocess.Popen([
+            'asciicast2gif',
+            './recordings/' + str(filename),
+            '../your_video/' + str(filename)
+            ])
+
+    return 'Done!'
+
+# ----------------------------------------------------------------------- #
+#                               Transfer 
+# ----------------------------------------------------------------------- #
+
+
+
+
