@@ -76,13 +76,17 @@ def new_script(instructions_list):
                 index += 1
             
             elif current_line_edited == "---":
-                current_title = instructions_list[title_index]["file_name"]
-                media_format = instructions_list[title_index]["media_format"]
-                f.write(current_line)
-                f.write("![freeze](%s.%s)\n"%(current_title, media_format))
-
-                index += 6
-                title_index += 1 
+                # This statement skips the header.
+                if index == 0:
+                    f.write(current_line)
+                    index += 1
+                else:
+                    current_title = instructions_list[title_index]["file_name"]
+                    media_format = instructions_list[title_index]["media_format"]
+                    f.write(current_line)
+                    f.write("![freeze](%s.%s)\n"%(current_title, media_format))
+                    index += 6
+                    title_index += 1 
 
     return 'New file created!'
 
