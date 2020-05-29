@@ -285,6 +285,7 @@ def asciicast_transfer(containers_name):
     newpath = current / "your_video"
     
     if not os.path.exists(newpath):
+        os.makedirs(newpath)
 
     for filename in os.listdir('./recordings'):
         subprocess.run([
