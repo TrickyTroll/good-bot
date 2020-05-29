@@ -16,8 +16,10 @@ def instruction_finder():
     '''
     This function searches for funtions to be executed inside
     of the container.
+
     The video's script name must be 'my_script.md'. It must also be 
     located inside of the 'script' repository.
+
     Returns: A list of functions to be executed.
     Function's structure:
     {command: , media_format: , file_name: }
@@ -45,16 +47,27 @@ def instruction_finder():
 # ----------------------------------------------------------------------- #
 def new_script(instructions_list):
     '''
+    Takes the instructions_list from instruction_finder(). Uses the 
+    instructions to generate a new script file, formatted to work using 
+    Video Puppet.
+
+    Input: A list of instructions. Instructions are dictionnaries created 
+    with the instruction_finder() function.
+
+    Returns: 'New file created!'
     '''
+
     print(os.getcwd())
     with open('../script/your_script.md', 'r') as f:
         lines = f.readlines()
-    with open('../script/toto.md', 'w') as f:
+    with open('../script/script.md', 'w') as f:
         index = 0
         title_index = 0
 
         while index < len(lines):
-
+            
+            # current_line_edited could be replaced by changing the 
+            # next 'if' statement by if '---' in current_line.
             current_line_edited = lines[index].rstrip().lstrip()
             current_line = lines[index]
 
@@ -150,9 +163,6 @@ def start_rec(to_record):
     to_record: shoud be a shell script created by script_maker.
     Returns: 'Sould be recording...'
     '''
-
-
-
     # Defines the title of the video to the shell script's name
     # and the path to the new directory.
     
@@ -196,8 +206,8 @@ def instruction_executer(path_to_scripts):
     
     if not os.path.exists(newpath):
         os.makedirs(newpath)
+
     # Executing start_rec for each.
-    print(os.getcwd())
 
     for filename in os.listdir(path_to_scripts):
 
@@ -209,7 +219,7 @@ def instruction_executer(path_to_scripts):
 # ----------------------------------------------------------------------- #
 #                         Asciicast converting
 # ----------------------------------------------------------------------- #
-
+# This function is not in use.
 def asciicast_2gif(path_to_asciicasts):
     '''
     path_to_asciicasts: the path of the folder where the asciicasts
@@ -245,7 +255,8 @@ def asciicast_2gif(path_to_asciicasts):
 
 def transfer_init():
     '''
-    Begins the transfer by initiating Docker
+    Begins the transfer by initiating Docker. It pulls asciicast2gif's 
+    image.
     '''
     subprocess.run([
         'docker',
@@ -256,7 +267,12 @@ def transfer_init():
 
 def asciicast_transfer(containers_name):
     '''
+    This function copies the recordings folder from a container to the 
+    CWD. It then converts asciicasts to gifs and saves the gifs in the 
+    your_video directory.
 
+    Input: The name or id of the container where your video was recorded.
+    Returns: 'Done'
     '''
     subprocess.run([
         'docker',
@@ -264,6 +280,11 @@ def asciicast_transfer(containers_name):
         '%s:/home/tutorial/app/recordings'%(containers_name),
         '.'
         ])
+
+    current = Path('.')
+    newpath = current / "your_video"
+    
+    if not os.path.exists(newpath):
 
     for filename in os.listdir('./recordings'):
         subprocess.run([
@@ -280,6 +301,11 @@ def asciicast_transfer(containers_name):
 
 def script_transfer(containers_name):
     '''
+    Transfers the script created inside of the container to the your_video 
+    folder.
+
+    Input: The name or id of the container where your video was recorded.
+    Returns: 'Done!'.
     '''
     subprocess.run([
         'docker',
@@ -290,4 +316,8 @@ def script_transfer(containers_name):
     return 'Done!'
 
 def cleanup():
+    '''
+    This functions cleans up the directory so that it can be used for another
+    video!
+    '''
     return None

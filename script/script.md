@@ -1,4 +1,6 @@
 ---
+size: 1080
+---
 (instructions:
 	echo 'Hello world!'
 	gif
