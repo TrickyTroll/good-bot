@@ -16,18 +16,18 @@ def instruction_finder():
     '''
     This function searches for funtions to be executed inside
     of the container.
-    The video's script name must be 'script.md'.
+    The video's script name must be 'my_script.md'. It must also be 
+    located inside of the 'script' repository.
     Returns: A list of functions to be executed.
     Function's structure:
     {command: , media_format: , file_name: }
     '''
     todo = []
-    with open('script/script.md', "r") as f:
+    with open('script/your_script.md', "r") as f:
         datafile = [line for line in f.readlines() if line.strip()]
-
-        # Here the program should also skip the header.
         index = 0
         for line in datafile:
+            # The '(instructions:' part allows the program to skip headers.
             if '---' in line and '(instructions:' in datafile[index+1]:
                 to_add = {
                         "command": datafile[index+2].rstrip().lstrip(),
@@ -35,12 +35,6 @@ def instruction_finder():
                         "file_name": datafile[index+4].rstrip().lstrip()
                         }
                 todo.append(to_add)
-
-            elif '---' in line and '(instructions:' not in datafile[index+1]:
-
-                print("Line %s has no instructions"%(index+1))
-                
-                break
 
             index += 1
 
@@ -53,7 +47,7 @@ def new_script(instructions_list):
     '''
     '''
     print(os.getcwd())
-    with open('../script/script.md', 'r') as f:
+    with open('../script/your_script.md', 'r') as f:
         lines = f.readlines()
     with open('../script/toto.md', 'w') as f:
         index = 0
@@ -264,7 +258,6 @@ def asciicast_transfer(containers_name):
     '''
 
     '''
-    x=(os.path.dirname(os.path.realpath(__file__)))
     subprocess.run([
         'docker',
         'cp',
@@ -273,15 +266,14 @@ def asciicast_transfer(containers_name):
         ])
 
     for filename in os.listdir('./recordings'):
-        print(os.getcwd())
         subprocess.run([
             'docker',
             'run',
             '--rm',
             '-v',
-            '%s:/data'%(x),
+            '%s:/data'%(os.getcwd()),
             'asciinema/asciicast2gif',
-            'recordings/' + filename,
+            'recordings/%s'%filename,
             'your_video/' + filename + '.gif'
             ])
     return 'Done'
