@@ -9,7 +9,7 @@ a simple syntax.
 
 To explain how Video-Automation works, let's first examine what it does.
 
-[comment]: <> Schema ici
+<Schema ici> 
 
 When the user builds a container using the Dockerfile, a container image is created. This 
 image is based on Ubuntu and contains the directory in which the ```docker build``` command 
