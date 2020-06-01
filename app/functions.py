@@ -224,50 +224,34 @@ def instruction_executer(path_to_scripts):
 #                         Asciicast converting
 # ----------------------------------------------------------------------- #
 # This function is not in use.
-def asciicast_2gif(path_to_asciicasts):
+def asciicast_2gif(path_to_asciicasts, path_to_save):
     '''
     path_to_asciicasts: the path of the folder where the asciicasts
     are saved.
+    
+    path_to_save: the path of the folder where the gifs are going to
+    be saved.
 
-    Creates a new repository inside of the main folder (the one that has
-    the Dockerfile). It then converts the asciicasts in path_to_asciicasts
-    into gifs, and saves them inside of the new folder.
+    Converts the asciicasts in path_to_asciicasts
+    into gifs, and saves them inside of path_to_save.
 
     Returns 'Done!'
     '''
 
-    current = os.getcwd()
-    parent = Path(current).parent
-    newpath = parent / "your_video"
-    
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-
     for filename in os.listdir(path_to_asciicasts):
 
-        subprocess.Popen([
-            'asciicast2gif',
-            './recordings/' + str(filename),
-            '../your_video/' + str(filename)
+        subprocess.run([
+           'asciicast2gif',
+           './recordings/' + str(filename),
+           newpath + str(filename) + '.gif'
             ])
 
     return 'Done!'
 
 # ----------------------------------------------------------------------- #
-#                               Transfer 
+#                               Conversion
 # ----------------------------------------------------------------------- #
 
-def transfer_init():
-    '''
-    Begins the transfer by initiating Docker. It pulls asciicast2gif's 
-    image.
-    '''
-    subprocess.run([
-        'docker',
-        'pull',
-        'asciinema/asciicast2gif'
-        ])
-    return 'Done!'
 
 def asciicast_transfer(containers_name):
     '''
@@ -278,12 +262,6 @@ def asciicast_transfer(containers_name):
     Input: The name or id of the container where your video was recorded.
     Returns: 'Done'
     '''
-    subprocess.run([
-        'docker',
-        'cp',
-        '%s:/home/tutorial/app/recordings'%(containers_name),
-        '.'
-        ])
 
     current = Path('.')
     newpath = current / "your_video"
@@ -291,17 +269,8 @@ def asciicast_transfer(containers_name):
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-    for filename in os.listdir('./recordings'):
-        subprocess.run([
-            'docker',
-            'run',
-            '--rm',
-            '-v',
-            '%s:/data'%(os.getcwd()),
-            'asciinema/asciicast2gif',
-            'recordings/%s'%filename,
-            'your_video/' + filename + '.gif'
-            ])
+    asciicast_2gif('./recordings', newpath)
+        
     return 'Done'
 
 def script_transfer(containers_name):
@@ -313,9 +282,8 @@ def script_transfer(containers_name):
     Returns: 'Done!'.
     '''
     subprocess.run([
-        'docker',
         'cp',
-        '%s:/home/tutorial/script/script.md'%(containers_name),
+        '/home/tutorial/script/script.md',
         './your_video'
         ])
     return 'Done!'
