@@ -24,9 +24,8 @@ WORKDIR /home/app
 COPY requirements.txt /home/app
 COPY . .
 RUN pip3 install -r requirements.txt
-RUN chmod +x /home/app/so_it_begins.py
 
 WORKDIR /tutorial
 VOLUME ["/tutorial"]
 
-ENTRYPOINT ["/home/app/so_it_begins.py"]
+ENTRYPOINT ["python3", "/home/app/so_it_begins.py"]

@@ -1,2 +1,5 @@
 **/__pycache__
 **/*.swp
+app/shell_scripts
+**/your_video
+app/recordings
