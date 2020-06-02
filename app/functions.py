@@ -26,7 +26,7 @@ def instruction_finder(path_to_script, filename):
     
     os.chdir(path_to_script)
     
-    with open(filename, "r") as f:
+    with open(path_to_script / filename, "r") as f:
         datafile = [line for line in f.readlines() if line.strip()]
         index = 0
         for line in datafile:
@@ -46,7 +46,7 @@ def instruction_finder(path_to_script, filename):
 # ----------------------------------------------------------------------- #
 #                        Editing the script 
 # ----------------------------------------------------------------------- #
-def new_script(instructions_list, read_path, write_path):
+def new_script(instructions_list, read_path, write_path, filename):
     '''
     Takes the instructions_list from instruction_finder(). Uses the 
     instructions to generate a new script file, formatted to work using 
@@ -65,7 +65,7 @@ def new_script(instructions_list, read_path, write_path):
     '''
     os.chdir(read_path)
     
-    with open('your_script.md', 'r') as f:
+    with open(filename, 'r') as f:
         lines = f.readlines()
         
     os.chdir(write_path)
@@ -104,7 +104,7 @@ def new_script(instructions_list, read_path, write_path):
 #                       Bash scripts creation
 # ----------------------------------------------------------------------- #
 
-def script_maker(instructions_list, path_to_create):
+def script_maker(instructions_list, path_to_create, path_to_demo_magic):
     '''
     Creates a bash script that uses demo-magic for every instruction in the
     list.
@@ -114,6 +114,8 @@ def script_maker(instructions_list, path_to_create):
     
     path_to_create: Path to where the new folder containing the shell 
     scripts should be created.
+    
+    path_to_demo_magic: Path to the shell script file 'demo-magic.sh'.
     
     Returns: The path to the folder containing the shell scripts.
     '''
@@ -139,7 +141,7 @@ def script_maker(instructions_list, path_to_create):
 
 # including demo-magic
 
-. ./demo-magic.sh
+. %s/demo-magic.sh
 
 # speed (defined by the user)
 
@@ -160,7 +162,7 @@ pe "%s"
 # The end (shows a prompt at the end)
 
 p ""
-'''%(10, i['command']))#Commands should be a list at some point
+'''%(path_to_demo_magic, 10, i['command']))#Commands should be a list at some point
             
             # Making sure that the files are executable
 
@@ -189,7 +191,7 @@ def start_rec(to_record, to_save):
     # Defines the title of the video to the shell script's name
     # and the path to the new directory.
     
-    title = to_save / to_record.replace('.sh', '')
+    title = to_save / str(to_record).replace('.sh', '')
 
     # Starting asciinema
 
@@ -263,7 +265,7 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
         subprocess.run([
            'ttygif',
            '--input',
-           path_to_asciicasts + str(filename),
+           path_to_asciicasts / str(filename),
            '--output',
            path_to_save / (str(filename) + '.gif'),
            '--fps=33'
@@ -296,7 +298,7 @@ def asciicast_transfer(path_to_recordings, product_path):
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-    asciicast_2gif(product_path, newpath)
+    asciicast_2gif(path_to_recordings, newpath)
         
     return 'Done'
 
