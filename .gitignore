@@ -3,3 +3,4 @@
 app/shell_scripts
 **/your_video
 app/recordings
+**/.DS_Store

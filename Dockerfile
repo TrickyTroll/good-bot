@@ -23,4 +23,4 @@ RUN cat requirements.txt | xargs -n 1 -L 1 pip3 install
 WORKDIR /tutorial
 VOLUME ["/tutorial"]
 
-#ENTRYPOINT ["python3", "/home/app/so_it_begins.py"]
+ENTRYPOINT ["python3", "/home/all/so_it_begins.py"]
