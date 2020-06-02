@@ -15,9 +15,9 @@ RUN apt install -y \
 	
 # ADD . /home/app
 # The previous add command should be replaced by something else.
-RUN mkdir /home/app
-WORKDIR /home/app
-COPY requirements.txt /home/app
+RUN mkdir /home/all
+WORKDIR /home/all
+COPY requirements.txt /home/all
 COPY . .
 RUN cat requirements.txt | xargs -n 1 -L 1 pip3 install
 WORKDIR /tutorial
