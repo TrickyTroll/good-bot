@@ -21,7 +21,7 @@ def instruction_finder(path_to_script):
     {command: , media_format: , file_name: }
     '''
     todo = []
-    with open('script/your_script.md', "r") as f:
+    with open(path_to_script, "r") as f:
         datafile = [line for line in f.readlines() if line.strip()]
         index = 0
         for line in datafile:
@@ -237,9 +237,12 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
     for filename in os.listdir(path_to_asciicasts):
 
         subprocess.run([
-           'asciicast2gif',
+           'ttygif',
+           '--input',
            './recordings/' + str(filename),
-           path_to_save / (str(filename) + '.gif')
+           '--output',
+           path_to_save / (str(filename) + '.gif'),
+           '--fps=33'
             ])
 
     return 'Done!'
@@ -273,7 +276,7 @@ def script_transfer():
     
     subprocess.run([
         'cp',
-        '/home/tutorial/script/script.md',
+        '/home/app/script/script.md',
         './your_video'
         ])
     return 'Done!'

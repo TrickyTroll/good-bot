@@ -1,10 +1,12 @@
 import sys
-sys.path.insert(1, './app')
+from pathlib import Path
+sys.path.insert(1, '/home/app/app')
 from functions import *
 
-filename = str(sys.argv)[0]
+filename = Path(sys.argv[1])
+print(filename)
 # Fetching the instructions inside script/script.md:
-instructions_list = instruction_finder('./script/your_script.md')
+instructions_list = instruction_finder(filename)
 
 # Creating bash scripts for every item inside of the list:
 script_maker(instructions_list)
