@@ -12,13 +12,9 @@ import subprocess
 #                    Finding the instructions
 # ----------------------------------------------------------------------- #
 
-def instruction_finder():
+def instruction_finder(path_to_script):
     '''
-    This function searches for funtions to be executed inside
-    of the container.
-
-    The video's script name must be 'my_script.md'. It must also be 
-    located inside of the 'script' repository.
+    path_to_script: The path towards the video script that you wrote.
 
     Returns: A list of functions to be executed.
     Function's structure:
@@ -243,7 +239,7 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
         subprocess.run([
            'asciicast2gif',
            './recordings/' + str(filename),
-           newpath + str(filename) + '.gif'
+           path_to_save / (str(filename) + '.gif')
             ])
 
     return 'Done!'
@@ -253,14 +249,11 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
 # ----------------------------------------------------------------------- #
 
 
-def asciicast_transfer(containers_name):
+def asciicast_transfer():
     '''
-    This function copies the recordings folder from a container to the 
-    CWD. It then converts asciicasts to gifs and saves the gifs in the 
-    your_video directory.
-
-    Input: The name or id of the container where your video was recorded.
-    Returns: 'Done'
+    This function Creates a new directory for the end product. 
+    It then converts asciicasts to gifs and saves the gifs in the 
+    your_video directory using asciicast_2gif.
     '''
 
     current = Path('.')
@@ -273,14 +266,11 @@ def asciicast_transfer(containers_name):
         
     return 'Done'
 
-def script_transfer(containers_name):
+def script_transfer():
     '''
-    Transfers the script created inside of the container to the your_video 
-    folder.
-
-    Input: The name or id of the container where your video was recorded.
-    Returns: 'Done!'.
+    Transfers the script created to the your_video folder.
     '''
+    
     subprocess.run([
         'cp',
         '/home/tutorial/script/script.md',
