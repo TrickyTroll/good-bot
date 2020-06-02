@@ -177,12 +177,13 @@ p ""
 # ----------------------------------------------------------------------- #
 
 
-def start_rec(to_record, to_save):
+def start_rec(to_record, to_save, filename):
     '''
     Records to_record using asciinema.
     
     to_record: shoud be a path to a shell script created by script_maker.
     to_save: Path to where the recording should be saved.
+    filename: The name of the file that will be created.
     
     creates: asciicasts
     
@@ -191,7 +192,8 @@ def start_rec(to_record, to_save):
     # Defines the title of the video to the shell script's name
     # and the path to the new directory.
     
-    title = to_save / str(to_record).replace('.sh', '')
+    title = to_save / str(filename).replace('.sh', '')
+    print(title)
 
     # Starting asciinema
 
@@ -237,7 +239,7 @@ def instruction_executer(working_path, path_to_scripts, path_to_save):
 
     for filename in os.listdir(path_to_scripts):
 
-        start_rec(path_to_scripts / filename, newpath)
+        start_rec(path_to_scripts / filename, newpath, filename)
 
     return newpath
 
