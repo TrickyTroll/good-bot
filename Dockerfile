@@ -11,7 +11,14 @@ RUN apt install -y \
 	python3-dev \
 	python3-pip \
 	python3.8 \
-	pv
+	ttyrec \
+	wget \
+	
+RUN wget https://dl.google.com/go/go1.13.linux-amd64.tar.gz; \
+    tar -C /usr/local -xzf go1.13.linux-amd64.tar.gz; \
+	export PATH=$PATH:/usr/local/go/bin; \
+	source ~/.profile; \
+	go get github.com/sugyan/ttyrec2gif
 	
 # ADD . /home/app
 # The previous add command should be replaced by something else.

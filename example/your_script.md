@@ -1,5 +1,5 @@
 ---
-size: 1080
+size: 1080p
 ---
 (instructions:
 	echo 'Hello world!'
@@ -11,7 +11,7 @@ This video was not made by a human.
 ---
 (instructions:
 	ls
-	png
+	gif
 	hello
 )
 Which is pretty cool

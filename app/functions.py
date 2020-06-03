@@ -179,13 +179,13 @@ p ""
 
 def start_rec(to_record, to_save, filename):
     '''
-    Records to_record using asciinema.
+    Records to_record using ttyrec.
     
     to_record: shoud be a path to a shell script created by script_maker.
     to_save: Path to where the recording should be saved.
     filename: The name of the file that will be created.
     
-    creates: asciicasts
+    creates: Whatever ttyrec outputs idk.
     
     Returns: 'Sould be recording...'
     '''
@@ -198,11 +198,8 @@ def start_rec(to_record, to_save, filename):
     # Starting asciinema
 
     subprocess.run([
-        'asciinema',
-        'rec',
-        '--overwrite',
-        '-q',
-        '-c',
+        'ttyrec',
+        '-e',
         to_record,
         title
         ])
@@ -250,13 +247,13 @@ def instruction_executer(working_path, path_to_scripts, path_to_save):
 
 def asciicast_2gif(path_to_asciicasts, path_to_save):
     '''
-    path_to_asciicasts: the path of the folder where the asciicasts
+    path_to_asciicasts: the path of the folder where the ttyrecs
     are saved.
     
     path_to_save: the path of the folder where the gifs are going to
     be saved.
 
-    Converts the asciicasts in path_to_asciicasts
+    Converts the ttyrecs in path_to_asciicasts
     into gifs, and saves them inside of path_to_save.
 
     Returns 'Done!'
@@ -265,12 +262,11 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
     for filename in os.listdir(path_to_asciicasts):
 
         subprocess.run([
-           'ttygif',
-           '--input',
+           'ttyrec2gif',
+           '-in',
            path_to_asciicasts / str(filename),
-           '--output',
-           path_to_save / (str(filename) + '.gif'),
-           '--fps=33'
+           '-out',
+           path_to_save / (str(filename) + '.gif')
             ])
 
     return 'Done!'
