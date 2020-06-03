@@ -66,12 +66,13 @@ def new_script(instructions_list, read_path, write_path, filename):
 
     Returns: The path towards the new script.
     '''
-    # Changing directories to the 
+    # Changing directories to the one that contains the script.
     os.chdir(read_path)
     
+    # Opening the file and storing the lines in a variable.
     with open(filename, 'r') as f:
         lines = f.readlines()
-        
+    # Changing directories to where script.md should be written.    
     os.chdir(write_path)
         
     with open('script.md', 'w') as f:
@@ -94,7 +95,7 @@ def new_script(instructions_list, read_path, write_path, filename):
                 if index == 0:
                     f.write(current_line)
                     index += 1
-                else:
+                else: # This means it's not the header.
                     current_title = instructions_list[title_index]["file_name"]
                     media_format = instructions_list[title_index]["media_format"]
                     f.write(current_line)
@@ -135,7 +136,7 @@ def script_maker(instructions_list, path_to_create, path_to_demo_magic):
 
     os.chdir(newpath)
 
-    # Creating the scripts.
+    # Creating the scripts. See demo-magic on github.
     
     for i in instructions_list:
         identification = '%s.sh'%(i['file_name'])
@@ -185,11 +186,13 @@ def start_rec(to_record, to_save, filename):
     '''
     Records to_record using ttyrec.
     
-    to_record: shoud be a path to a shell script created by script_maker.
+    to_record: Shoud be a path to a shell script created by script_maker.
+    
     to_save: Path to where the recording should be saved.
+    
     filename: The name of the file that will be created.
     
-    creates: Whatever ttyrec outputs idk.
+    creates: A ttyrec named after filename.
     
     Returns: 'Sould be recording...'
     '''
@@ -199,7 +202,7 @@ def start_rec(to_record, to_save, filename):
     title = to_save / str(filename).replace('.sh', '')
     print(title)
 
-    # Starting asciinema
+    # Starting ttyrec
 
     subprocess.run([
         'ttyrec',
@@ -249,26 +252,26 @@ def instruction_executer(working_path, path_to_scripts, path_to_save):
 #                         Asciicast converting
 # ----------------------------------------------------------------------- #
 
-def asciicast_2gif(path_to_asciicasts, path_to_save):
+def ttyrec_2gif(path_to_ttyrec, path_to_save):
     '''
-    path_to_asciicasts: the path of the folder where the ttyrecs
+    path_to_ttyrec: the path of the folder where the ttyrecs
     are saved.
     
     path_to_save: the path of the folder where the gifs are going to
     be saved.
 
-    Converts the ttyrecs in path_to_asciicasts
+    Converts the ttyrecs in path_to_ttyrec
     into gifs, and saves them inside of path_to_save.
 
     Returns 'Done!'
     '''
-
-    for filename in os.listdir(path_to_asciicasts):
+    # Iters over each file in path_to_ttyrec.
+    for filename in os.listdir(path_to_ttyrec):
 
         subprocess.run([
-           '/root/go/bin/ttyrec2gif',
+           '/root/go/bin/ttyrec2gif', # This is where ttyrec2gif is located.
            '-in',
-           path_to_asciicasts / str(filename),
+           path_to_ttyrec / str(filename),
            '-out',
            path_to_save / (str(filename) + '.gif')
             ])
@@ -280,33 +283,41 @@ def asciicast_2gif(path_to_asciicasts, path_to_save):
 # ----------------------------------------------------------------------- #
 
 
-def asciicast_transfer(path_to_recordings, product_path):
+def ttyrec_transfer(path_to_recordings, product_path):
     '''
-    path_to_recordings: Path towards the asciicasts recordings.
+    path_to_recordings: Path towards the ttyrecs recordings.
     
     product_path: Path towards where the end product will be created.
     The end product is a folder that contains the gifs and the new script.
     
     This function Creates a new directory for the end product. 
-    It then converts asciicasts to gifs and saves the gifs in the 
-    your_video directory using asciicast_2gif.
+    It then converts ttyrecs to gifs and saves the gifs in the 
+    your_video directory using ttyrec_2gif.
     
     Returns: 'Done!'
     '''
-
+    # Making a new directory inside of the docker volume.
+    # This means the directory will also be on the host.
     current = product_path
     newpath = current / 'your_video'
     
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
-    asciicast_2gif(path_to_recordings, newpath)
+    ttyrec_2gif(path_to_recordings, newpath)
         
     return 'Done'
 
 def script_transfer(new_script_path, product_path):
     '''
     Transfers the script created to the your_video folder.
+    
+    new_script_path: Path to where the new script has been saved. This 
+    should be returned by the new_script function.
+    
+    product_path: Path towards the volume that is mounted inside the 
+    container. This means the script will also be available on the 
+    host computer.
     '''
     
     subprocess.run([
@@ -321,4 +332,6 @@ def cleanup():
     This functions cleans up the directory so that it can be used for another
     video!
     '''
+    # Not sure if this is still useful since everything happens inside the
+    # container.
     return None
