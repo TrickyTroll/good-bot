@@ -1,23 +1,68 @@
-# video-automation
+# good-bot
 
 Automating the recording of documentation videos using Video Puppet and Python!
 
 This cool application allows you to create terminal recordings using only a markdown file and 
 a simple syntax.
 
+## Usage
+
+1. Clone this repository.
+
+2. Write a markdown file that uses the syntax described below. You can see an example under 
+the example folder.
+
+3. Change your current working directory to this repo.
+
+4. Build your container using ```docker build [--tag something you want] .```.
+
+5. Change your current working directory to the one that contains your instruction file.
+
+6. Run your container using ```docker run -it [--name something you want] -v $(PWD):/toto [the tag you chose] your_script.md ```.
+
+**The ```-it``` is important, since you will need a TTY to run the commands!!!**
+
+```your_script.md``` is the name of the instructions file you want to use.
+
+7. Let the container do his thing. When it's done, a new folder called ```your_video``` should have been created
+inside of your current working directory.
+
+8. Send the content of the your_video folder to Video Puppet!
+
 ## How it works
 
-To explain how Video-Automation works, let's first examine what it does.
+To explain how good-bot works, let's first examine what it does.
 
-<Schema ici> 
+![Where is x function running](https://docs.google.com/drawings/d/e/2PACX-1vSP3jd_BWWXzxL_WmsfMpxDAS5xrd2vLejp3PUAgnjejE_O5PDRzVk0lH8OzlZXcUZ6qVl_cfTcjxso/pub?w=960&h=720)
+
+### The build
 
 When the user builds a container using the Dockerfile, a container image is created. This 
 image is based on Ubuntu and contains the directory in which the ```docker build``` command 
 was executed. This is why you must build your container inside the main repository of this 
 app.
 
+The good-bot directory will be copied inside the container under the folder ```/home/all/```
+
+The build will also create two other directories:
+
+* ```/tutorial```: This is just a clean directory. It is where the commands specified in the 
+instruction file are going to be executed.
+
+* ```/usr/local/go/bin```: This is where ```ttyrec2gif``` can be called from.
+
+### Running the container
+
+####  Analyzing the docker run command
+
+
+#### What happends after you press enter
+
 Every time the container is run, it also uses python to run the script called 
-```so_it_begins.py```. This script imports functions from ```app/functions.py``` that do a 
+```so_it_begins.py```. ```so_it_begins.py``` only takes one argument: the path towards the 
+instructions file you wrote.
+
+This script also imports functions from ```app/functions.py``` that do a 
 few things:
 
 1. ```instruction_finder```: This function reads the file called ```your_script.md``` under 
@@ -67,6 +112,7 @@ new video script. It also converts the asciicasts into gifs and bundles everythi
 directory called ```your_video```. This folder is what you can send to Video Puppet to 
 create a video!
 
+
 ## Syntax
 
 Here is an example of the very pointillous syntax that you ~~sould~~ must use:
@@ -83,21 +129,7 @@ size: 1080p
 
 ```
 
-## Usage
 
-1. Clone this repository.
-
-2. Modify your_script.md respecting the syntax.
-
-3. Build your container using ```docker build --tag [something you want] .```.
-
-4. Run your container using ```docker run -it --name [something you want] [the tag you chose]```.
-
-**The ```-it``` is important, since you will need a TTY to run the commands!!!**
-
-5. Fetch your video by running the ```is_this_how_it_ends.py``` script.
-
-6. Send the your_video folder to Video Puppet!
 
 ## What could be improved?
 
