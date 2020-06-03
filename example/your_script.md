@@ -1,5 +1,6 @@
 ---
 size: 1080p
+asset-resize: contain
 ---
 (instructions:
 	echo 'Hello world!'
@@ -14,4 +15,5 @@ This video was not made by a human.
 	gif
 	hello
 )
-Which is pretty cool
+
+Which is pretty cool.
