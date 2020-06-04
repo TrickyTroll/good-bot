@@ -156,8 +156,7 @@ size: 1080p
 * Giving users more options, like the colours of their terminal and the speed at which the 
 typing is done.
 
-* Making the value associated with "command" a list, allowing for multiple commands to be
-recorded at the same time.
+* ~~Making the value associated with "command" a list, allowing for multiple commands to be recorded at the same time.~~
 
 * ~~A main script that builds the container, runs it, and transfers the data.~~
 
