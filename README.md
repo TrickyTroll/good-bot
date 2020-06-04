@@ -16,12 +16,12 @@ the example folder.
 
 4. Build your container using ```docker build [--tag something you want] .```.
 
-5. Change your current working directory to the one that contains your instruction file.
+5. Change your current working directory to the one that contains your instructions file.
 
 6. Run your container using ```docker run -it [--name something you want] -v $(PWD):/toto [the tag you chose] your_script.md ```.
 
 7. Let the container do his thing. When it's done, a new folder called ```your_video``` should have been created
-inside of your current working directory.
+inside your current working directory.
 
 8. Send the content of the your_video folder to Video Puppet!
 
@@ -61,19 +61,19 @@ the container. ```$PWD``` can be replaced to whatever you want, but ```/toto``` 
 Don't forget that ```your_script.md``` is actually a path relative to ```$PWD```. If you choose to change 
 ```$PWD```, you must change ```your_script.md``` accordingly. See the [documentation](https://docs.docker.com/storage/volumes/) to learn more.
 
-* Naming your container isn't required, but it's a lot more easy to remember something cool like 
+* Naming your container isn't required, but it's a lot easier to remember something cool like 
 ```rocker-raccoon``` compared to a long string of 12 letters and numbers.
 
-#### What happends after you press enter
+#### What happens after you press enter
 
-The last line of the ```Dockerfile``` is the container's [entrypoint](https://docs.docker.com/engine/reference/builder/#entrypoint).
+The last line of the ```Dockerfile``` is the container's [entry point](https://docs.docker.com/engine/reference/builder/#entrypoint).
 
 ```ENTRYPOINT ["python3", "/home/all/so_it_begins.py"]```
 
-This tells docker that our container runs an executable in our case, everytime you run the container,
+This tells docker that our container runs an executable in our case, every time you run the container,
 ```so_it_begins.py``` will be executed using python3.
 
-The python script also takes a path as an input. This path should guide the script towards your instruction 
+The python script also takes a path as an input. This path should guide the script towards your instructions 
 file. It must be relative to ```$PWD```, or whatever you chose for the host's binding point.
 
 Finally, ```so_it_begins.py``` also imports functions from ```app/functions.py``` that can do a 
@@ -147,7 +147,7 @@ size: 1080p
 
 * Adding ```asset-resize: contain``` to your header. This tells Video Puppet not to scale your gifs.
 
-* Adding ```background: corporate-1``` to your header. This soundtrack is staight fire.
+* Adding ```background: corporate-1``` to your header. This soundtrack is straight fire.
 
 ## What could be improved?
 
