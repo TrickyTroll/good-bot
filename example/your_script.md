@@ -3,7 +3,7 @@ size: 1080p
 asset-resize: contain
 ---
 (instructions:
-	echo 'Hello world!'
+	echo 'Hello world!'; echo 'Multiple commands!'
 	gif
 	cool_name
 )
