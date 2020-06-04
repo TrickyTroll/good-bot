@@ -20,10 +20,6 @@ the example folder.
 
 6. Run your container using ```docker run -it [--name something you want] -v $(PWD):/toto [the tag you chose] your_script.md ```.
 
-**The ```-it``` is important, since you will need a TTY to run the commands!!!**
-
-```your_script.md``` is the name of the instructions file you want to use.
-
 7. Let the container do his thing. When it's done, a new folder called ```your_video``` should have been created
 inside of your current working directory.
 
@@ -55,62 +51,80 @@ instruction file are going to be executed.
 
 ####  Analyzing the docker run command
 
+```docker run -it [--name something you want] -v $(PWD):/toto [the tag you chose] your_script.md ```
+
+* ```-it```: This starts the container in interactive mode and gives it access to a pseudo-TTY. It's
+required to allow the container to record itself.
+
+* ```-v```: It bind mounts à volume. In this case, it binds the hosts ```$PWD``` to ```/toto``` inside
+the container. ```$PWD``` can be replaced to whatever you want, but ```/toto``` should not be replaced.
+Don't forget that ```your_script.md``` is actually a path relative to ```$PWD```. If you choose to change 
+```$PWD```, you must change ```your_script.md``` accordingly. See the [documentation](https://docs.docker.com/storage/volumes/) to learn more.
+
+* Naming your container isn't required, but it's a lot more easy to remember something cool like 
+```rocker-raccoon``` compared to a long string of 12 letters and numbers.
 
 #### What happends after you press enter
 
-Every time the container is run, it also uses python to run the script called 
-```so_it_begins.py```. ```so_it_begins.py``` only takes one argument: the path towards the 
-instructions file you wrote.
+The last line of the ```Dockerfile``` is the container's [entrypoint](https://docs.docker.com/engine/reference/builder/#entrypoint).
 
-This script also imports functions from ```app/functions.py``` that do a 
+```ENTRYPOINT ["python3", "/home/all/so_it_begins.py"]```
+
+This tells docker that our container runs an executable in our case, everytime you run the container,
+```so_it_begins.py``` will be executed using python3.
+
+The python script also takes a path as an input. This path should guide the script towards your instruction 
+file. It must be relative to ```$PWD```, or whatever you chose for the host's binding point.
+
+Finally, ```so_it_begins.py``` also imports functions from ```app/functions.py``` that can do a 
 few things:
 
-1. ```instruction_finder```: This function reads the file called ```your_script.md``` under 
-The ```script``` directory. It looks under each ```hr``` if there is the string 
+1. ```instruction_finder```: Reads the file called ```your_script.md``` from 
+the path provided as an argument to the python script. It looks under each ```hr``` if there is the string 
 ```(instructions:```. If the string is not present, it reads the next line, assuming that it 
 is the file's header. In the case that the string  is there, instruction_finder creates 
 a dictionary using the next 3 lines. The dictionary's format is 
 ```{"command": , "media_format": , "file_name"}```. The next 3 lines shoud then contain 
-The command to run, the media format (only gifs are supported for now), and the file name, 
+The commands to run, the media format (only gifs are supported for now), and the file name, 
 respectively. Further details on the syntax can be found below. The dictionary is 
-appended to a list, which is returned when the function has read the whole file.
+appended to a list, which is returned when the function has read through whole file.
 
-2. ```script_maker```: This function creates a bash script for each instruction made by 
+2. ```new_script```: A new video script is created. This video plan respects 
+[Video Puppet's](https://www.videopuppet.com/docs/format/) Markdown format. 
+Whenever ```new_script``` is called, a new markdown file
+is created by reading through the old one and removing the ```instructions``` mentions, 
+replacing them with a line similar to: ```![freeze](somefile.gif)```.
+
+3. ```script_maker```: This function creates a bash script for each instruction made by 
 ```instruction_finder```. The bash script imports ```demo-magic.sh``` and is made to follow 
 [Demo-Magic's](https://github.com/paxtonhare/demo-magic) syntax. Demo-Magic is a bash script 
 that automates typing of functions. This is useful because the commands will be typed 
 and recorded inside the container without needing any input other that the initial 
 markdown file from the user. The shell scripts are saved in a new folder called ```shell_scripts```.
 
-3. ```instruction_executer```: Iters over every file inside of ```shell_scripts``` and 
-runs the scripts while recoding using [Asciinema](https://asciinema.org/). Asciinema 
-creates json files that will allow you to replay what happened on your terminal while Asciinema 
+4. ```instruction_executer```: Iters over every file inside of ```shell_scripts``` and 
+runs the scripts while recoding using [Ttyrec](https://nethackwiki.com/wiki/Ttyrec). Ttyrec 
+creates data files that will allow you to replay what happened on your terminal while Ttyrec 
 was recoding. These files can later be converted into gifs.
 
-4. ```new_script```: Finally, a new video script is created. This video plan respects 
-[Video Puppet's](https://www.videopuppet.com/docs/format/) Markdown format. 
-Whenever ```new_script``` is called, a new markdown file
-is created by reading through the old one and removing the ```instructions``` mentions, 
-replacing them with a line similar to: ```![freeze](somefile.gif)```.
+5. ```ttyrec_transfer```: The name is a bit missleading. Not only does it transfers your recordings to a 
+new folder, but it also converts them into gifs using [Ttyrec2gif](https://github.com/sugyan/ttyrec2gif). 
+The new folder is created under ```/toto```, which is binded to the host. This means that this folder will 
+be accessible even after the container has completed his run.
 
-The previous 4 steps ran inside the Ubuntu docker container. This allows you to run 
+6. ```script_transfer```: A bit less missleading. This just copies the script created by ```new_script``` 
+to the same folder where the gifs were saved. This folder is called ```your_video```. 
+This folder is what you can send to Video Puppet to create a video!
+
+
+All the previous steps ran inside the Ubuntu docker container. This allows you to run 
 commands that install stuff that you already have locally an still go through the 
 installation steps. It also allows you install whatever you want without having to remove it 
 from your computer afterwards!
 
-The only problem is that the new script and all the recordings are still inside the 
-container!!! Luckily, the python script ```is_this_how_it_ends.py``` is made to fetch them 
-for you. Here is what it does:
+#### For the visual type of people
 
-1. It asks the user for the container's name (or id if you're that kind of person).
-
-2. ```is_this_how_it_ends.py``` then pulls [Asciicast2gif's](https://github.com/asciinema/asciicast2gif)
-Docker image. Asciicast2gif is the tool used to convert your recordings.
-
-3. Using ```docker cp```, the script copies the folder that contains the recordings and the 
-new video script. It also converts the asciicasts into gifs and bundles everything in a cool 
-directory called ```your_video```. This folder is what you can send to Video Puppet to 
-create a video!
+![what is x function doing](https://docs.google.com/drawings/d/e/2PACX-1vSL3QEHcWukD-dDqg4ml-wIuV_KK_kfjEA20drzrVLy_69L2QEt_znLHFbHITivdTqZHQhQKQBBfDHd/pub?w=960&h=720)
 
 
 ## Syntax
@@ -129,11 +143,15 @@ size: 1080p
 
 ```
 
+### Recommendations
 
+* Adding ```asset-resize: contain``` to your header. This tells Video Puppet not to scale your gifs.
+
+* Adding ```background: corporate-1``` to your header. This soundtrack is staight fire.
 
 ## What could be improved?
 
-* The pathing is pretty bad. Should be done using pathlib instead of os.
+* ~~The pathing is pretty bad. Should be done using pathlib instead of os.~~
 
 * Giving users more options, like the colours of their terminal and the speed at which the 
 typing is done.
@@ -141,9 +159,11 @@ typing is done.
 * Making the value associated with "command" a list, allowing for multiple commands to be
 recorded at the same time.
 
-* A main script that builds the container, runs it, and transfers the data.
+* ~~A main script that builds the container, runs it, and transfers the data.~~
 
 * Allowing more than just the gif format (stills and code formatted text cells could be 
-useful.
+useful).
 
-* It's overall very syntax dependent, which is annoying.
+* ~~It's overall very syntax dependent, which is annoying.~~
+
+* The recording quality. It's bad.
