@@ -136,7 +136,7 @@ Here is an example of the very pointillous syntax that you ~~sould~~ must use:
 size: 1080p
 ---
 (instructions:
-	[command]
+	[command]; [some other command]
 	[media_format]
 	[file_name]
 )

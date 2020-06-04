@@ -8,9 +8,36 @@ import sys
 import os
 import subprocess
 
+
 # ----------------------------------------------------------------------- #
 #                    Finding the instructions
 # ----------------------------------------------------------------------- #
+
+def text_processor(text_line, to_do):
+    '''
+    text_line: The string that will be processed.
+    to_do: What the processor should do. This feature has not yet been 
+    implemented. Only command_processing can be used.
+    
+    returns: The processed string
+    '''
+    
+    def command_processing(same_line):
+        '''
+        same_line: This should be the text_line variable from the parent 
+        function
+        
+        Cleans up the string and splits the commands into a list.
+        
+        returns: A list of commands.
+        '''
+        return same_line.rstrip().lstrip().split(';')
+    
+    if to_do == 'command':
+        
+        return command_processing(text_line)
+    else:
+        return 'Wrong command'
 
 def instruction_finder(read_path, filename):
     '''
@@ -18,7 +45,7 @@ def instruction_finder(read_path, filename):
     
     filename: The full name of the script.
 
-    Returns: A list of functions to be executed.
+    returns: A list of functions to be executed.
     
     Function's structure:
     {command: , media_format: , file_name: }
@@ -36,7 +63,7 @@ def instruction_finder(read_path, filename):
             # The '(instructions:' part allows the program to skip headers.
             if '---' in line and '(instructions:' in datafile[index+1]:
                 to_add = {
-                        "command": datafile[index+2].rstrip().lstrip(),
+                        "command": text_processor(datafile[index+2], 'command'),
                         "media_format": datafile[index+3].rstrip().lstrip(),
                         "file_name": datafile[index+4].rstrip().lstrip()
                         }
@@ -64,7 +91,7 @@ def new_script(instructions_list, read_path, write_path, filename):
     
     Creates: A markdown file that uses Video Puppet's syntax.
 
-    Returns: The path towards the new script.
+    returns: The path towards the new script.
     '''
     # Changing directories to the one that contains the script.
     os.chdir(read_path)
@@ -122,7 +149,7 @@ def script_maker(instructions_list, path_to_create, path_to_demo_magic):
     Creates: A bash script that uses demo-magic for every instruction in the
     list.
     
-    Returns: The path to the folder containing the shell scripts.
+    returns: The path to the folder containing the shell scripts.
     '''
     # Making a new directory for the scripts.
 
@@ -135,7 +162,25 @@ def script_maker(instructions_list, path_to_create, path_to_demo_magic):
     # Changing to the new working directory.
 
     os.chdir(newpath)
-
+    
+    def command_lister(commands):
+        '''
+        commands: List of shell commands.
+        
+        returns: A string with one line for each command. The line 
+        starts with 'pe' to support demo-magic.
+        '''
+        big_string = ''
+        
+        for command in commands:
+            command = command.strip()
+            # Making sure that the string isn't empty.
+            if command != '':
+                big_string += 'pe'+ ' "' + command + '"'
+                big_string += '\n'
+                
+        return big_string
+        
     # Creating the scripts. See demo-magic on github.
     
     for i in instructions_list:
@@ -162,12 +207,12 @@ clear
 
 # The commands go here
 
-pe "%s"
+%s
 
 # The end (shows a prompt at the end)
 
 p ""
-'''%(path_to_demo_magic, 10, i['command']))#Commands should be a list at some point
+'''%(path_to_demo_magic, 10, command_lister(i['command'])))#Commands should be a list at some point
             
             # Making sure that the files are executable
 
@@ -194,7 +239,7 @@ def start_rec(to_record, to_save, filename):
     
     creates: A ttyrec named after filename.
     
-    Returns: 'Sould be recording...'
+    returns: 'Sould be recording...'
     '''
     # Defines the title of the video to the shell script's name
     # and the path to the new directory.
@@ -229,7 +274,7 @@ def instruction_executer(working_path, path_to_scripts, path_to_save):
 
     The path is absolute.
 
-    Returns: The path towards the new recordings.
+    returns: The path towards the new recordings.
     '''
 
     # Creating the new directory    
@@ -263,7 +308,7 @@ def ttyrec_2gif(path_to_ttyrec, path_to_save):
     Converts the ttyrecs in path_to_ttyrec
     into gifs, and saves them inside of path_to_save.
 
-    Returns 'Done!'
+    returns 'Done!'
     '''
     # Iters over each file in path_to_ttyrec.
     for filename in os.listdir(path_to_ttyrec):
@@ -294,7 +339,7 @@ def ttyrec_transfer(path_to_recordings, product_path):
     It then converts ttyrecs to gifs and saves the gifs in the 
     your_video directory using ttyrec_2gif.
     
-    Returns: 'Done!'
+    returns: 'Done!'
     '''
     # Making a new directory inside of the docker volume.
     # This means the directory will also be on the host.
