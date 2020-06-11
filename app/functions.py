@@ -195,6 +195,8 @@ def script_maker(instructions_list, path_to_create, path_to_demo_magic):
 
 . %s/demo-magic.sh
 
+[ -f /home/all/.state ] && . /home/all/.state
+
 # speed (defined by the user)
 
 TYPE_SPEED=%s
@@ -214,6 +216,8 @@ clear
 # The end (shows a prompt at the end)
 
 p ""
+
+echo "cd $PWD" > /home/all/.state
 '''%(path_to_demo_magic, 10, command_lister(i['command'])))#Commands should be a list at some point
 
             # Making sure that the files are executable
@@ -286,7 +290,6 @@ def instruction_executer(working_path, path_to_scripts, path_to_save):
 
     # Executing start_rec for each.
     os.chdir(working_path)
-
     all_files = os.listdir(path_to_scripts)
     paths = sorted(all_files)
     for filename in paths:

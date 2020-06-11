@@ -24,7 +24,6 @@ filename = Path(sys.argv[1])
 
 # Fetching the instructions inside script/script.md:
 instructions_list = instruction_finder(mount_path, filename)
-print(instructions_list)
 
 # Creating a new script and writing it inside of the new video folder.
 # Reads from mount_path and writes in main_path.
