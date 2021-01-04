@@ -17,8 +17,10 @@ RUN apt install -y \
 #	source ~/.profile; \
 #	go get github.com/sugyan/ttyrec2gif
 
-ADD ./app $HOME/src/
-COPY requirements.txt /home/all
+COPY ./app $HOME/src/
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+RUN rm requirements.txt
 WORKDIR /tutorial
 VOLUME ["/tutorial"]
 
