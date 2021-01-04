@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "https://github.com/TrickyTroll/good-bot/cmd"
+import "github.com/TrickyTroll/good-bot/cmd"
 
 func main() {
 	cmd.Execute()
