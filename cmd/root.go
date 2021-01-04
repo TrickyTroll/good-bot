@@ -32,7 +32,7 @@ var rootCmd = &cobra.Command{
 	Use:   "good-bot",
 	Short: "Automating the creation of video documentation.",
 	Long: `A program that cant automatically create videos based on your
-documentation`,
+documentation or a config file.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
