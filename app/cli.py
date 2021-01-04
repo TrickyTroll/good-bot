@@ -13,7 +13,7 @@ def app():
 @click.option(
     "--environment",
     "-env",
-    type = click.File(mode="r")
+    type = click.File(mode="r"),
     help = """\
         To provide environment variables to the program.
         """
@@ -24,20 +24,11 @@ def app():
     type = click.File('r'),
 )
 
-def setup(script):
-    """To create a new video based on your script."""
-
-    
-    return None
-
-@click.command()
-
 def run(setup):
-    """To start the video using the setted up env"""
+    """To create a video from a YAML script."""
     pass
 
 @app.add_command(run)
-@app.add_command(setup)
 
-if __name__ == "__main__":
+def main():
     app()
