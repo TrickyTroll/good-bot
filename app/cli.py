@@ -26,9 +26,11 @@ def app():
 
 def run(setup):
     """To create a video from a YAML script."""
-    pass
+    click.echo("Hello,world")
+    return None
 
-@app.add_command(run)
+app.add_command(run)
 
-def main():
+if __name__ == "__main__":
+    # execute only if run as a script
     app()
