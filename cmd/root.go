@@ -72,9 +72,10 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".good-bot" (yaml extension).
+		// Search config in home directory with name "goodbot" (yaml extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".good-bot")
+		viper.AddConfigPath("./config/")
+		viper.SetConfigName(".goodbot")
 		viper.SetConfigType("yaml")
 	}
 
@@ -84,4 +85,5 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
 }
