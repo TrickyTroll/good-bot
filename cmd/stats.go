@@ -22,27 +22,32 @@ import (
 	"github.com/spf13/viper"
 )
 
-// confCmd represents the conf command
-var confCmd = &cobra.Command{
-	Use:   "conf",
+// statsCmd represents the stats command
+var statsCmd = &cobra.Command{
+	Use:   "stats",
 	Short: "Print config file.",
-	Long:  `This command can be used to debug the config file`,
+	Long: `To pring the config file as seen by the Go program.
+	It also prints useful stats about the file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("conf called")
-		fmt.Println("Output: ", viper.GetString("scene"))
+		fmt.Println("stats called")
+		foo := viper.AllSettings()
+		fmt.Println()
+		fmt.Println("Output: ", foo)
+		fmt.Println()
+		fmt.Println("Amount of scenes: ", len(foo))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(confCmd)
+	rootCmd.AddCommand(statsCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// confCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// statsCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// confCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// statsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
