@@ -1,4 +1,4 @@
-# good-bot
+# good bot
 Automating the recording of documentation videos.
 
 ## For the old version
@@ -22,7 +22,7 @@ Then, update your current session with
 source ~/.zshrc
 ```
 
-All future sessions with have `~/go` as their GOPATH.
+All future sessions are going to have `~/go` as their GOPATH.
 
 ### Checking for Go env vars
 
@@ -38,7 +38,7 @@ echo $GOPATH
 go env
 ```
 
-### Creading the `.mod` and `.sum` files
+### Creating the `.mod` and `.sum` files
 
 To create the module file:
 
