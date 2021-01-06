@@ -30,11 +30,14 @@ var statsCmd = &cobra.Command{
 	It also prints useful stats about the file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("stats called")
-		foo := viper.AllSettings()
+		// To check if a parameter has been set.
+		fmt.Println(viper.IsSet("1"))
+		foo := viper.Get("1.read")
+		fmt.Println(foo)
 		fmt.Println()
 		fmt.Println("Output: ", foo)
 		fmt.Println()
-		fmt.Println("Amount of scenes: ", len(foo))
+		//		fmt.Println("Amount of scenes: ", len(foo))
 	},
 }
 
