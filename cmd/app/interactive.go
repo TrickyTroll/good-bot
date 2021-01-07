@@ -2,16 +2,11 @@ package main
 
 import (
 	"log"
-	"math/rand"
 	"os"
 	"os/exec"
 	"time"
 
 	expect "github.com/Netflix/go-expect"
-)
-
-var (
-	run = "echo 'hello world'"
 )
 
 func main() {
@@ -21,10 +16,7 @@ func main() {
 	}
 	defer c.Close()
 
-	// Random typing
-	rand.Seed(time.Now().Unix())
-
-	cmd := exec.Command("/bin/bash")
+	cmd := exec.Command("bash")
 	cmd.Stdin = c.Tty()
 	cmd.Stdout = c.Tty()
 	cmd.Stderr = c.Tty()
@@ -39,12 +31,14 @@ func main() {
 	}
 
 	time.Sleep(time.Second)
-	for _, rune := range run {
-		c.Send(string(rune))
-		time.Sleep(time.Duration(rand.Float32()))
-	}
-	c.Send("\n")
+	c.Send("iHello world\x1b")
 	time.Sleep(time.Second)
-	c.Send("exit\n")
-	c.Close()
+	c.Send("dd")
+	time.Sleep(time.Second)
+	c.SendLine(":q!")
+
+	err = cmd.Wait()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
