@@ -1,5 +1,5 @@
 # The base go-image
-FROM golang:1.15.6-alpine3.12
+FROM golang
  
 # Create a directory for the app
 RUN mkdir /app
@@ -12,5 +12,5 @@ WORKDIR /app
  
 # Run command as described:
 # go build will build an executable file named server in the current directory
-RUN go build -o github.com/TrickyTroll/good-bot . 
+RUN go install github.com/TrickyTroll/good-bot . 
  
