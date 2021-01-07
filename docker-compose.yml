@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  web:
+  app:
     build: .
     command: $GOPATH/bin/good-bot
     volumes:
