@@ -24,7 +24,7 @@ func main() {
 	// Random typing
 	rand.Seed(time.Now().Unix())
 
-	cmd := exec.Command("bash")
+	cmd := exec.Command("/bin/bash")
 	cmd.Stdin = c.Tty()
 	cmd.Stdout = c.Tty()
 	cmd.Stderr = c.Tty()
