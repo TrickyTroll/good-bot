@@ -1,64 +1,50 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"log"
-	"regexp"
-	"strings"
+	"math/rand"
+	"os"
+	"os/exec"
 	"time"
 
-	expect "github.com/google/goexpect"
-	"github.com/google/goterm/term"
-)
-
-const (
-	timeout = 10 * time.Minute
+	expect "github.com/Netflix/go-expect"
 )
 
 var (
-	/*
-		addr = flag.String("address", "", "address of telnet server")
-		user = flag.String("user", "", "username to use")
-		pass = flag.String("pass", "", "password to use")
-		cmd  = flag.String("cmd", "", "command to run")
-
-		userRE   = regexp.MustCompile("username:")
-		passRE   = regexp.MustCompile("password:")
-		promptRE = regexp.MustCompile("%")
-	*/
-	cmd      = "echo"
-	args     = "'hello world'"
-	flags    = ""
-	promptRE = regexp.MustCompile("$")
-	all      = [3]string{cmd, args, flags}
+	run = "echo 'hello world'"
 )
 
 func main() {
-	flag.Parse()
-	fmt.Println(term.Bluef("echo example"))
-	e, _, err := expect.Spawn("/bin/bash", -1)
+	c, err := expect.NewConsole(expect.WithStdout(os.Stdout))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer e.Close()
+	defer c.Close()
 
-	e.Expect(promptRE, timeout)
-	e.Send(parse() + "\n")
-	e.Send("exit\n")
+	// Random typing
+	rand.Seed(time.Now().Unix())
 
-	fmt.Println(term.Greenf("Done"))
-}
+	cmd := exec.Command("bash")
+	cmd.Stdin = c.Tty()
+	cmd.Stdout = c.Tty()
+	cmd.Stderr = c.Tty()
 
-func parse() string {
+	go func() {
+		c.ExpectEOF()
+	}()
 
-	var parsed strings.Builder
-
-	for _, element := range all {
-		if len(element) > 0 {
-			parsed.WriteString(element)
-			parsed.WriteString(" ")
-		}
+	err = cmd.Start()
+	if err != nil {
+		log.Fatal(err)
 	}
-	return parsed.String()
+
+	time.Sleep(time.Second)
+	for _, rune := range run {
+		c.Send(string(rune))
+		time.Sleep(time.Duration(rand.Float32()))
+	}
+	c.Send("\n")
+	time.Sleep(time.Second)
+	c.Send("exit\n")
+	c.Close()
 }
