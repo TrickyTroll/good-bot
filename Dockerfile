@@ -17,9 +17,9 @@ RUN yes Y | sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/to
 	
 RUN wget https://dl.google.com/go/go1.13.linux-arm64.tar.gz; \
     tar -C /usr/local -xzf go1.13.linux-arm64.tar.gz; \
-	export PATH=$PATH:/usr/local/go/bin; 
-#	source ~/.profile; 
-#	go get github.com/sugyan/ttyrec2gif
+	export PATH=$PATH:/usr/local/go/bin; \
+	source ~/.profile; \
+	go get github.com/sugyan/ttyrec2gif 
 
 COPY . $HOME/src/
 WORKDIR /tutorial
