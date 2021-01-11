@@ -3,6 +3,8 @@ version: "3.9"
 services:
   app:
     build: .
-    command: $GOPATH/bin/good-bot
     volumes:
-      - .:/app
+      - type: bind
+        source: .
+        target: /app
+
