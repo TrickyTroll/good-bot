@@ -22,3 +22,5 @@
 
 # vi
 *.swp
+.vim_runtime
+.vimrc

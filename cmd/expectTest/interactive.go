@@ -43,25 +43,3 @@ func main() {
 
 	fmt.Println(term.Greenf("%s: result: %s\n", "echo", "Done"))
 }
-
-func shellSpawn(shell string, timeout time.Duration, opts ...expect.Option) (expect.Expecter, <-chan error, error) {
-	conn, err := telnet.Dial(network, addr)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	resCh := make(chan error)
-
-	return expect.SpawnGeneric(&expect.GenOptions{
-		In:  conn,
-		Out: conn,
-		Wait: func() error {
-			return <-resCh
-		},
-		Close: func() error {
-			close(resCh)
-			return conn.Close()
-		},
-		Check: func() bool { return true },
-	}, timeout, opts...)
-}
