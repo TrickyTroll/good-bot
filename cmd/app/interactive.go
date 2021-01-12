@@ -71,12 +71,12 @@ func fakeCli(tMap map[string]string, in io.Reader, out io.Writer) {
 // ExampleVerbose changes the Verbose and VerboseWriter options.
 func ExampleShell() {
 	rIn, wIn := io.Pipe()
-	rOut, wOut := io.Pipe()
+	//_, _ := io.Pipe()
 	waitCh := make(chan error)
 	outCh := make(chan string)
 	defer close(outCh)
 
-	go fakeCli(commands, rIn, wOut)
+	go fakeCli(commands, rIn, os.Stdout)
 	go func() {
 		var last string
 		for s := range outCh {
@@ -90,18 +90,18 @@ func ExampleShell() {
 
 	exp, r, err := expect.SpawnGeneric(&expect.GenOptions{
 		In:    wIn,
-		Out:   rOut,
+		Out:   os.Stdout,
 		Wait:  func() error { return <-waitCh },
 		Close: func() error { return wIn.Close() },
 		Check: func() bool {
 			return true
-		}}, -1, expect.Verbose(true), expect.VerboseWriter(os.Stdout))
+		}}, -1)
 
 	if err != nil {
 		fmt.Printf("SpawnGeneric failed: %v\n", err)
 		return
 	}
-	prompt := regexp.MustCompile("#")
+	prompt := regexp.MustCompile("testuser@testrouter#")
 	var interactCmdSorted []string
 	for k := range commands {
 		interactCmdSorted = append(interactCmdSorted, k)
@@ -113,6 +113,7 @@ func ExampleShell() {
 				fmt.Printf("exp.Send(%q) failed: %v\n", cmd+"\n", err)
 				return
 			}
+			fmt.Printf("foo")
 			out, _, err := exp.Expect(prompt, -1)
 			if err != nil {
 				fmt.Printf("exp.Expect(%v) failed: %v out: %v", prompt, err, out)
@@ -124,7 +125,6 @@ func ExampleShell() {
 
 	waitCh <- nil
 	exp.Close()
-	wOut.Close()
 
 	<-r
 }
