@@ -2,8 +2,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"regexp"
 	"sort"
@@ -12,7 +14,7 @@ import (
 )
 
 var (
-	cliMap = map[string]string{
+	commands = map[string]string{
 		"show system uptime": `Current time:      1998-10-13 19:45:47 UTC
 Time Source:       NTP CLOCK
 System booted:     1998-10-12 20:51:41 UTC (22:54:06 ago)
@@ -50,13 +52,83 @@ testuser@testrouter#`,
 	}
 )
 
+func fakeCli(tMap map[string]string, in io.Reader, out io.Writer) {
+	scn := bufio.NewScanner(in)
+	for scn.Scan() {
+		tst, ok := tMap[scn.Text()]
+		if !ok {
+			out.Write([]byte(fmt.Sprintf("command: %q not found", scn.Text())))
+			continue
+		}
+		_, err := out.Write([]byte(tst))
+		if err != nil {
+			log.Println("Write of %q failed: %v", tst, err)
+			return
+		}
+	}
+}
+
 // ExampleVerbose changes the Verbose and VerboseWriter options.
-func ExampleVerbose() {
+func ExampleShell() {
 	rIn, wIn := io.Pipe()
 	rOut, wOut := io.Pipe()
 	waitCh := make(chan error)
 	outCh := make(chan string)
 	defer close(outCh)
 
-    exp, r, err := expect.SpawnGeneric(&)
+	go fakeCli(commands, rIn, wOut)
+	go func() {
+		var last string
+		for s := range outCh {
+			if s == last {
+				continue
+			}
+			fmt.Println(s)
+			last = s
+		}
+	}()
 
+	exp, r, err := expect.SpawnGeneric(&expect.GenOptions{
+		In:    wIn,
+		Out:   rOut,
+		Wait:  func() error { return <-waitCh },
+		Close: func() error { return wIn.Close() },
+		Check: func() bool {
+			return true
+		}}, -1, expect.Verbose(true), expect.VerboseWriter(os.Stdout))
+
+	if err != nil {
+		fmt.Printf("SpawnGeneric failed: %v\n", err)
+		return
+	}
+	prompt := regexp.MustCompile("#")
+	var interactCmdSorted []string
+	for k := range commands {
+		interactCmdSorted = append(interactCmdSorted, k)
+	}
+	sort.Strings(interactCmdSorted)
+	interact := func() {
+		for _, cmd := range interactCmdSorted {
+			if err := exp.Send(cmd + "\n"); err != nil {
+				fmt.Printf("exp.Send(%q) failed: %v\n", cmd+"\n", err)
+				return
+			}
+			out, _, err := exp.Expect(prompt, -1)
+			if err != nil {
+				fmt.Printf("exp.Expect(%v) failed: %v out: %v", prompt, err, out)
+				return
+			}
+		}
+	}
+	interact()
+
+	waitCh <- nil
+	exp.Close()
+	wOut.Close()
+
+	<-r
+}
+
+func main() {
+	ExampleShell()
+}
