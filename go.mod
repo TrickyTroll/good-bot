@@ -3,6 +3,7 @@ module github.com/TrickyTroll/good-bot
 go 1.15
 
 require (
+	github.com/Netflix/go-expect v0.0.0-20201125194554-85d881c3777e // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/google/goexpect v0.0.0-20200816234442-b5b77125c2c5 // indirect
 	github.com/google/goterm v0.0.0-20200907032337-555d40f16ae2
