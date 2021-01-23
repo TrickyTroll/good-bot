@@ -1,4 +1,6 @@
 import click
+import funcmodule
+import classmodule
 
 @click.group()
 def app():
