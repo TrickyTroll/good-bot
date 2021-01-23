@@ -36,7 +36,7 @@ def echo_config(config: click.File) -> None:
     return None
 
 app.add_command(greet)
-app
+app.add_command(echo_config)
 
-def main():
+if __name__ == "__main__":
     app()
