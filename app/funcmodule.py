@@ -18,3 +18,22 @@ def config_parser(file: click.File) -> dict:
     """
     parsed_file = yaml.safe_load(file)
     return parsed_file
+
+########################################################################
+#                             shell commands                           #
+########################################################################
+
+def is_shell_command(command: dict) -> bool:
+    """Checks if the command is a shell command.
+
+    Args:
+        command (dict): The command dict
+
+    Returns:
+        bool: Wether the command is a shell command or not.
+    """
+    toggle = False
+    for key, value in command.values():
+        if key == "command":
+            toggle = True
+    return toggle
