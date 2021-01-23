@@ -18,7 +18,25 @@ def greet():
     
     return None
 
+@click.command()
+@click.argument(
+    "config",
+    type = click.File("r")
+)
+def echo_config(config: click.File) -> None:
+    """To echo the configuration file
+
+    Args:
+        config (click.File): The config file provided by the user.
+    Returns:
+        None: None
+    """
+    parsed = funcmodule.config_parser(config)
+    click.echo(parsed)
+    return None
+
 app.add_command(greet)
+app
 
 def main():
     app()

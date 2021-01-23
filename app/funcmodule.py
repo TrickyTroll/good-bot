@@ -16,4 +16,5 @@ def config_parser(file: click.File) -> dict:
     Returns:
         dict: A dict with the parsed information.
     """
+    parsed = yaml.safe_load(file)
     return parsed_file
