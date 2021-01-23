@@ -3,7 +3,7 @@ version: "3.9"
 services:
   app:
     build: .
-    command: go run ./main.go
+    command: python ./cli.py
     volumes:
         - .:/app
 
