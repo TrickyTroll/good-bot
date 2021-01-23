@@ -1,5 +1,5 @@
 import pexpect
-class Command():
+class Command:
     def __init__(command: str, arguments: list):
         self.command = command
         self.arguments = arguments
@@ -28,11 +28,11 @@ class Command():
     def run(self):
         pass
 
-class Read():
+class Read:
     def __init__(read: str):
         self.to_read = read
-class Edit():
+class Edit:
     pass
 
-class Slide():
+class Slide:
     pass
