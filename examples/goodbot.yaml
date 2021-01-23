@@ -1,12 +1,11 @@
-1:
-  command: echo
+- command: echo
   arguments: "hello, world"
   read: "Hello, world."
-2:
-  command: ls
+
+- command: ls
   argument: "-a"
   read: "I can run commands."
-3:
-  command: echo
+
+- command: echo
   arguments: "hello, world"
   read: "Hello, world."
