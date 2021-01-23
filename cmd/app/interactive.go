@@ -24,6 +24,7 @@ func main() {
 
 	e, _, err := expect.Spawn("/bin/bash", -1)
 	fmt.Printf("%#v\n", e)
+	fmt.Println(e.pty)
 	if err != nil {
 		log.Fatal(err)
 	}
