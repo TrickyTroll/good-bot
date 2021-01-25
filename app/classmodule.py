@@ -2,9 +2,11 @@ import pexpect
 import sys
 class Commands:
     def __init__(commands: list, expect: list):
-        self.commands = commands
-        self.expect = expect
+        # The first command will be typed using fake_typing.
         self.initial = commands[0]
+        # The other commands will be sent using send.
+        self.commands = commands[1:]
+        self.expect = expect
 
     def fake_start(self, text: str) -> None:
         """To print the first command before creating a child process.
@@ -61,9 +63,48 @@ class Commands:
         child.logfile_read = None
 
         return None
+    
+    def is_password(self, returning: str) -> bool:
+        """Checks if the next thing to return is as password.
 
-    def run(self):
+        Args:
+            returning (str): The string that will be typed ot answer
+            the prompt.
 
+        Returns:
+            bool: Wether the answer will be a password or not.
+        """
+
+        password_string = returning.split()
+
+        if password_string[0] == "Password":
+
+            return True
+
+        return False
+
+    def run(self) -> None:
+        """Runs the command and anwsers all prompts for the sequence.
+
+        Returns:
+            None: None
+        """
+
+        self.fake_start(self.initial)
+        child = pexpect.spawn(initial, encoding = "utf-8", echo = False)
+        child.logfile = sys.stdout
+
+        for i in range(len(self.commands)):
+            if self.is_password(self.commands[i]):
+                # TODO: This is where the password getter shoud happen.
+                pass
+            else:
+                child.expect(self.expect[i])
+                self.fake_typing(answers[i])
+
+        child.expect(pexpect.EOF)
+
+        return None
 class Read:
     def __init__(read: str):
         self.to_read = read
