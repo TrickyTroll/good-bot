@@ -1,5 +1,6 @@
 import yaml
 import click
+import classmodule
 from pathlib import Path
 
 ########################################################################
@@ -18,6 +19,20 @@ def config_parser(file: click.File) -> dict:
     """
     parsed_file = yaml.safe_load(file)
     return parsed_file
+
+def create_classes(file: click.File) -> list:
+
+    parsed_file = config_parser(file)
+    all_classes = []
+
+    for todos in parsed_file:
+
+        if "commands" in todos:
+            all_classes.append(classmodule.Commands(
+                commands = todos["commands"],
+                expect = todos["expect"]))
+    
+    return all_classes
 
 ########################################################################
 #                             shell commands                           #
