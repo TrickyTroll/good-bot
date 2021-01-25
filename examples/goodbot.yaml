@@ -1,10 +1,10 @@
-- command: 
+- commands: 
   - echo 'hello world'
   expect:
   - prompt
   read: Hello, world.
 
-- command:
+- commands:
   - ls -a
   expect:
   - prompt
