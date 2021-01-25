@@ -1,11 +1,11 @@
-- command: echo
-  arguments: "hello, world"
-  read: "Hello, world."
+- command: 
+  - echo 'hello world'
+  expect:
+  - prompt
+  read: Hello, world.
 
-- command: ls
-  argument: "-a"
-  read: "I can run commands."
-
-- command: echo
-  arguments: "hello, world"
-  read: "Hello, world."
+- command:
+  - ls -a
+  expect:
+  - prompt
+  read: I can run commands.
