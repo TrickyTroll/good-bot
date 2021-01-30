@@ -2,10 +2,12 @@ import click
 import funcmodule
 import classmodule
 
+
 @click.group()
 def app():
     """Automating the recording of documentation videos."""
     pass
+
 
 @click.command()
 def greet():
@@ -15,13 +17,14 @@ def greet():
         None: None
     """
     click.echo("Hello, world!")
-    
+
     return None
+
 
 @click.command()
 @click.argument(
     "config",
-    type = click.File("r")
+    type=click.File("r")
 )
 def echo_config(config: click.File) -> None:
     """To echo the configuration file
@@ -34,13 +37,28 @@ def echo_config(config: click.File) -> None:
     parsed = funcmodule.config_parser(config)
     click.echo(parsed)
     return None
-    
+
+
 @click.command()
 @click.argument(
     "config",
-    type = click.File("r")
+    type=click.File("r")
 )
-def setup()
+@click.option(
+    "--project-name",
+    prompt = '''\
+    Please provide a name for your project.
+    ''')
+
+def setup(config: click.File) -> None:
+
+    todos = funcmodule.create_classes(config)
+    path = funcmodule.create_dirs(project_name)
+
+
+
+    return None
+
 
 app.add_command(setup)
 app.add_command(greet)
