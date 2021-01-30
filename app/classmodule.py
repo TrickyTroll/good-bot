@@ -1,5 +1,8 @@
 import pexpect
 import sys
+import time
+
+
 class Commands:
     def __init__(commands: list, expect: list):
         # The first command will be typed using fake_typing.
@@ -7,6 +10,7 @@ class Commands:
         # The other commands will be sent using send.
         self.commands = commands[1:]
         self.expect = expect
+        self.dir_name = "commands"
 
     def fake_start(self, text: str) -> None:
         """To print the first command before creating a child process.
@@ -21,11 +25,19 @@ class Commands:
 
         letters = list(text)
         for letter in letters[0: -1]:
-            print(letter, end = "", flush = True)
-            time.sleep(.11) #TODO: This should be randomized.
-        print(splitted[-1])
+            print(letter, end="", flush=True)
+            time.sleep(.11)  # TODO: This should be randomized.
+        print(letters[-1])
 
         return None
+
+    def get_directory(self) -> str:
+        """Returns the dir_name attr
+        
+        Returns:
+            str: The dir_name.
+        """
+        return self.dir_name
 
     def fake_typing(self, text: str) -> None:
         """Fake typing of commands
@@ -39,11 +51,11 @@ class Commands:
         letters = list(text)
         letters.append("\n")
         for letter in letters:
-            time.sleep(.12) #TODO: This should also be random.
+            time.sleep(.12)  # TODO: This should also be random.
             child.send(things)
-        
+
         return None
-    
+
     def fake_typing_secret(self, secret: str) -> None:
         """To fake type a password or other secret. This ensures that the
         password won't be recorded.
@@ -63,7 +75,7 @@ class Commands:
         child.logfile_read = None
 
         return None
-    
+
     def is_password(self, returning: str) -> bool:
         """Checks if the next thing to return is as password.
 
@@ -91,7 +103,7 @@ class Commands:
         """
 
         self.fake_start(self.initial)
-        child = pexpect.spawn(initial, encoding = "utf-8", echo = False)
+        child = pexpect.spawn(initial, encoding="utf-8", echo=False)
         child.logfile = sys.stdout
 
         for i in range(len(self.commands)):
@@ -105,12 +117,16 @@ class Commands:
         child.expect(pexpect.EOF)
 
         return None
-        
+
+
 class Read:
     def __init__(read: str):
         self.to_read = read
+
+
 class Edit:
     pass
+
 
 class Slide:
     pass
