@@ -4,7 +4,7 @@ import time
 
 
 class Commands:
-    def __init__(commands: list, expect: list):
+    def __init__(self, commands: list, expect: list):
         # The first command will be typed using fake_typing.
         self.initial = commands[0]
         # The other commands will be sent using send.
@@ -32,8 +32,8 @@ class Commands:
         return None
 
     def get_directory(self) -> str:
-        """Returns the dir_name attr
-        
+        """Returns the dir_name attr.
+
         Returns:
             str: The dir_name.
         """
@@ -103,7 +103,7 @@ class Commands:
         """
 
         self.fake_start(self.initial)
-        child = pexpect.spawn(initial, encoding="utf-8", echo=False)
+        child = pexpect.spawn(self.initial, encoding="utf-8", echo=False)
         child.logfile = sys.stdout
 
         for i in range(len(self.commands)):
@@ -112,7 +112,7 @@ class Commands:
                 pass
             else:
                 child.expect(self.expect[i])
-                self.fake_typing(answers[i])
+                self.fake_typing(self.answers[i])
 
         child.expect(pexpect.EOF)
 
@@ -120,7 +120,7 @@ class Commands:
 
 
 class Read:
-    def __init__(read: str):
+    def __init__(self, read: str):
         self.to_read = read
 
 

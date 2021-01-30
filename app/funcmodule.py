@@ -56,7 +56,7 @@ def create_dirs(directories: list, project_dir: str = "project") -> Path:
 
         new_dir = project_dir / Path(directory)
 
-        if new_folder.is_dir():
+        if new_dir.is_dir():
             print(f"Folder {new_dir} exists!")
         else:
             os.mkdir(new_dir)

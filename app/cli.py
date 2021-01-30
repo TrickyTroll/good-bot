@@ -1,6 +1,5 @@
 import click
 import funcmodule
-import classmodule
 
 
 @click.group()
@@ -46,16 +45,32 @@ def echo_config(config: click.File) -> None:
 )
 @click.option(
     "--project-name",
-    prompt = '''\
+    prompt='''\
     Please provide a name for your project.
     ''')
+def setup(config: click.File, project_name: str) -> None:
+    """Create a directory that contains everything required to make
+    a documentation video!
 
-def setup(config: click.File) -> None:
+    Args:
+        config (click.File): The configuration file. This should be
+        handled by click.
+        project_name (str): The name of the project. Will be used
+        to create the project's root directory.
+
+    Returns:
+        None: None
+    """
+    to_create = []
 
     todos = funcmodule.create_classes(config)
-    path = funcmodule.create_dirs(project_name)
+    for todo in todos:
+        if todo.get_directory() not in to_create:
+            to_create.append(todo.get_directory())
 
+    path = funcmodule.create_dirs(to_create, project_name)
 
+    click.echo(path)
 
     return None
 
