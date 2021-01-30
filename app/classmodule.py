@@ -105,6 +105,7 @@ class Commands:
         child.expect(pexpect.EOF)
 
         return None
+        
 class Read:
     def __init__(read: str):
         self.to_read = read
