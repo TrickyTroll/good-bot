@@ -34,7 +34,15 @@ def echo_config(config: click.File) -> None:
     parsed = funcmodule.config_parser(config)
     click.echo(parsed)
     return None
+    
+@click.command()
+@click.argument(
+    "config",
+    type = click.File("r")
+)
+def setup()
 
+app.add_command(setup)
 app.add_command(greet)
 app.add_command(echo_config)
 
