@@ -1,8 +1,9 @@
-- commands: 
+- commands:
   - echo 'hello world'
   expect:
   - prompt
   read: Hello, world.
+  scene: 1
 
 - commands:
   - ls -a
