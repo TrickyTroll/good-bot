@@ -1,8 +1,11 @@
-import yaml
-import click
-import classmodule
 import os
 from pathlib import Path
+
+import click
+import yaml
+
+import classmodule
+
 
 ########################################################################
 #                               YAML parsing                           #
@@ -20,22 +23,45 @@ def config_parser(file: click.File) -> dict:
         dict: A dict with the parsed information.
     """
     parsed_file = yaml.safe_load(file)
+
     return parsed_file
 
 
-def create_classes(file: click.File) -> list:
+def config_info(parsed_config: dict) -> dict:
+    """
+    Returns useful info on the configuration file.
 
-    parsed_file = config_parser(file)
-    all_classes = []
+    Args:
+        parsed_config (dict): The parsed configuration file. This should
+        be handled by the config_parser func.
 
-    for todos in parsed_file:
+    Returns:
+        dict: A dictionary that contains usful information about the
+        configuration.
+    """
 
-        if "commands" in todos:
-            all_classes.append(classmodule.Commands(
-                commands=todos["commands"],
-                expect=todos["expect"]))
+    conf_info = {
+        "cli_commands": [],
+        "scenes": [],
+        "text_edit": [],
+        "slides": []
+    }
 
-    return all_classes
+    for item in parsed_config:
+        for keys, values in item.values():
+            if "scene" in keys:
+                if item["scene"] not in conf_info["scenes"]:
+                    conf_info["scenes"].append(f"scene_{item['scene']}")
+            if "commands" in keys:
+                conf_info["cli_commands"].append(item)
+            elif "slides" in keys:
+                conf_info["slides"].append(item)
+            elif "editor" in keys:
+                conf_info["text_edit"].append(item)
+            else:
+                print("This item does not match any of the supported commands.")
+
+    return conf_info
 
 ########################################################################
 #                       Creating directories                           #
@@ -43,7 +69,6 @@ def create_classes(file: click.File) -> list:
 
 
 def create_dirs(directories: list, project_dir: str = "project") -> Path:
-
     project_dir = Path(project_dir)
     toggle = False
     if project_dir.is_dir():
@@ -65,6 +90,7 @@ def create_dirs(directories: list, project_dir: str = "project") -> Path:
         return project_dir
     else:
         return Path("./")
+
 
 ########################################################################
 #                             shell commands                           #
