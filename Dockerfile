@@ -1,8 +1,11 @@
 FROM python:latest
 RUN mkdir -pv \
-            ~/commands \
-            ~/read \
-            ~/slides 
+            /video/commands \
+            /video/read \
+            /video/slides \
+            /video/audio \
+            /video/recording \
+            /video/project
 WORKDIR /app
 COPY . /app/
 RUN pip install -r requirements.txt
