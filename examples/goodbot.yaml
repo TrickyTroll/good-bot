@@ -1,12 +1,12 @@
+1:
 - commands:
-  - echo 'hello world'
+    - echo 'hello world'
   expect:
-  - prompt
+    - prompt
   read: Hello, world.
-  scene: 1
 
 - commands:
-  - ls -a
+    - ls -a
   expect:
-  - prompt
+    - prompt
   read: I can run commands.
