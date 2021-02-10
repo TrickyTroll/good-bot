@@ -1,6 +1,5 @@
 import unittest
 import runner.funcmodule as funcmodule
-import runner.tools as tools
 
 from pathlib import Path
 
@@ -22,8 +21,9 @@ class TestParsing(unittest.TestCase):
         with open(TESTCONFS / "test_conf.yaml") as config:
             result = funcmodule.parse_config(config)
 
-        # TODO: Finish this test
-        self.assertEqual(type(result),type({}))
+        for keys, values in result.values():
+            self.assertEqual(type(result),type({}))
+            self.assertEqual(type(values), type([]))
         
 
 if __name__ == '__main__':
