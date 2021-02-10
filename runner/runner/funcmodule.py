@@ -1,5 +1,6 @@
-from io import TextIOWrapper
+import sys
 import yaml
+from io import TextIOWrapper
 
 def parse_config(conf: TextIOWrapper) -> dict:
     """Parses a config file to generate a dict.
@@ -17,5 +18,10 @@ def parse_config(conf: TextIOWrapper) -> dict:
     
     if type(parsed) != dict:
         print("Wrong type of config file")
+        sys.exit()
 
     return parsed
+
+# For debugging
+if __name__ == "__main__":
+    parse_config("../tests/examples/test_conf.yaml")
