@@ -6,3 +6,6 @@ services:
     command: python src/cli.py
     volumes:
         - .:/app
+  runner: 
+    build: .
+    command: runner /runner/tests/examples/test_conf.yaml
