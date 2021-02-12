@@ -3,7 +3,6 @@ version: "3.9"
 services:
   app:
     build: .
-    command: python ./app/cli.py
+    command: python src/cli.py
     volumes:
         - .:/app
-
