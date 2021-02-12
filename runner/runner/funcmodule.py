@@ -24,4 +24,7 @@ def parse_config(conf: TextIOWrapper) -> dict:
 
 # For debugging
 if __name__ == "__main__":
-    parse_config("../tests/examples/test_conf.yaml")
+    import os
+    current_dir = os.getcwd()
+    with open("./runner/tests/examples/test_conf.yaml", "r") as stream:
+        parse_config(stream)
