@@ -52,7 +52,7 @@ class Commands:
         letters.append("\n")
         for letter in letters:
             time.sleep(.12)  # TODO: This should also be random.
-            child.send(things)
+            child.send(letters)
 
         return None
 
@@ -70,7 +70,7 @@ class Commands:
         child.logfile = None
         child.logfile_read = sys.stdout
         child.delaybeforesend = 1
-        child.sendline(password)
+        child.sendline(secret)
         child.logfile = sys.stdout
         child.logfile_read = None
 
@@ -102,14 +102,18 @@ class Commands:
             None: None
         """
 
-        self.fake_start(self.initial)
-        child = pexpect.spawn(self.initial, encoding="utf-8", echo=False)
+        child = pexpect.spawn("bash", encoding="utf-8", echo=False)
         child.logfile = sys.stdout
+        # TODO: This should be changed for a better regex 
+        # (check for the EOL).
+        child.expect(["#", "$", "%"])
 
+        self.fake_typing(self.initial)
         for i in range(len(self.commands)):
             if self.is_password(self.commands[i]):
                 # TODO: This is where the password getter shoud happen.
-                pass
+                print("Passwords havent been implemented yet.")
+                sys.exit()
             else:
                 child.expect(self.expect[i])
                 self.fake_typing(self.commands[i])
