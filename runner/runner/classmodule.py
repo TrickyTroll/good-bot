@@ -39,11 +39,12 @@ class Commands:
         """
         return self.dir_name
 
-    def fake_typing(self, text: str) -> None:
+    def fake_typing(self, text: str, child: pexpect.pty_spawn.spawn) -> None:
         """Fake typing of commands
 
         Args:
             text (str): The text to type
+            child (pexpect.pty_spawn.spawn): The child process.
 
         Returns:
             None: None
@@ -52,7 +53,7 @@ class Commands:
         letters.append("\n")
         for letter in letters:
             time.sleep(.12)  # TODO: This should also be random.
-            child.send(letters)
+            child.send(letter)
 
         return None
 
@@ -101,22 +102,26 @@ class Commands:
         Returns:
             None: None
         """
-
-        child = pexpect.spawn("bash", encoding="utf-8", echo=False)
-        child.logfile = sys.stdout
         # TODO: This should be changed for a better regex 
         # (check for the EOL).
-        child.expect(["#", "$", "%"])
+        prompt = ["#", "$", "%"]
+        child = pexpect.spawn("bash", encoding="utf-8", echo=False)
+        child.logfile = sys.stdout
+        child.expect(prompt)
 
-        self.fake_typing(self.initial)
+        self.fake_typing(self.initial, child)
         for i in range(len(self.commands)):
             if self.is_password(self.commands[i]):
                 # TODO: This is where the password getter shoud happen.
                 print("Passwords havent been implemented yet.")
                 sys.exit()
             else:
-                child.expect(self.expect[i])
-                self.fake_typing(self.commands[i])
+                if self.expect[i] == "prompt":
+                    child.expect(prompt)
+                else:
+                    child.expect(self.expect[i])
+
+                self.fake_typing(self.commands[i], child)
 
         child.expect(pexpect.EOF)
 
