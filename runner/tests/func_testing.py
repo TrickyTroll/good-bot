@@ -23,6 +23,7 @@ class TestParsing(unittest.TestCase):
         for keys, values in result.items():
             self.assertEqual(type(result),type({}))
             self.assertEqual(type(values), type([]))
+            self.assertEqual(type(keys), type(""))
         
 
 if __name__ == '__main__':
