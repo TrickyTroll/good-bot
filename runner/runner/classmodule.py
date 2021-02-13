@@ -123,7 +123,7 @@ class Commands:
 
                 self.fake_typing(self.commands[i], child)
 
-        child.expect(pexpect.EOF, timeout = 1)
-        child.close(force = True)
+        child.expect("#")
+        child.close()
 
         return None
