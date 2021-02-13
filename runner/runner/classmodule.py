@@ -57,12 +57,13 @@ class Commands:
 
         return None
 
-    def fake_typing_secret(self, secret: str) -> None:
+    def fake_typing_secret(self, secret: str, child: pexpect.pty_spawn.spawn) -> None:
         """To fake type a password or other secret. This ensures that the
         password won't be recorded.
 
         Args:
             secret (str): The secret that has to be typed
+            child (pexpect.pty_spawn.spawn): The child process.
 
         Returns:
             None: None
@@ -102,12 +103,11 @@ class Commands:
         Returns:
             None: None
         """
+        child = pexpect.spawn("bash", echo = False)
+        child.logfile = sys.stdout.buffer
         # TODO: This should be changed for a better regex 
         # (check for the EOL).
-        prompt = ["#", "$", "%"]
-        child = pexpect.spawn("bash", encoding="utf-8", echo=False)
-        child.logfile = sys.stdout
-        child.expect(prompt)
+        child.expect("#")
 
         self.fake_typing(self.initial, child)
         for i in range(len(self.commands)):
@@ -117,12 +117,13 @@ class Commands:
                 sys.exit()
             else:
                 if self.expect[i] == "prompt":
-                    child.expect(prompt)
+                    child.expect("#")
                 else:
                     child.expect(self.expect[i])
 
                 self.fake_typing(self.commands[i], child)
 
-        child.expect(pexpect.EOF)
+        child.expect(pexpect.EOF, timeout = 1)
+        child.close(force = True)
 
         return None
