@@ -61,12 +61,9 @@ def setup(config: click.File, project_name: str) -> None:
     Returns:
         None: None
     """
-    to_create = []
-
-    todos = funcmodule.create_classes(config)
-    for todo in todos:
-        if todo.get_directory() not in to_create:
-            to_create.append(todo.get_directory())
+    parsed = funcmodule.config_parser(config)
+    conf_info = funcmodule.config_info(parsed)
+    to_create = funcmodule.create_dirs_list(conf_info)
 
     path = funcmodule.create_dirs(to_create, project_name)
 

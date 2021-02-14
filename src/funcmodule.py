@@ -41,25 +41,28 @@ def config_info(parsed_config: dict) -> dict:
     """
 
     conf_info = {
-        "cli_commands": [],
+        "commands": [],
         "scenes": [],
-        "text_edit": [],
-        "slides": []
+        "editor": [],
+        "slides": [],
+        "read": [],
     }
+    for keys, values in parsed_config:
 
-    for item in parsed_config:
-        for keys, values in item.values():
-            if "scene" in keys:
-                if item["scene"] not in conf_info["scenes"]:
-                    conf_info["scenes"].append(f"scene_{item['scene']}")
-            if "commands" in keys:
-                conf_info["cli_commands"].append(item)
-            elif "slides" in keys:
-                conf_info["slides"].append(item)
-            elif "editor" in keys:
-                conf_info["text_edit"].append(item)
-            else:
-                print("This item does not match any of the supported commands.")
+        conf_info["scenes"].append(keys)
+
+        for item in values:
+            for k, v in item.items():
+                if k == "commands":
+                    conf_info["cli_commands"].append(v)
+                if k == "read":
+                    conf_info["read"].append(v)
+                elif k == "slides":
+                    conf_info["slides"].append(v)
+                elif k == "editor":
+                    conf_info["editor"].append(v)
+                else:
+                    print(f"{k} is not a supported command.")
 
     return conf_info
 
@@ -67,8 +70,41 @@ def config_info(parsed_config: dict) -> dict:
 #                       Creating directories                           #
 ########################################################################
 
+def create_dirs_list(conf_info: dict) -> Path:
 
-def create_dirs(directories: list, project_dir: str = "project") -> Path:
+    to_create = []
+
+    for keys, values in conf_info.items():
+        if values: # There are items in the list.
+            to_create.append(keys)
+        
+
+    if "read" in to_create:
+        to_create.append("audio") # MP3 files
+
+    # Those dirs are created no matter the content
+    to_create.append("gifs") # Gifs files
+    to_create.append("recording") # MP4 files
+    to_create.append("project") # Final video
+
+    return to_create
+
+def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
+    """Creates directories for the project. This function should be
+    called on the host's computer, not in the container. Docker will
+    mount the project afterwards.
+
+    Args:
+        directories (list): A list of subdirs to create
+        project_dir (str, optional): The name of the project. It will
+        be used to name the root directory for the project.
+         Defaults to "my_project".
+
+    Returns:
+        Path : The path towards where the project has been created if
+        the command succeded. If it didn't, this returns the path
+        towards the current directory.
+    """
     project_dir = Path(project_dir)
     toggle = False
     if project_dir.is_dir():
@@ -91,6 +127,10 @@ def create_dirs(directories: list, project_dir: str = "project") -> Path:
     else:
         return Path("./")
 
+def split_config():
+    # Should use parse_config to split the configuration files and
+    # save them in the appropriate directories.
+    pass
 
 ########################################################################
 #                             shell commands                           #
