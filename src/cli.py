@@ -1,3 +1,4 @@
+import pathlib
 import click
 import funcmodule
 

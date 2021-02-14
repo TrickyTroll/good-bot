@@ -1,11 +1,9 @@
 import os
+import sys
 from pathlib import Path
 
 import click
 import yaml
-
-import classmodule
-
 
 ########################################################################
 #                               YAML parsing                           #
@@ -23,6 +21,11 @@ def config_parser(file: click.File) -> dict:
         dict: A dict with the parsed information.
     """
     parsed_file = yaml.safe_load(file)
+    
+    if type(parsed_file) != dict:
+        print("Your config is not formatted properly.")
+        click.echo(parsed_file)
+        sys.exit()
 
     return parsed_file
 
@@ -45,17 +48,21 @@ def config_info(parsed_config: dict) -> dict:
         "scenes": [],
         "editor": [],
         "slides": [],
-        "read": [],
+        "read": []
     }
-    for keys, values in parsed_config:
+
+    for keys, values in parsed_config.items():
 
         conf_info["scenes"].append(keys)
 
         for item in values:
             for k, v in item.items():
+                print(k)
+                print("type of key: ", type(k))
+                print(k == "commands")
                 if k == "commands":
-                    conf_info["cli_commands"].append(v)
-                if k == "read":
+                    conf_info["commands"].append(v)
+                elif k == "read":
                     conf_info["read"].append(v)
                 elif k == "slides":
                     conf_info["slides"].append(v)
