@@ -24,7 +24,7 @@ def config_parser(file: click.File) -> dict:
     parsed_file = yaml.safe_load(file)
     
     if type(parsed_file) != dict:
-        print("Your config is not formatted properly.")
+        click.echo("Your config is not formatted properly.")
         click.echo(parsed_file)
         sys.exit()
 
@@ -69,7 +69,7 @@ def config_info(parsed_config: dict) -> dict:
                 elif k == "editor":
                     conf_info["editor"].append(v)
                 else:
-                    print(f'"{k}" is not a supported command.')
+                    click.echo(f'"{k}" is not a supported command.')
                     sys.exit()
 
     return conf_info
@@ -143,14 +143,14 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
         new_dir = project_dir / Path(directory)
 
         if new_dir.is_dir() and not overwrite:
-            print(f"Folder {new_dir} exists!")
+            click.echo(f"Folder {new_dir} exists!")
         else:
             os.mkdir(new_dir)
 
     if overwrite:
-        return project_dir
+        return project_dir.absolute()
     else:
-        return Path("./")
+        return Path("./").absolute()
 
 def split_config():
     # Should use parse_config to split the configuration files and
