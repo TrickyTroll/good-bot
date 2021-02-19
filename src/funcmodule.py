@@ -44,7 +44,9 @@ def config_info(parsed_config: dict) -> dict:
         configuration.
     """
 
-    conf_info = {
+    all_confs = {}
+
+    CONF_TEMPLATE = {
         "commands": [],
         "expect": [],
         "scenes": [],
@@ -60,7 +62,7 @@ def config_info(parsed_config: dict) -> dict:
             click.echo(f"Scene #{keys} is empty, please remove it.")
             sys.exit()
 
-        conf_info["scenes"].append(keys)
+        conf_info = CONF_TEMPLATE.copy()
 
         for item in values:
             for k, v in item.items():
@@ -77,31 +79,39 @@ def config_info(parsed_config: dict) -> dict:
                 else:
                     click.echo(f'"{k}" is not a supported command.')
                     sys.exit()
+        
+        all_confs[keys] = conf_info
 
-    return conf_info
+    return all_confs
 
 ########################################################################
 #                       Creating directories                           #
 ########################################################################
 
-def create_dirs_list(conf_info: dict) -> Path:
+def create_dirs_list(all_confs: dict) -> Path:
 
-    to_create = []
+    dirs_list = []
 
-    for keys, values in conf_info.items():
-        if values: # There are items in the list.
-            to_create.append(keys)
-        
+    for k, v in all_confs.items():
 
-    if "read" in to_create:
-        to_create.append("audio") # MP3 files
+        to_create = []
 
-    # Those dirs are created no matter the content
-    to_create.append("gifs") # Gifs files
-    to_create.append("recording") # MP4 files
-    to_create.append("project") # Final video
+        for keys, values in v.items():
+            if values: # There are items in the list.
+                to_create.append(keys)
+            
 
-    return to_create
+        if "read" in to_create:
+            to_create.append("audio") # MP3 files
+
+        # Those dirs are created no matter the content
+        to_create.append("gifs") # Gifs files
+        to_create.append("recording") # MP4 files
+        to_create.append("project") # Final video
+
+        dirs_list.append({k: to_create})
+
+    return dirs_list
 
 def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     """Creates directories for the project. This function should be
@@ -144,14 +154,22 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     else:
         os.mkdir(project_dir)
 
-    for directory in directories:
+    for item in directories:
 
-        new_dir = project_dir / Path(directory)
+        # There should only be one key, no need for
+        # a for loop.
+        scene_number = list(item.keys())[0]
 
-        if new_dir.is_dir() and not overwrite:
-            click.echo(f"Folder {new_dir} exists!")
-        else:
-            os.mkdir(new_dir)
+        scene = Path(f"scene_{scene_number}")
+
+        for directory in item.values():
+
+            new_dir = project_dir / scene / Path(directory)
+
+            if new_dir.is_dir() and not overwrite:
+                click.echo(f"Folder {new_dir} exists!")
+            else:
+                os.mkdir(new_dir)
 
     if overwrite:
         return project_dir.absolute()
@@ -202,19 +220,3 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
 ########################################################################
 #                             shell commands                           #
 ########################################################################
-
-
-def is_shell_command(command: dict) -> bool:
-    """Checks if the command is a shell command.
-
-    Args:
-        command (dict): The command dict
-
-    Returns:
-        bool: Wether the command is a shell command or not.
-    """
-    toggle = False
-    for key, value in command.values():
-        if key == "command":
-            toggle = True
-    return toggle
