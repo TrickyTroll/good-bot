@@ -53,6 +53,11 @@ def config_info(parsed_config: dict) -> dict:
     }
 
     for keys, values in parsed_config.items():
+        
+        if not values:
+
+            click.echo(f"Scene #{keys} is empty, please remove it.")
+            sys.exit()
 
         conf_info["scenes"].append(keys)
 
