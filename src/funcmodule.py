@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 from pathlib import Path
 
 import click
@@ -57,11 +58,10 @@ def config_info(parsed_config: dict) -> dict:
 
         for item in values:
             for k, v in item.items():
-                print(k)
-                print("type of key: ", type(k))
-                print(k == "commands")
                 if k == "commands":
                     conf_info["commands"].append(v)
+                elif k == "expect":
+                    pass
                 elif k == "read":
                     conf_info["read"].append(v)
                 elif k == "slides":
@@ -69,7 +69,8 @@ def config_info(parsed_config: dict) -> dict:
                 elif k == "editor":
                     conf_info["editor"].append(v)
                 else:
-                    print(f"{k} is not a supported command.")
+                    print(f'"{k}" is not a supported command.')
+                    sys.exit()
 
     return conf_info
 
@@ -113,10 +114,27 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
         towards the current directory.
     """
     project_dir = Path(project_dir)
-    toggle = False
+    overwrite = False
+
     if project_dir.is_dir():
-        print(f"Directory {project_dir} exists!")
-        toggle = True
+
+        click.echo(f"Directory {project_dir} exists!")
+        resp = input(f"Would you like to overwrite {project_dir}?: ")
+
+        if resp.lower() == "yes":
+
+            # Erase the directory
+            overwrite = True
+            confirm = input(f"Are you sure you want to remove {project_dir}?: ")
+            shutil.rmtree(project_dir)
+
+            # Then make a new one
+
+            os.mkdir(project_dir)
+
+        else:
+            sys.exit()
+
     else:
         os.mkdir(project_dir)
 
@@ -124,12 +142,12 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
 
         new_dir = project_dir / Path(directory)
 
-        if new_dir.is_dir():
+        if new_dir.is_dir() and not overwrite:
             print(f"Folder {new_dir} exists!")
         else:
             os.mkdir(new_dir)
 
-    if toggle:
+    if overwrite:
         return project_dir
     else:
         return Path("./")
