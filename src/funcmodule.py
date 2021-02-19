@@ -109,7 +109,7 @@ def create_dirs_list(all_confs: dict) -> Path:
         to_create.append("recording") # MP4 files
         to_create.append("project") # Final video
 
-        dirs_list.append({k: to_create})
+        dirs_list.append({f"scene_{k}": to_create})
 
     return dirs_list
 
@@ -158,9 +158,8 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
 
         # There should only be one key, no need for
         # a for loop.
-        scene_number = list(item.keys())[0]
-
-        scene = Path(f"scene_{scene_number}")
+        scene_id = list(item.keys())[0]
+        scene = Path(scene_id)
 
         for directory in item.values():
 
@@ -192,31 +191,33 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
     todos = config_info(parsed)
 
     # This should probably be grouped
-    for key, value in todos.items():
+    for k, v in todos.items():
 
-        write_path = Path(key)
+        scene_path = Path(k)
 
-        if "read" in key:
-            ext = ".txt" 
-        else:
-            ext = ".yaml"
+        for key, value in v.items():
 
-        for item in value:
-            try:
-                to_write = yaml.safe_dump(item)
-            
-            except TypeError:
-                sys.exit()
-            
-            file_path = (project_path / write_path)
-            click.echo(f"Creating {file_path.with_suffix(ext)}")
+            write_path = Path(key)
 
-            with open(file_path.with_suffix(ext), "w") as file:
+            if "read" in key:
+                ext = ".txt" 
+            else:
+                ext = ".yaml"
+
+            for item in value:
+
+                try:
+                    to_write = yaml.safe_dump(item)
                 
-                file.write(to_write)
-    
-    return project_path
+                except TypeError:
+                    sys.exit()
+                
+                file_path = (project_path / scene_path / write_path)
 
-########################################################################
-#                             shell commands                           #
-########################################################################
+                click.echo(f"Creating {file_path.with_suffix(ext)}")
+
+                with open(file_path.with_suffix(ext), "w") as file:
+                    
+                    file.write(to_write)
+        
+    return project_path
