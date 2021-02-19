@@ -70,6 +70,7 @@ def setup(config: click.File, project_name: str) -> None:
     path = funcmodule.create_dirs(to_create, project_name)
 
     # Splitting script
+    funcmodule.split_config(parsed, path)
 
     click.echo(f"Your project has been setup at: {path}")
 

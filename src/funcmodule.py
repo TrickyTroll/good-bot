@@ -158,15 +158,30 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     else:
         return Path("./").absolute()
 
-def split_config(parsed: click.File, project_path: Path) -> None:
-    # Should use parse_config to split the configuration files and
-    # save them in the appropriate directories.
+def split_config(parsed: click.File, project_path: Path) -> Path:
+    """Splits the main config file into sub configurations for
+    every type of action.
+
+    Args:
+        parsed (click.File): The parsed configuration file. This
+        should be handled by the `parse_config` function.
+        project_path (Path): The path towards the project. This
+        path is returned by the `create_dirs` function.
+
+    Returns:
+        Path: The same project path that was passed.
+    """
     todos = config_info(parsed)
 
     # This should probably be grouped
     for key, value in todos.items():
 
         write_path = Path(key)
+
+        if "read" in key:
+            ext = ".txt" 
+        else:
+            ext = ".yaml"
 
         for item in value:
             try:
@@ -175,8 +190,11 @@ def split_config(parsed: click.File, project_path: Path) -> None:
             except TypeError:
                 sys.exit()
             
-            with open(project_path / Path())
-    pass
+            with open((project_path / write_path).suffix(ext), "w") as file:
+                
+                file.write(to_write)
+    
+    return project_path
 
 ########################################################################
 #                             shell commands                           #
