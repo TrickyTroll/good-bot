@@ -68,7 +68,7 @@ def setup(config: click.File, project_name: str) -> None:
 
     path = funcmodule.create_dirs(to_create, project_name)
 
-    click.echo(f"Your project has been setup at: {path}.")
+    click.echo(f"Your project has been setup at: {path}")
 
     return None
 
