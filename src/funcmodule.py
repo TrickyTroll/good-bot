@@ -158,9 +158,24 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     else:
         return Path("./").absolute()
 
-def split_config():
+def split_config(parsed: click.File, project_path: Path) -> None:
     # Should use parse_config to split the configuration files and
     # save them in the appropriate directories.
+    todos = config_info(parsed)
+
+    # This should probably be grouped
+    for key, value in todos.items():
+
+        write_path = Path(key)
+
+        for item in value:
+            try:
+                to_write = yaml.safe_dump(item)
+            
+            except TypeError:
+                sys.exit()
+            
+            with open(project_path / Path())
     pass
 
 ########################################################################
