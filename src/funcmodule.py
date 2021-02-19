@@ -190,7 +190,10 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
             except TypeError:
                 sys.exit()
             
-            with open((project_path / write_path).suffix(ext), "w") as file:
+            file_path = (project_path / write_path)
+            click.echo(f"Creating {file_path.with_suffix(ext)}")
+
+            with open(file_path.with_suffix(ext), "w") as file:
                 
                 file.write(to_write)
     
