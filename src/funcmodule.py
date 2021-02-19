@@ -46,6 +46,7 @@ def config_info(parsed_config: dict) -> dict:
 
     conf_info = {
         "commands": [],
+        "expect": [],
         "scenes": [],
         "editor": [],
         "slides": [],
@@ -66,7 +67,7 @@ def config_info(parsed_config: dict) -> dict:
                 if k == "commands":
                     conf_info["commands"].append(v)
                 elif k == "expect":
-                    pass
+                    conf_info["expect"].append(v)
                 elif k == "read":
                     conf_info["read"].append(v)
                 elif k == "slides":

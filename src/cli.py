@@ -62,11 +62,14 @@ def setup(config: click.File, project_name: str) -> None:
     Returns:
         None: None
     """
+    # Creating directories
     parsed = funcmodule.config_parser(config)
     conf_info = funcmodule.config_info(parsed)
     to_create = funcmodule.create_dirs_list(conf_info)
 
     path = funcmodule.create_dirs(to_create, project_name)
+
+    # Splitting script
 
     click.echo(f"Your project has been setup at: {path}")
 
