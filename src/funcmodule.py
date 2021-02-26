@@ -266,3 +266,20 @@ def list_scenes(project_dir: click.Path) -> Path:
     to_return = []
             
     return [thing for thing in project_dir.iterdir() if is_scene(thing)]
+
+def record_commands(scene: Path) -> Path:
+    """Records a gif for every video in the commands directory of the
+    specified scene.
+    
+    Args:
+        scene (pathlib.Path): The path towards the scene to record.
+    Returns:
+        pathlib.Path: The path towards the gif that has been recorded.
+        If nothing has been recorded, this function returns the path
+        of the current working directory instead.
+    """
+    contains_something = any(directory.iterdir())
+    if not contains_something:
+        return Path(os.getcwd())
+    if 
+    pass
