@@ -173,10 +173,7 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
             else:
                 os.makedirs(new_dir)
 
-    if overwrite:
-        return project_dir.absolute()
-    else:
-        return Path("./").absolute()
+    return project_dir.absolute()
 
 def split_config(parsed: click.File, project_path: Path) -> Path:
     """Splits the main config file into sub configurations for
@@ -219,7 +216,7 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
                 file_path = (project_path / scene_path / write_path / file_name)
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
-
+                
                 with open(file_path.with_suffix(ext), "w") as file:
                     
                     file.write(to_write)
