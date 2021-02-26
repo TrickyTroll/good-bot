@@ -77,6 +77,25 @@ def setup(config: click.File, project_name: str) -> None:
     return None
 
 
+@click.command()
+@click.argument(
+    "projectpath",
+    type = click.Path(exists=True),
+    help='''\
+    The path towards the project that you want to build. Your project
+    directory shoud be created using the `setup` command.
+    ''')
+    
+def setup(projectpath: click.Path) -> None:
+    """
+    Makes a video from the instructions stored in a project 
+    directory.
+    """
+
+    return None
+
+
+
 app.add_command(setup)
 app.add_command(greet)
 app.add_command(echo_config)
