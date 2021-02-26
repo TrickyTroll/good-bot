@@ -9,3 +9,8 @@ services:
   runner: 
     build: .
     command: runner /runner/tests/examples/test_conf.yaml
+  setup:
+    build: .
+    command: python src/cli.py setup examples/goodbot.yaml
+    volumes:
+       - .:/app
