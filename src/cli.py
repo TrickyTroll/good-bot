@@ -86,12 +86,12 @@ def setup(config: click.File, project_name: str) -> None:
     directory shoud be created using the `setup` command.
     ''')
     
-def setup(projectpath: click.Path) -> None:
+def build(projectpath: click.Path) -> None:
     """
     Makes a video from the instructions stored in a project 
     directory.
     """
-
+    
     return None
 
 

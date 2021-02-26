@@ -226,3 +226,48 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
                     file.write(to_write)
         
     return project_path
+
+
+########################################################################
+#                             Video creation                           #
+########################################################################
+
+
+def is_scene(directory: Path) -> bool:
+    """Checks if a directory is a scene that contains instructions.
+    
+    Args:
+        directory (pathlib.Path): The path towards the directory to 
+        check.
+    Returns:
+        bool: Wether the directory is a scene that contains elements
+        or not.
+    """
+    to_return = False
+    dir_name = directory.name
+    contains_something = any(directory.iterdir())
+    
+    if dir_name[0:5] == "scene" and contains_something:
+        
+        to_return = True
+    
+    return to_return
+    
+def list_scenes(project_dir: click.Path) -> Path:
+    """Lists scenes in the project directory.
+    
+    Args:
+        project_dir (click.Path): The path towards the location of the
+        project.
+    Returns:
+        list: A list of directories (Paths).
+    """
+    
+
+        
+    project_dir = Path(project_dir)
+    
+    for thing in project_dir.iterdir():
+        if thing.is_dir():
+    return [scene for scene in project_dir.iterdir() if scene.is_dir()]
+    pass
