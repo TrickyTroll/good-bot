@@ -9,7 +9,7 @@ services:
   runner: 
     build: .
     command: runner /runner/tests/examples/test_conf.yaml
-  parser:
+  setup:
     build: .
     command: python src/cli.py setup example/goodbot.yaml
     volumes:

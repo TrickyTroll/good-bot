@@ -161,14 +161,17 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
         scene_id = list(item.keys())[0]
         scene = Path(scene_id)
 
-        for directory in item.values():
+        # There should only be one value too
+        # This shoud probably stored as a tuple now that
+        # I think about it...
+        for directory in list(item.values())[0]:
 
             new_dir = project_dir / scene / Path(directory)
 
             if new_dir.is_dir() and not overwrite:
                 click.echo(f"Folder {new_dir} exists!")
             else:
-                os.mkdir(new_dir)
+                os.makedirs(new_dir)
 
     if overwrite:
         return project_dir.absolute()
@@ -193,7 +196,7 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
     # This should probably be grouped
     for k, v in todos.items():
 
-        scene_path = Path(k)
+        scene_path = Path(f"scene_{k}")
 
         for key, value in v.items():
 
@@ -204,15 +207,16 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
             else:
                 ext = ".yaml"
 
-            for item in value:
+            for i in range(len(value)):
 
                 try:
-                    to_write = yaml.safe_dump(item)
+                    to_write = yaml.safe_dump(value[i])
                 
                 except TypeError:
                     sys.exit()
                 
-                file_path = (project_path / scene_path / write_path)
+                file_name = Path(f"file_{i}")
+                file_path = (project_path / scene_path / write_path / file_name)
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
 
