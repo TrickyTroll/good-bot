@@ -1,5 +1,7 @@
 FROM python:latest
 
+RUN pip install asciinema
+
 RUN mkdir -pv \
             /video/commands \
             /video/read \
