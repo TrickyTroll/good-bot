@@ -262,12 +262,7 @@ def list_scenes(project_dir: click.Path) -> Path:
     Returns:
         list: A list of directories (Paths).
     """
-    
-
-        
     project_dir = Path(project_dir)
-    
-    for thing in project_dir.iterdir():
-        if thing.is_dir():
-    return [scene for scene in project_dir.iterdir() if scene.is_dir()]
-    pass
+    to_return = []
+            
+    return [thing for thing in project_dir.iterdir() if is_scene(thing)]
