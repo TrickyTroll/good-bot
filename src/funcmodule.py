@@ -67,9 +67,13 @@ def config_info(parsed_config: dict) -> dict:
         for item in values:
             for k, v in item.items():
                 if k == "commands":
-                    conf_info["commands"].append(v)
+                    to_append = {}
+                    to_append["command"] = item["commands"]
+                    if "expect" in item.keys():
+                        to_append["expect"] = item["expect"]
+                    conf_info["commands"].append(to_append)
                 elif k == "expect":
-                    conf_info["expect"].append(v)
+                    continue
                 elif k == "read":
                     conf_info["read"].append(v)
                 elif k == "slides":
