@@ -1,11 +1,11 @@
 import os
 import sys
-import shutil
-from pathlib import Path
-
-import click
 import yaml
+import click
+import shutil
+import subprocess
 
+from pathlib import Path
 ########################################################################
 #                               YAML parsing                           #
 ########################################################################
@@ -278,8 +278,16 @@ def record_commands(scene: Path) -> Path:
         If nothing has been recorded, this function returns the path
         of the current working directory instead.
     """
-    contains_something = any(directory.iterdir())
-    if not contains_something:
+    is_commands = Path("commands") in [item for item in scene.iterdir()]
+    
+    if not is_commands:
         return Path(os.getcwd())
-    if 
+    else:
+        commands_path = scene / Path("commands")
+        
+    for command in commands_path.iterdir():
+        subprocess.run([
+            "runner",
+            command.
+        ])
     pass
