@@ -287,7 +287,10 @@ def record_commands(scene: Path) -> Path:
         
     for command in commands_path.iterdir():
         subprocess.run([
+            "asciinema",
+            "rec",
+            "-c",
             "runner",
-            command.
+            
         ])
     pass
