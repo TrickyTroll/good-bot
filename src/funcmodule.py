@@ -6,6 +6,8 @@ import shutil
 import subprocess
 
 from pathlib import Path
+from google.cloud import texttospeech
+
 ########################################################################
 #                               YAML parsing                           #
 ########################################################################
@@ -232,7 +234,7 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
 #                             Video creation                           #
 ########################################################################
 
-
+# Command execution and recording.
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
     
@@ -253,7 +255,7 @@ def is_scene(directory: Path) -> bool:
     
     return to_return
     
-def list_scenes(project_dir: click.Path) -> Path:
+def list_scenes(project_dir: click.Path) -> list:
     """Lists scenes in the project directory.
     
     Args:
@@ -263,11 +265,10 @@ def list_scenes(project_dir: click.Path) -> Path:
         list: A list of directories (Paths).
     """
     project_dir = Path(project_dir)
-    to_return = []
             
     return [thing for thing in project_dir.iterdir() if is_scene(thing)]
 
-def record_commands(scene: Path) -> Path:
+def record_commands(scene: Path, save_path: Path) -> Path:
     """Records a gif for every video in the commands directory of the
     specified scene.
     
@@ -287,10 +288,79 @@ def record_commands(scene: Path) -> Path:
         
     for command in commands_path.iterdir():
         subprocess.run([
-            "asciinema",
+            "ttyrec",
             "rec",
-            "-c",
-            "runner",
-            
+            "-e",
+            f"runner {command.absolute()}",
+            save_path
         ])
-    pass
+    return save_path
+
+# Audio recording
+def is_read(directory: Path) -> bool:
+    """Checks if a directory is a directory that contains 
+    text file that should be sent to Google TTS.
+    
+    Args:
+        directory (pathlib.Path): The path towards the directory to 
+        check.
+    Returns:
+        bool: Wether the directory is a directory that contains
+        text file that should be read by Google TTS.
+    """
+    to_return = False
+    dir_name = directory.name
+    contains_something = any(directory.iterdir())
+    
+    if dir_name[0:4] == "read" and contains_something:
+        
+        to_return = True
+    
+    return to_return
+    
+def list_read(project_dir: click.Path) -> list:
+    """Lists read files in the project directory.
+    
+    Args:
+        project_dir (click.Path): The path towards the location of the
+        project.
+    Returns:
+        list: A list of directories (Paths).
+    """
+    project_dir = Path(project_dir)
+            
+    return [thing for thing in project_dir.iterdir() if is_read(thing)]
+
+def record_audio(read_path: Path, save_path: Path) -> Path:
+    """
+    """
+    with open(read_path, "r") as stream:
+        to_read = stream.readlines()[0]
+        to_read = to_read.strip()
+        
+    client = texttospeech.TextToSpeechClient()
+
+    synthesis_input = texttospeech.SynthesisInput(text=to_read)
+
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+    )
+
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+    )
+
+    response = client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+    )
+    
+    file_name = read_path.name
+    save_path = save_path / file_name
+    
+    with open(save_path, "wb") as out:
+        
+        out.write(response.audio_content)
+        print(f"Audio content written to file {save_path.absolute()}")
+        
+    return save_path
+    
