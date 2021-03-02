@@ -10,6 +10,7 @@ RUN apt install -y \
 	python3-pip \
 	python3.9 \
 	golang-go \
+	ffmpeg \
 	ttyrec \
 	wget \
 	pv \
@@ -30,6 +31,11 @@ RUN mkdir -pv \
             /video/audio \
             /video/recording \
             /video/project
+			
+WORKDIR ~/.env
+COPY ./env ~/.env
+
+ENV GOOGLE_APPLICATION_CREDENTIALS="~/.env/google-tts.json"
 
 WORKDIR /runner
 COPY ./runner /runner/
@@ -39,3 +45,4 @@ WORKDIR /app
 COPY ./src /app/
 COPY ./requirements.txt /app/
 RUN pip3 install -r requirements.txt
+RUN pip3 install --upgrade google-cloud-texttospeech
