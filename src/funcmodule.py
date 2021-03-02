@@ -297,70 +297,56 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     return save_path
 
 # Audio recording
-def is_read(directory: Path) -> bool:
-    """Checks if a directory is a directory that contains 
-    text file that should be sent to Google TTS.
+def record_audio(scene: Path, save_path: Path) -> Path:
+    """Records audio by reading the `read` files using Google TTS.
     
     Args:
-        directory (pathlib.Path): The path towards the directory to 
-        check.
+        scene (click.Path): The path towards the files to read. 
+        Only the first line of these files will be read.
+        save_path (click.Path): The path where the mp3 audio file
+        will be saved. This does not include the file name, as it
+        will be kept from the read path.
     Returns:
-        bool: Wether the directory is a directory that contains
-        text file that should be read by Google TTS.
+        click.Path: The path where the audio file is saved. This
+        now includes the name of the file.
     """
-    to_return = False
-    dir_name = directory.name
-    contains_something = any(directory.iterdir())
+    is_read = Path("read") in [item for item in scene.iterdir()]
+    audio_dir = save_path
     
-    if dir_name[0:4] == "read" and contains_something:
+    if not is_read:
+        return Path(os.getcwd())
+    else:
+        read_path = scene / Path("read")
+    
+    for item in read_path.iterdir():
         
-        to_return = True
-    
-    return to_return
-    
-def list_read(project_dir: click.Path) -> list:
-    """Lists read files in the project directory.
-    
-    Args:
-        project_dir (click.Path): The path towards the location of the
-        project.
-    Returns:
-        list: A list of directories (Paths).
-    """
-    project_dir = Path(project_dir)
-            
-    return [thing for thing in project_dir.iterdir() if is_read(thing)]
-
-def record_audio(read_path: Path, save_path: Path) -> Path:
-    """
-    """
-    with open(read_path, "r") as stream:
-        to_read = stream.readlines()[0]
-        to_read = to_read.strip()
+        with open(item, "r") as stream:
+            to_read = stream.readlines()[0]
+            to_read = to_read.strip()
         
-    client = texttospeech.TextToSpeechClient()
+        client = texttospeech.TextToSpeechClient()
 
-    synthesis_input = texttospeech.SynthesisInput(text=to_read)
+        synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
-    voice = texttospeech.VoiceSelectionParams(
-        language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-    )
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
 
-    audio_config = texttospeech.AudioConfig(
-        audio_encoding=texttospeech.AudioEncoding.MP3
-    )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
 
-    response = client.synthesize_speech(
-        input=synthesis_input, voice=voice, audio_config=audio_config
-    )
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
     
-    file_name = read_path.name
-    save_path = save_path / file_name
+        file_name = read_path.name
+        save_path = save_path / file_name
     
-    with open(save_path, "wb") as out:
+        with open(save_path, "wb") as out:
         
-        out.write(response.audio_content)
-        print(f"Audio content written to file {save_path.absolute()}")
+            out.write(response.audio_content)
+            print(f"Audio content written to file {save_path.absolute()}")
         
-    return save_path
+    return audio_dir
     
