@@ -285,7 +285,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         return Path(os.getcwd())
     else:
         commands_path = scene / Path("commands")
-        
+    click.echo(f"Recording shell commands for {str(scene)}.")
     for command in commands_path.iterdir():
         subprocess.run([
             "ttyrec",

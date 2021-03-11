@@ -33,7 +33,7 @@ RUN mkdir -pv \
             /video/project
 			
 WORKDIR ~/.env
-COPY ./env ~/.env
+COPY .env ~/.env
 
 ENV GOOGLE_APPLICATION_CREDENTIALS="~/.env/google-tts.json"
 

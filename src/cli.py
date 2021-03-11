@@ -80,18 +80,18 @@ def setup(config: click.File, project_name: str) -> None:
 @click.command()
 @click.argument(
     "projectpath",
-    type = click.Path(exists=True),
-    help='''\
-    The path towards the project that you want to build. Your project
-    directory shoud be created using the `setup` command.
-    ''')
+    type = click.Path(exists=True))
     
 def build(projectpath: click.Path) -> None:
     """
     Makes a video from the instructions stored in a project 
     directory.
     """
-    
+    all_scenes = funcmodule.list_scenes(projectpath)
+    for scene in all_scenes:
+        click.echo(f"Working on {str(scene)}...")
+        funcmodule.record_commands(scene, projectpath / pathlib.Path("gifs"))
+        funcmodule.record_audio(scene, projectpath / pathlib.Path("audio"))
     return None
 
 
@@ -99,6 +99,7 @@ def build(projectpath: click.Path) -> None:
 app.add_command(setup)
 app.add_command(greet)
 app.add_command(echo_config)
+app.add_command(build)
 
 if __name__ == "__main__":
     app()
