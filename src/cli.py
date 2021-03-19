@@ -90,9 +90,19 @@ def build(projectpath: click.Path) -> None:
 
     click.echo(f"Using project at: {projectpath}")
     all_scenes = funcmodule.list_scenes(projectpath)
+    # This probably won't work on windows
+    project_name = (projectpath.split("/")[-1])
+
+    click.echo(f"The project '{project_name}' contains:")
 
     for scene in all_scenes:
+
+        click.echo(f"- {scene.name}")
+
+    for scene in all_scenes:
+
         click.echo(f"Working on {str(scene)}...")
+
         funcmodule.record_commands(scene, projectpath / pathlib.Path("gifs"))
         funcmodule.record_audio(scene, projectpath / pathlib.Path("audio"))
 

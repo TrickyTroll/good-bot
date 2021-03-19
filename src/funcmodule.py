@@ -268,8 +268,19 @@ def list_scenes(project_dir: click.Path) -> list:
         list: A list of directories (Paths).
     """
     project_dir = Path(project_dir)
+    all_scenes = []
+
+    for directory in project_dir.iterdir():
+
+        if is_scene(directory):
+
+            all_scenes.append(directory)
+
+        else:
+
+            click.echo(f"The directory {directory} was ignored.")
             
-    return [some_file for files in project_dir.iterdir() if is_scene(some_file)]
+    return all_scenes
 
 def record_commands(scene: Path, save_path: Path) -> Path:
     """Records a gif for every video in the commands directory of the
