@@ -292,7 +292,6 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     for command in commands_path.iterdir():
         subprocess.run([
             "ttyrec",
-            "rec",
             "-e",
             f"runner {command.absolute()}",
             save_path
@@ -356,24 +355,24 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         
     return audio_dir
 
-def convert_gif(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
+def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
     """
-    Converts gifs to MP3 files. This is done using ttyrec2gif.
+    Converts ttyrecs to gif files. This is done using ttyrec2gif.
 
     Args:
-        gpath(pathlib.Path): The path towards the directory that
+        tpath(pathlib.Path): The path towards the directory that
         contains the gifs to convert.
-        vpath(pathlib.Path): The path towards the directory where
+        gpath(pathlib.Path): The path towards the directory where
         the gifs will be saved. This path should already exist.
 
     Returns:
         (pathlib.Path): The path towards the location of the newly
-        created mp3 files.
+        created gif files.
     """
 
-    for gif in gpath.iterdir():
+    for gif in tpath.iterdir():
 
-        save_name = vpath / gif.name
+        save_name = gpath / gif.name
 
         subprocess.run([
             "ttyrec2gif",
@@ -383,4 +382,4 @@ def convert_gif(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
             save_name
         ])
 
-    return vpath
+    return gpath
