@@ -245,16 +245,18 @@ def is_scene(directory: Path) -> bool:
         bool: Wether the directory is a scene that contains elements
         or not.
     """
-    to_return = False
+
     dir_name = directory.name
     contains_something = any(directory.iterdir())
     
     if dir_name[0:5] == "scene" and contains_something:
         
-        to_return = True
-    
-    return to_return
-    
+        return True
+
+    else:
+
+        return False
+
 def list_scenes(project_dir: click.Path) -> list:
     """Lists scenes in the project directory.
     
@@ -266,7 +268,7 @@ def list_scenes(project_dir: click.Path) -> list:
     """
     project_dir = Path(project_dir)
             
-    return [thing for thing in project_dir.iterdir() if is_scene(thing)]
+    return [some_file for files in project_dir.iterdir() if is_scene(some_file)]
 
 def record_commands(scene: Path, save_path: Path) -> Path:
     """Records a gif for every video in the commands directory of the
@@ -279,6 +281,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         If nothing has been recorded, this function returns the path
         of the current working directory instead.
     """
+
     is_commands = Path("commands") in [item for item in scene.iterdir()]
     
     if not is_commands:
@@ -294,6 +297,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
             f"runner {command.absolute()}",
             save_path
         ])
+
     return save_path
 
 # Audio recording
@@ -321,6 +325,8 @@ def record_audio(scene: Path, save_path: Path) -> Path:
     for item in read_path.iterdir():
         
         with open(item, "r") as stream:
+            # Assuming everything to read is on one line
+            # TODO: Read a multi line file.
             to_read = stream.readlines()[0]
             to_read = to_read.strip()
         
@@ -349,4 +355,18 @@ def record_audio(scene: Path, save_path: Path) -> Path:
             print(f"Audio content written to file {save_path.absolute()}")
         
     return audio_dir
-    
+
+def convert_gif(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
+    """
+    Converts gifs to MP3 files. This is done using ttyrec2gif.
+
+    Args:
+        gpath(pathlib.Path): The path towards the directory that
+        contains the gifs to convert.
+        vpath(pathlib.Path): The path towards the directory where
+        the gifs will be saved. This path should already exist.
+
+    Returns:
+        (pathlib.Path): The path towards the location of the newly
+        created mp3 files.
+    """
