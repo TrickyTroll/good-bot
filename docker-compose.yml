@@ -19,6 +19,6 @@ services:
 
   create:
     build: .
-    command: python3 src/cli.py build examples/goodbot.yaml
+    command: python3 src/cli.py build ./toto
     volumes:
       - .:/app
