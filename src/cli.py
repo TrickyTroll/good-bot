@@ -88,6 +88,7 @@ def build(projectpath: click.Path) -> None:
     directory.
     """
 
+    click.echo(f"Using project at: {projectpath}")
     all_scenes = funcmodule.list_scenes(projectpath)
 
     for scene in all_scenes:
