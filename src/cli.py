@@ -101,7 +101,7 @@ def build(projectpath: click.Path) -> None:
 
     for scene in all_scenes:
 
-        click.echo(f"Working on {str(scene)}...")
+        click.echo(f"Working on {scene}...")
 
         funcmodule.record_commands(scene, projectpath / pathlib.Path("gifs"))
         funcmodule.record_audio(scene, projectpath / pathlib.Path("audio"))

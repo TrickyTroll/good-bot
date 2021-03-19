@@ -310,13 +310,19 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     else:
         commands_path = scene / Path("commands")
     click.echo(f"Recording shell commands for {str(scene)}.")
+
     for command in commands_path.iterdir():
+
         subprocess.run([
-            "ttyrec",
-            "-e",
-            f"runner {command.absolute()}",
-            save_path
+            "runner",
+            str(command.absolute())
         ])
+#        subprocess.run([
+#            "ttyrec",
+#            "-e",
+#            f"runner {command.absolute()}",
+#            save_path
+#        ])
 
     return save_path
 
