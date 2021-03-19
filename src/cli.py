@@ -87,14 +87,19 @@ def build(projectpath: click.Path) -> None:
     Makes a video from the instructions stored in a project 
     directory.
     """
+
     all_scenes = funcmodule.list_scenes(projectpath)
+
     for scene in all_scenes:
         click.echo(f"Working on {str(scene)}...")
         funcmodule.record_commands(scene, projectpath / pathlib.Path("gifs"))
         funcmodule.record_audio(scene, projectpath / pathlib.Path("audio"))
+
+    # TODO: Convert gifs to videos
+    # TODO: Stitch audio and video
+    # TODO: Stitch whole video
+
     return None
-
-
 
 app.add_command(setup)
 app.add_command(greet)
