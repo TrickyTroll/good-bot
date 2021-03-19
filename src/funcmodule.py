@@ -4,9 +4,10 @@ import yaml
 import click
 import shutil
 import subprocess
+import pathlib
 
-from pathlib import Path
 from google.cloud import texttospeech
+Path = pathlib.Path
 
 ########################################################################
 #                               YAML parsing                           #
@@ -370,16 +371,50 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
         created gif files.
     """
 
-    for gif in tpath.iterdir():
+    for ttyrec in tpath.iterdir():
 
-        save_name = gpath / gif.name
+        save_name = (gpath / ttyrec.name).with_suffix(".gif")
 
         subprocess.run([
-            "ttyrec2gif",
+            "ttyrec2ttyrec",
             "-in",
-            gif,
+            str(ttyrec),
             "-out",
-            save_name
+            str(save_name)
         ])
 
     return gpath
+
+def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
+    """
+    Converts gifs to mp4 files. This is done using ffmpeg.
+
+    Args:
+        gpath(pathlib.Path): The path towards the gifs' directory.
+        vpath(pathlib.Path): The path towards the directory where the
+        mp4 files will be saved. This path should have been created
+        beforehand.
+
+    Returns:
+        (pathlib.Path): The path towards the video files.
+    """
+
+    for gif in gpath.iterdir():
+
+        save_name = (vpath / gpath.name).with_suffix(".mp4")
+
+        subprocess.run([
+
+             'ffmpeg',
+             '-i',
+             str(gif.absolute()),
+             '-movflags',
+             'faststart',
+             '-pix_fmt',
+             'yuv420p',
+             '-vf',
+             'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+             str(save_name.absolute())
+        ])
+
+        return vpath
