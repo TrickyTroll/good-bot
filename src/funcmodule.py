@@ -247,8 +247,11 @@ def is_scene(directory: Path) -> bool:
         or not.
     """
 
-    dir_name = directory.name
-    contains_something = any(directory.iterdir())
+    if directory.is_dir():
+        dir_name = directory.name
+        contains_something = any(directory.iterdir())
+    else:
+        return False
     
     if dir_name[0:5] == "scene" and contains_something:
         
@@ -293,9 +296,15 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         If nothing has been recorded, this function returns the path
         of the current working directory instead.
     """
+    contains = list(scene.iterdir())
+    categories = [command.name for command in contains]
 
-    is_commands = Path("commands") in [item for item in scene.iterdir()]
-    
+    if "commands" in categories:
+        is_commands = True
+    else:
+        is_commands = False
+    print(is_commands)
+
     if not is_commands:
         return Path(os.getcwd())
     else:
@@ -363,7 +372,7 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         with open(save_path, "wb") as out:
         
             out.write(response.audio_content)
-            print(f"Audio content written to file {save_path.absolute()}")
+            click.echo(f"Audio content written to file {save_path.absolute()}")
         
     return audio_dir
 
