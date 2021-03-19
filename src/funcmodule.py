@@ -370,3 +370,17 @@ def convert_gif(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
         (pathlib.Path): The path towards the location of the newly
         created mp3 files.
     """
+
+    for gif in gpath.iterdir():
+
+        save_name = vpath / gif.name
+
+        subprocess.run([
+            "ttyrec2gif",
+            "-in",
+            gif,
+            "-out",
+            save_name
+        ])
+
+    return vpath
