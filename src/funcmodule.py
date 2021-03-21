@@ -113,7 +113,8 @@ def create_dirs_list(all_confs: dict) -> Path:
 
         # Those dirs are created no matter the content
         to_create.append("gifs") # Gifs files
-        to_create.append("recording") # MP4 files
+        to_create.append("ttyrecs")
+        to_create.append("recordings") # MP4 files
         to_create.append("project") # Final video
 
         dirs_list.append({f"scene_{k}": to_create})
@@ -291,11 +292,14 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     
     Args:
         scene (pathlib.Path): The path towards the scene to record.
+        save_path (pathlib.Path): The path towards the directory
+        where the gifs will be saved.
     Returns:
         pathlib.Path: The path towards the gif that has been recorded.
         If nothing has been recorded, this function returns the path
         of the current working directory instead.
     """
+
     contains = list(scene.iterdir())
     categories = [command.name for command in contains]
 
@@ -303,7 +307,6 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         is_commands = True
     else:
         is_commands = False
-    print(is_commands)
 
     if not is_commands:
         return Path(os.getcwd())
@@ -313,11 +316,13 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
     for command in commands_path.iterdir():
 
+        file_name = Path(command.stem)
+
         subprocess.run([
             "ttyrec",
             "-e",
             f"runner {command.absolute()}",
-            save_path
+            save_path / file_name
         ])
 
     return save_path
@@ -336,7 +341,14 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         click.Path: The path where the audio file is saved. This
         now includes the name of the file.
     """
-    is_read = Path("read") in [item for item in scene.iterdir()]
+    contains = list(scene.iterdir())
+    categories = [command.name for command in contains]
+
+    if "read" in categories:
+        is_read = True
+    else:
+        is_read = False
+
     audio_dir = save_path
     
     if not is_read:
