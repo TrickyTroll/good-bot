@@ -71,7 +71,7 @@ def config_info(parsed_config: dict) -> dict:
             for k, v in item.items():
                 if k == "commands":
                     to_append = {}
-                    to_append["command"] = item["commands"]
+                    to_append["commands"] = item["commands"]
                     if "expect" in item.keys():
                         to_append["expect"] = item["expect"]
                     conf_info["commands"].append(to_append)
@@ -314,15 +314,11 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     for command in commands_path.iterdir():
 
         subprocess.run([
-            "runner",
-            str(command.absolute())
+            "ttyrec",
+            "-e",
+            f"runner {command.absolute()}",
+            save_path
         ])
-#        subprocess.run([
-#            "ttyrec",
-#            "-e",
-#            f"runner {command.absolute()}",
-#            save_path
-#        ])
 
     return save_path
 
