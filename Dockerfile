@@ -35,7 +35,7 @@ RUN mkdir -pv \
 WORKDIR ~/.env
 COPY .env ~/.env
 
-ENV GOOGLE_APPLICATION_CREDENTIALS="~/.env/google-tts.json"
+ENV GOOGLE_APPLICATION_CREDENTIALS="/app/.env/google-tts.json"
 
 WORKDIR /runner
 COPY ./runner /runner/
