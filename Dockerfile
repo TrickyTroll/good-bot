@@ -1,5 +1,6 @@
 FROM ubuntu:latest
 
+ENV HOME /root
 ENV TERM linux
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -32,10 +33,6 @@ RUN mkdir -pv \
             /video/recording \
             /video/project
 			
-WORKDIR ~/.env
-COPY .env ~/.env
-
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/.env/google-tts.json"
 
 WORKDIR /runner
 COPY ./runner /runner/
@@ -46,3 +43,10 @@ COPY ./src /app/
 COPY ./requirements.txt /app/
 RUN pip3 install -r requirements.txt
 RUN pip3 install --upgrade google-cloud-texttospeech
+
+WORKDIR /env
+COPY .env /env
+
+ENV GOOGLE_APPLICATION_CREDENTIALS="/env/google-tts.json"
+
+WORKDIR $HOME

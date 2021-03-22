@@ -3,9 +3,9 @@ version: "3.9"
 services:
   app:
     build: .
-    command: python3 src/cli.py
+    command: python3 /app/cli.py
     volumes:
-        - .:/app
+        - .:/root
 
   runner: 
     build: .
@@ -13,12 +13,12 @@ services:
 
   setup:
     build: .
-    command: python3 src/cli.py setup examples/goodbot.yaml
+    command: python3 /app/cli.py setup examples/goodbot.yaml
     volumes:
-       - .:/app
+       - .:/root
 
   create:
     build: .
-    command: python3 src/cli.py build ./toto
+    command: python3 /app/cli.py build ./toto
     volumes:
-      - .:/app
+      - .:/root
