@@ -380,13 +380,13 @@ def record_audio(scene: Path, save_path: Path) -> Path:
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
     
-        file_name = read_path.name
-        save_path = save_path / file_name
-    
-        with open(save_path, "wb") as out:
+        file_name = item.stem
+        write_path = (save_path / file_name).with_suffix(".mp3")
+
+        with open(write_path, "wb") as out:
         
             out.write(response.audio_content)
-            click.echo(f"Audio content written to file {save_path.absolute()}")
+            click.echo(f"Audio content written to file {write_path.absolute()}")
         
     return audio_dir
 
