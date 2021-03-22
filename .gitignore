@@ -145,3 +145,6 @@ toto
 
 # Bash in the container
 .bash_history
+
+# MacOS stuff
+*.DS_Store
