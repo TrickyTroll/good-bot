@@ -32,7 +32,8 @@ RUN mkdir -pv \
             /video/audio \
             /video/recording \
             /video/project
-			
+
+RUN pip3 install --upgrade google-cloud-texttospeech
 
 WORKDIR /runner
 COPY ./runner /runner/
@@ -42,7 +43,6 @@ WORKDIR /app
 COPY ./src /app/
 COPY ./requirements.txt /app/
 RUN pip3 install -r requirements.txt
-RUN pip3 install --upgrade google-cloud-texttospeech
 
 WORKDIR /env
 COPY .env /env
