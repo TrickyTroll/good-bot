@@ -3,28 +3,26 @@ FROM ubuntu:latest
 ENV HOME /root
 ENV TERM linux
 ENV DEBIAN_FRONTEND noninteractive
+ENV GOPATH /usr/local/go/bin
 
 RUN apt update; apt upgrade -y
 
 RUN apt install -y \
-	python3-dev \
 	python3-pip \
 	python3.9 \
-	golang-go \
 	ffmpeg \
 	ttyrec \
 	wget \
-	pv \
 	git
-	
+
 RUN mkdir /home/all
 WORKDIR /home/all
 
-RUN export PATH=$PATH:/usr/local/go/bin
-RUN /bin/bash -c "source ~/.profile"
-RUN /bin/bash -c "go get github.com/sugyan/ttyrec2gif"	
+RUN wget https://dl.google.com/go/go1.16.linux-arm64.tar.gz; \
+    tar -C /usr/local -xzf go1.16.linux-arm64.tar.gz; \
+    export PATH=$PATH:/usr/local/go/bin; \
+    go get github.com/sugyan/ttyrec2gif	
 
-	
 RUN mkdir -pv \
             /video/commands \
             /video/read \

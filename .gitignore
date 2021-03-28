@@ -148,3 +148,12 @@ toto
 
 # MacOS stuff
 *.DS_Store
+
+# Vi swap files
+*.swp
+
+# Container stuff
+.config/
+.npm/
+.wget-hsts
+

@@ -113,7 +113,7 @@ def create_dirs_list(all_confs: dict) -> Path:
 
         # Those dirs are created no matter the content
         to_create.append("gifs") # Gifs files
-        to_create.append("ttyrecs")
+        to_create.append("ttyrecs") # ttyrecs
         to_create.append("recordings") # MP4 files
         to_create.append("project") # Final video
 
@@ -409,13 +409,17 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
 
         save_name = (gpath / ttyrec.name).with_suffix(".gif")
 
+        click.echo(f"Converting {ttyrec.absolute()}")
+
         subprocess.run([
-            "ttyrec2ttyrec",
+            "/root/go/bin/ttyrec2gif",
             "-in",
-            str(ttyrec),
+            str(ttyrec.absolute()),
             "-out",
-            str(save_name)
+            str(save_name.absolute())
         ])
+
+        click.echo(f"Gif written at {save_name.absolute()}")
 
     return gpath
 
@@ -435,7 +439,7 @@ def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
 
     for gif in gpath.iterdir():
 
-        save_name = (vpath / gpath.name).with_suffix(".mp4")
+        save_name = (vpath / gif.name).with_suffix(".mp4")
 
         subprocess.run([
 

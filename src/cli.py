@@ -103,11 +103,10 @@ def build(projectpath: click.Path) -> None:
 
         click.echo(f"Working on {scene}...")
 
-        funcmodule.record_commands(scene, scene / pathlib.Path("ttyrecs"))
-        funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
-
-    # TODO: convert ttyrecs to gifs
-    # TODO: Convert gifs to videos
+        ttyrec_path = funcmodule.record_commands(scene, scene / pathlib.Path("ttyrecs"))
+        tts_path = funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
+        gifs_path = funcmodule.convert_ttyrec(ttyrec_path, scene / pathlib.Path("gifs"))
+        video_path = funcmodule.convert_gifs(gifs_path, scene / pathlib.Path("recordings"))
     # TODO: Stitch audio and video
     # TODO: Stitch whole video
 
