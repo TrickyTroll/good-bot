@@ -15,8 +15,7 @@ RUN apt install -y \
 	wget \
 	git
 
-RUN mkdir /home/all
-WORKDIR /home/all
+WORKDIR /install
 
 RUN wget https://dl.google.com/go/go1.16.linux-arm64.tar.gz; \
     tar -C /usr/local -xzf go1.16.linux-arm64.tar.gz; \

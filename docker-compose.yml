@@ -5,7 +5,7 @@ services:
     build: .
     command: python3 /app/cli.py
     volumes:
-        - .:/root
+        - ./project:/root
 
   runner: 
     build: .
@@ -13,12 +13,12 @@ services:
 
   setup:
     build: .
-    command: python3 /app/cli.py setup examples/goodbot.yaml
+    command: python3 /app/cli.py setup /root/goodbot.yaml
     volumes:
-       - .:/root
+       - ./toto:/root
 
   create:
     build: .
-    command: python3 /app/cli.py build ./toto
+    command: python3 /app/cli.py build ./my_example
     volumes:
-      - .:/root
+      - ./toto:/root
