@@ -24,9 +24,9 @@ class Commands:
         """
 
         letters = list(text)
-        for letter in letters[0: -1]:
+        for letter in letters[0:-1]:
             print(letter, end="", flush=True)
-            time.sleep(.11)  # TODO: This should be randomized.
+            time.sleep(0.11)  # TODO: This should be randomized.
         print(letters[-1])
 
         return None
@@ -52,7 +52,7 @@ class Commands:
         letters = list(text)
         letters.append("\n")
         for letter in letters:
-            time.sleep(.12)  # TODO: This should also be random.
+            time.sleep(0.12)  # TODO: This should also be random.
             child.send(letter)
 
         return None
@@ -103,9 +103,9 @@ class Commands:
         Returns:
             None: None
         """
-        child = pexpect.spawn("bash", echo = False)
+        child = pexpect.spawn("bash", echo=False)
         child.logfile = sys.stdout.buffer
-        # TODO: This should be changed for a better regex 
+        # TODO: This should be changed for a better regex
         # (check for the EOL).
         child.expect("#")
 

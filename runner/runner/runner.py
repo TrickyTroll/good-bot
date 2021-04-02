@@ -3,13 +3,9 @@ import click
 from runner import classmodule
 from runner import funcmodule
 
+
 @click.command()
-
-@click.argument(
-    'input',
-    type = click.File('r')
-)
-
+@click.argument("input", type=click.File("r"))
 def gb_run(input: click.File) -> None:
     """Runs a command using the Commands class.
     It runs the command according to the configuration file that is
@@ -31,6 +27,7 @@ def gb_run(input: click.File) -> None:
 
     return None
 
+
 def main():
-# if __name__ == "__main__":
+    # if __name__ == "__main__":
     gb_run()
