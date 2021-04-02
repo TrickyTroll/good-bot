@@ -157,3 +157,5 @@ toto
 .npm/
 .wget-hsts
 
+# Pycharm
+.idea
