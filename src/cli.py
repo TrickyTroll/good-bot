@@ -22,10 +22,7 @@ def greet():
 
 
 @click.command()
-@click.argument(
-    "config",
-    type=click.File("r")
-)
+@click.argument("config", type=click.File("r"))
 def echo_config(config: click.File) -> None:
     """To echo the configuration file
 
@@ -40,15 +37,13 @@ def echo_config(config: click.File) -> None:
 
 
 @click.command()
-@click.argument(
-    "config",
-    type=click.File("r")
-)
+@click.argument("config", type=click.File("r"))
 @click.option(
     "--project-name",
-    prompt='''\
+    prompt="""\
     Please provide a name for your project.
-    ''')
+    """,
+)
 def setup(config: click.File, project_name: str) -> None:
     """Create a directory that contains everything required to make
     a documentation video!
@@ -78,20 +73,17 @@ def setup(config: click.File, project_name: str) -> None:
 
 
 @click.command()
-@click.argument(
-    "projectpath",
-    type = click.Path(exists=True))
-    
+@click.argument("projectpath", type=click.Path(exists=True))
 def build(projectpath: click.Path) -> None:
     """
-    Makes a video from the instructions stored in a project 
+    Makes a video from the instructions stored in a project
     directory.
     """
 
     click.echo(f"Using project at: {projectpath}")
     all_scenes = funcmodule.list_scenes(projectpath)
     # This probably won't work on windows
-    project_name = (projectpath.split("/")[-1])
+    project_name = projectpath.split("/")[-1]
 
     click.echo(f"The project '{project_name}' contains:")
 
@@ -106,11 +98,14 @@ def build(projectpath: click.Path) -> None:
         ttyrec_path = funcmodule.record_commands(scene, scene / pathlib.Path("ttyrecs"))
         tts_path = funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
         gifs_path = funcmodule.convert_ttyrec(ttyrec_path, scene / pathlib.Path("gifs"))
-        video_path = funcmodule.convert_gifs(gifs_path, scene / pathlib.Path("recordings"))
+        video_path = funcmodule.convert_gifs(
+            gifs_path, scene / pathlib.Path("recordings")
+        )
     # TODO: Stitch audio and video
     # TODO: Stitch whole video
 
     return None
+
 
 app.add_command(setup)
 app.add_command(greet)

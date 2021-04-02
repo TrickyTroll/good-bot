@@ -7,6 +7,7 @@ import subprocess
 import pathlib
 
 from google.cloud import texttospeech
+
 Path = pathlib.Path
 
 ########################################################################
@@ -25,7 +26,7 @@ def config_parser(file: click.File) -> dict:
         dict: A dict with the parsed information.
     """
     parsed_file = yaml.safe_load(file)
-    
+
     if type(parsed_file) != dict:
         click.echo("Your config is not formatted properly.")
         click.echo(parsed_file)
@@ -55,11 +56,11 @@ def config_info(parsed_config: dict) -> dict:
         "scenes": [],
         "editor": [],
         "slides": [],
-        "read": []
+        "read": [],
     }
 
     for keys, values in parsed_config.items():
-        
+
         if not values:
 
             click.echo(f"Scene #{keys} is empty, please remove it.")
@@ -86,14 +87,16 @@ def config_info(parsed_config: dict) -> dict:
                 else:
                     click.echo(f'"{k}" is not a supported command.')
                     sys.exit()
-        
+
         all_confs[keys] = conf_info
 
     return all_confs
 
+
 ########################################################################
 #                       Creating directories                           #
 ########################################################################
+
 
 def create_dirs_list(all_confs: dict) -> Path:
 
@@ -104,22 +107,22 @@ def create_dirs_list(all_confs: dict) -> Path:
         to_create = []
 
         for keys, values in v.items():
-            if values: # There are items in the list.
+            if values:  # There are items in the list.
                 to_create.append(keys)
-            
 
         if "read" in to_create:
-            to_create.append("audio") # MP3 files
+            to_create.append("audio")  # MP3 files
 
         # Those dirs are created no matter the content
-        to_create.append("gifs") # Gifs files
-        to_create.append("ttyrecs") # ttyrecs
-        to_create.append("recordings") # MP4 files
-        to_create.append("project") # Final video
+        to_create.append("gifs")  # Gifs files
+        to_create.append("ttyrecs")  # ttyrecs
+        to_create.append("recordings")  # MP4 files
+        to_create.append("project")  # Final video
 
         dirs_list.append({f"scene_{k}": to_create})
 
     return dirs_list
+
 
 def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     """Creates directories for the project. This function should be
@@ -183,6 +186,7 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
 
     return project_dir.absolute()
 
+
 def split_config(parsed: click.File, project_path: Path) -> Path:
     """Splits the main config file into sub configurations for
     every type of action.
@@ -208,7 +212,7 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
             write_path = Path(key)
 
             if "read" in key:
-                ext = ".txt" 
+                ext = ".txt"
             else:
                 ext = ".yaml"
 
@@ -216,19 +220,19 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
 
                 try:
                     to_write = yaml.safe_dump(value[i])
-                
+
                 except TypeError:
                     sys.exit()
-                
+
                 file_name = Path(f"file_{i}")
-                file_path = (project_path / scene_path / write_path / file_name)
+                file_path = project_path / scene_path / write_path / file_name
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
-                
+
                 with open(file_path.with_suffix(ext), "w") as file:
-                    
+
                     file.write(to_write)
-        
+
     return project_path
 
 
@@ -239,9 +243,9 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
 # Command execution and recording.
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
-    
+
     Args:
-        directory (pathlib.Path): The path towards the directory to 
+        directory (pathlib.Path): The path towards the directory to
         check.
     Returns:
         bool: Wether the directory is a scene that contains elements
@@ -253,18 +257,19 @@ def is_scene(directory: Path) -> bool:
         contains_something = any(directory.iterdir())
     else:
         return False
-    
+
     if dir_name[0:5] == "scene" and contains_something:
-        
+
         return True
 
     else:
 
         return False
 
+
 def list_scenes(project_dir: click.Path) -> list:
     """Lists scenes in the project directory.
-    
+
     Args:
         project_dir (click.Path): The path towards the location of the
         project.
@@ -283,13 +288,14 @@ def list_scenes(project_dir: click.Path) -> list:
         else:
 
             click.echo(f"The directory {directory} was ignored.")
-            
+
     return all_scenes
+
 
 def record_commands(scene: Path, save_path: Path) -> Path:
     """Records a gif for every video in the commands directory of the
     specified scene.
-    
+
     Args:
         scene (pathlib.Path): The path towards the scene to record.
         save_path (pathlib.Path): The path towards the directory
@@ -318,21 +324,19 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
         file_name = Path(command.stem)
 
-        subprocess.run([
-            "ttyrec",
-            "-e",
-            f"runner {command.absolute()}",
-            save_path / file_name
-        ])
+        subprocess.run(
+            ["ttyrec", "-e", f"runner {command.absolute()}", save_path / file_name]
+        )
 
     return save_path
+
 
 # Audio recording
 def record_audio(scene: Path, save_path: Path) -> Path:
     """Records audio by reading the `read` files using Google TTS.
-    
+
     Args:
-        scene (click.Path): The path towards the files to read. 
+        scene (click.Path): The path towards the files to read.
         Only the first line of these files will be read.
         save_path (click.Path): The path where the mp3 audio file
         will be saved. This does not include the file name, as it
@@ -350,20 +354,20 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         is_read = False
 
     audio_dir = save_path
-    
+
     if not is_read:
         return Path(os.getcwd())
     else:
         read_path = scene / Path("read")
-    
+
     for item in read_path.iterdir():
-        
+
         with open(item, "r") as stream:
             # Assuming everything to read is on one line
             # TODO: Read a multi line file.
             to_read = stream.readlines()[0]
             to_read = to_read.strip()
-        
+
         client = texttospeech.TextToSpeechClient()
 
         synthesis_input = texttospeech.SynthesisInput(text=to_read)
@@ -379,16 +383,17 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         response = client.synthesize_speech(
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
-    
+
         file_name = item.stem
         write_path = (save_path / file_name).with_suffix(".mp3")
 
         with open(write_path, "wb") as out:
-        
+
             out.write(response.audio_content)
             click.echo(f"Audio content written to file {write_path.absolute()}")
-        
+
     return audio_dir
+
 
 def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
     """
@@ -411,17 +416,20 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
 
         click.echo(f"Converting {ttyrec.absolute()}")
 
-        subprocess.run([
-            "$GOPATH/bin/ttyrec2gif",
-            "-in",
-            str(ttyrec.absolute()),
-            "-out",
-            str(save_name.absolute())
-        ])
+        subprocess.run(
+            [
+                "$GOPATH/bin/ttyrec2gif",
+                "-in",
+                str(ttyrec.absolute()),
+                "-out",
+                str(save_name.absolute()),
+            ]
+        )
 
         click.echo(f"Gif written at {save_name.absolute()}")
 
     return gpath
+
 
 def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
     """
@@ -441,18 +449,19 @@ def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
 
         save_name = (vpath / gif.name).with_suffix(".mp4")
 
-        subprocess.run([
-
-             'ffmpeg',
-             '-i',
-             str(gif.absolute()),
-             '-movflags',
-             'faststart',
-             '-pix_fmt',
-             'yuv420p',
-             '-vf',
-             'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-             str(save_name.absolute())
-        ])
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-i",
+                str(gif.absolute()),
+                "-movflags",
+                "faststart",
+                "-pix_fmt",
+                "yuv420p",
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                str(save_name.absolute()),
+            ]
+        )
 
         return vpath
