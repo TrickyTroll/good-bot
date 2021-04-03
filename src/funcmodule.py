@@ -10,6 +10,7 @@ from google.cloud import texttospeech
 
 Path = pathlib.Path
 
+
 ########################################################################
 #                               YAML parsing                           #
 ########################################################################
@@ -62,7 +63,6 @@ def config_info(parsed_config: dict) -> dict:
     for keys, values in parsed_config.items():
 
         if not values:
-
             click.echo(f"Scene #{keys} is empty, please remove it.")
             sys.exit()
 
@@ -99,7 +99,6 @@ def config_info(parsed_config: dict) -> dict:
 
 
 def create_dirs_list(all_confs: dict) -> Path:
-
     dirs_list = []
 
     for k, v in all_confs.items():
@@ -321,7 +320,6 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     click.echo(f"Recording shell commands for {str(scene)}.")
 
     for command in commands_path.iterdir():
-
         file_name = Path(command.stem)
 
         subprocess.run(
@@ -365,7 +363,6 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         read_path = scene / Path("read")
 
     for item in read_path.iterdir():
-
         with open(item, "r") as stream:
             # Assuming everything to read is on one line
             # TODO: Read a multi line file.
@@ -392,80 +389,7 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         write_path = (save_path / file_name).with_suffix(".mp3")
 
         with open(write_path, "wb") as out:
-
             out.write(response.audio_content)
             click.echo(f"Audio content written to file {write_path.absolute()}")
 
     return audio_dir
-
-
-def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
-    """
-    Converts ttyrecs to gif files. This is done using ttyrec2gif.
-
-    Args:
-        tpath(pathlib.Path): The path towards the directory that
-        contains the gifs to convert.
-        gpath(pathlib.Path): The path towards the directory where
-        the gifs will be saved. This path should already exist.
-
-    Returns:
-        (pathlib.Path): The path towards the location of the newly
-        created gif files.
-    """
-
-    for ttyrec in tpath.iterdir():
-
-        save_name = (gpath / ttyrec.name).with_suffix(".gif")
-
-        click.echo(f"Converting {ttyrec.absolute()}")
-
-        subprocess.run(
-            [
-                "/converter/node_modules/bin/asiicast2gif",
-                "-in",
-                str(ttyrec.absolute()),
-                "-out",
-                str(save_name.absolute()),
-            ]
-        )
-
-        click.echo(f"Gif written at {save_name.absolute()}")
-
-    return gpath
-
-# This function is obsolete
-def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
-    """
-    Converts gifs to mp4 files. This is done using ffmpeg.
-
-    Args:
-        gpath(pathlib.Path): The path towards the gifs' directory.
-        vpath(pathlib.Path): The path towards the directory where the
-        mp4 files will be saved. This path should have been created
-        beforehand.
-
-    Returns:
-        (pathlib.Path): The path towards the video files.
-    """
-
-    for gif in gpath.iterdir():
-
-        save_name = (vpath / gif.name).with_suffix(".mp4")
-
-        subprocess.run(
-            [
-                "ffmpeg",
-                "-i",
-                str(gif.absolute()),
-                "-movflags",
-                "faststart",
-                "-pix_fmt",
-                "yuv420p",
-                "-vf",
-                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
-                str(save_name.absolute()),
-            ]
-        )
-
-        return vpath
