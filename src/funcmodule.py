@@ -418,7 +418,7 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
 
         subprocess.run(
             [
-                "$GOPATH/bin/ttyrec2gif",
+                "/usr/local/go/bin/bin/ttyrec2gif",
                 "-in",
                 str(ttyrec.absolute()),
                 "-out",
