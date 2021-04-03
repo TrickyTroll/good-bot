@@ -18,10 +18,10 @@ services:
     volumes:
        - .:/root
 
-  create:
+  record:
     build: .
 # This would be the proper command later on.
 #    command: python3 /app/cli.py build ./my_example
-    command: python3 ./src/cli.py build ./toto
+    command: python3 ./src/cli.py record ./toto
     volumes:
       - .:/root
