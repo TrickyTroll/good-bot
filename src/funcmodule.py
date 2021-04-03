@@ -114,7 +114,7 @@ def create_dirs_list(all_confs: dict) -> Path:
 
         # Those dirs are created no matter the content
         to_create.append("gifs")  # Gifs files
-        to_create.append("ttyrecs")  # ttyrecs
+        to_create.append("asciicasts")  # asciicasts
         to_create.append("recordings")  # MP4 files
         to_create.append("project")  # Final video
 

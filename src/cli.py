@@ -94,7 +94,7 @@ def record(projectpath: click.Path) -> None:
 
         click.echo(f"Working on {scene}...")
 
-        ttyrec_path = funcmodule.record_commands(scene, scene / pathlib.Path("ttyrecs"))
+        casts_path = funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
         tts_path = funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
 
     return None
