@@ -325,7 +325,11 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         file_name = Path(command.stem)
 
         subprocess.run(
-            ["ttyrec", "-e", f"runner {command.absolute()}", save_path / file_name]
+            ["asciinema",
+             "rec",
+             "-c",
+             f"runner {command.absolute()}",
+             save_path / file_name]
         )
 
     return save_path
@@ -418,7 +422,7 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
 
         subprocess.run(
             [
-                "/usr/local/go/bin/bin/ttyrec2gif",
+                "/converter/node_modules/bin/asiicast2gif",
                 "-in",
                 str(ttyrec.absolute()),
                 "-out",
@@ -430,7 +434,7 @@ def convert_ttyrec(tpath: pathlib.Path, gpath: pathlib.Path) -> pathlib.Path:
 
     return gpath
 
-
+# This function is obsolete
 def convert_gifs(gpath: pathlib.Path, vpath: pathlib.Path) -> pathlib.Path:
     """
     Converts gifs to mp4 files. This is done using ffmpeg.

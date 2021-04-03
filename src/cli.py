@@ -74,10 +74,9 @@ def setup(config: click.File, project_name: str) -> None:
 
 @click.command()
 @click.argument("projectpath", type=click.Path(exists=True))
-def build(projectpath: click.Path) -> None:
+def record(projectpath: click.Path) -> None:
     """
-    Makes a video from the instructions stored in a project
-    directory.
+    Records everything that is required for the documentation.
     """
 
     click.echo(f"Using project at: {projectpath}")
@@ -97,12 +96,6 @@ def build(projectpath: click.Path) -> None:
 
         ttyrec_path = funcmodule.record_commands(scene, scene / pathlib.Path("ttyrecs"))
         tts_path = funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
-        gifs_path = funcmodule.convert_ttyrec(ttyrec_path, scene / pathlib.Path("gifs"))
-        video_path = funcmodule.convert_gifs(
-            gifs_path, scene / pathlib.Path("recordings")
-        )
-    # TODO: Stitch audio and video
-    # TODO: Stitch whole video
 
     return None
 
@@ -110,7 +103,7 @@ def build(projectpath: click.Path) -> None:
 app.add_command(setup)
 app.add_command(greet)
 app.add_command(echo_config)
-app.add_command(build)
+app.add_command(record)
 
 if __name__ == "__main__":
     app()
