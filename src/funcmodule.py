@@ -51,7 +51,7 @@ def config_info(parsed_config: dict) -> dict:
 
     all_confs = {}
 
-    CONF_TEMPLATE = {
+    conf_template = {
         "commands": [],
         "expect": [],
         "scenes": [],
@@ -66,13 +66,12 @@ def config_info(parsed_config: dict) -> dict:
             click.echo(f"Scene #{keys} is empty, please remove it.")
             sys.exit()
 
-        conf_info = CONF_TEMPLATE.copy()
+        conf_info = conf_template.copy()
 
         for item in values:
             for k, v in item.items():
                 if k == "commands":
-                    to_append = {}
-                    to_append["commands"] = item["commands"]
+                    to_append = {"commands": item["commands"]}
                     if "expect" in item.keys():
                         to_append["expect"] = item["expect"]
                     conf_info["commands"].append(to_append)
@@ -152,11 +151,13 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
             # Erase the directory
             overwrite = True
             confirm = input(f"Are you sure you want to remove {project_dir}?: ")
-            shutil.rmtree(project_dir)
 
-            # Then make a new one
+            if confirm.lower() == "yes":
+                shutil.rmtree(project_dir)
 
-            os.mkdir(project_dir)
+                # Then make a new one
+
+                os.mkdir(project_dir)
 
         else:
             sys.exit()
@@ -327,7 +328,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
              "rec",
              "-c",
              f"runner {command.absolute()}",
-             save_path / file_name]
+             save_path / file_name.with_suffix(".cast")]
         )
 
     return save_path
