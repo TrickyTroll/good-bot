@@ -5,7 +5,7 @@ services:
     build: .
     command: python3 /app/cli.py
     volumes:
-        - .:/root
+        - .:/project
 
   runner: 
     build: .
@@ -14,14 +14,14 @@ services:
   setup:
     build: .
 #    command: python3 /app/cli.py setup /root/goodbot.yaml
-    command: python3 ./src/cli.py setup ./examples/goodbot.yaml
+    command: python3 /app/cli.py setup /project/examples/goodbot.yaml
     volumes:
-       - .:/root
+       - .:/project
 
   record:
     build: .
 # This would be the proper command later on.
 #    command: python3 /app/cli.py build ./my_example
-    command: python3 ./src/cli.py record ./toto
+    command: python3 /app/cli.py record ./toto
     volumes:
       - .:/root
