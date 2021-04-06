@@ -16,17 +16,19 @@ Path = pathlib.Path
 ########################################################################
 
 
-def config_parser(file: click.File) -> dict:
-    """Can be used to parse a configuration file.
+def config_parser(file: pathlib.Path) -> dict:
+    """ Parses the YAML config and recturns it as a dictionnary.
 
     Args:
-        file (click.File): The configuration file. This should be
-        handled by click.
+        file: The path towards the config file.
 
     Returns:
-        dict: A dict with the parsed information.
+        A dictionnary representation of the configuration file.
     """
-    parsed_file = yaml.safe_load(file)
+    with open(file) as stream:
+        configuration = stream.read()
+
+    parsed_file = yaml.safe_load(configuration)
 
     if type(parsed_file) != dict:
         click.echo("Your config is not formatted properly.")

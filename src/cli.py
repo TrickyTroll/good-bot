@@ -2,6 +2,8 @@ import pathlib
 import click
 import funcmodule
 
+PROJECT_ROOT = pathlib.Path("/project")
+
 
 @click.group()
 def app():
@@ -22,47 +24,32 @@ def greet():
 
 
 @click.command()
-@click.argument("config", type=click.File("r"))
-def echo_config(config: click.File) -> None:
-    """To echo the configuration file
-
-    Args:
-        config (click.File): The config file provided by the user.
-    Returns:
-        None: None
-    """
-    parsed = funcmodule.config_parser(config)
+@click.argument("config", type=str)
+def echo_config(config: str) -> None:
+    file_name = pathlib.Path(config)
+    parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
     click.echo(parsed)
     return None
 
 
 @click.command()
-@click.argument("config", type=click.File("r"))
+@click.argument("config", type=str)
 @click.option(
     "--project-name",
     prompt="""\
     Please provide a name for your project.
     """,
 )
-def setup(config: click.File, project_name: str) -> None:
-    """Create a directory that contains everything required to make
-    a documentation video!
+def setup(config: str, project_name: str) -> None:
 
-    Args:
-        config (click.File): The configuration file. This should be
-        handled by click.
-        project_name (str): The name of the project. Will be used
-        to create the project's root directory.
-
-    Returns:
-        None: None
-    """
+    file_name = pathlib.Path(config)
+    project_name = pathlib.Path(project_name)
     # Creating directories
-    parsed = funcmodule.config_parser(config)
+    parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
     conf_info = funcmodule.config_info(parsed)
     to_create = funcmodule.create_dirs_list(conf_info)
 
-    path = funcmodule.create_dirs(to_create, project_name)
+    path = funcmodule.create_dirs(to_create, PROJECT_ROOT / project_name)
 
     # Splitting script
     funcmodule.split_config(parsed, path)
@@ -73,25 +60,22 @@ def setup(config: click.File, project_name: str) -> None:
 
 
 @click.command()
-@click.argument("projectpath", type=click.Path(exists=True))
-def record(projectpath: click.Path) -> None:
+@click.argument("projectpath", type=str)
+def record(projectpath: str) -> None:
     """
     Records everything that is required for the documentation.
     """
+    dir_path = pathlib.Path(projectpath)
 
-    click.echo(f"Using project at: {projectpath}")
-    all_scenes = funcmodule.list_scenes(projectpath)
-    # This probably won't work on windows
-    project_name = projectpath.split("/")[-1]
+    click.echo(f"Using project : {projectpath}")
+    all_scenes = funcmodule.list_scenes(PROJECT_ROOT / dir_path)
 
-    click.echo(f"The project '{project_name}' contains:")
+    click.echo(f"The project '{dir_path}' contains:")
 
     for scene in all_scenes:
-
         click.echo(f"- {scene.name}")
 
     for scene in all_scenes:
-
         click.echo(f"Working on {scene}...")
 
         casts_path = funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
