@@ -142,3 +142,20 @@ cython_debug/
 
 # Testing folder
 toto
+
+# Bash in the container
+.bash_history
+
+# MacOS stuff
+*.DS_Store
+
+# Vi swap files
+*.swp
+
+# Container stuff
+.config/
+.npm/
+.wget-hsts
+
+# Pycharm
+.idea

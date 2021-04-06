@@ -3,14 +3,25 @@ version: "3.9"
 services:
   app:
     build: .
-    command: python src/cli.py
+    command: python3 /app/cli.py
     volumes:
-        - .:/app
+        - .:/project
+
   runner: 
     build: .
     command: runner /runner/tests/examples/test_conf.yaml
+
   setup:
     build: .
-    command: python src/cli.py setup examples/goodbot.yaml
+#    command: python3 /app/cli.py setup /root/goodbot.yaml
+    command: python3 /app/cli.py setup /project/examples/goodbot.yaml
     volumes:
-       - .:/app
+       - .:/project
+
+  record:
+    build: .
+# This would be the proper command later on.
+#    command: python3 /app/cli.py build ./my_example
+    command: python3 /app/cli.py record ./toto
+    volumes:
+      - .:/root
