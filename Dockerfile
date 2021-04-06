@@ -3,25 +3,25 @@ FROM ubuntu:latest
 ENV HOME /root
 ENV TERM linux
 ENV DEBIAN_FRONTEND noninteractive
-# ENV GOPATH /usr/local/go/bin
 
-RUN apt update; apt upgrade -y
-
-RUN apt install -y \
+RUN apt-get update && apt-get install -y \
 	python3-pip \
+    asciinema \
     asciinema \
 	python3.9 \
 	ffmpeg \
 	ttyrec \
 	wget \
-	git
+	git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install utf8 locale
+RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+ENV LANG en_US.utf8
 
 WORKDIR /install
-
-#RUN wget https://dl.google.com/go/go1.16.linux-arm64.tar.gz; \
-#    tar -C /usr/local -xzf go1.16.linux-arm64.tar.gz; \
-#    export PATH=$PATH:/usr/local/go/bin; \
-#    go get github.com/sugyan/ttyrec2gif
 
 RUN pip3 install --upgrade google-cloud-texttospeech
 
@@ -39,4 +39,7 @@ COPY .env /env
 
 ENV GOOGLE_APPLICATION_CREDENTIALS="/env/google-tts.json"
 
-WORKDIR $HOME
+WORKDIR /project
+VOLUME ["/project"]
+
+ENTRYPOINT ["python3", "/app/cli.py"]
