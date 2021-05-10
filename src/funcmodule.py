@@ -99,7 +99,21 @@ def config_info(parsed_config: dict) -> dict:
 ########################################################################
 
 
-def create_dirs_list(all_confs: dict) -> Path:
+def create_dirs_list(all_confs: dict) -> list:
+    """Creates required directories for a project.
+
+    Uses the information provided by ``config_info()``
+    to create directories according to the user's configuration
+    file.
+
+    Args:
+        all_confs (dict): A ``dict`` of configuration information.
+            This should be created using the ``config_info()``
+            function.
+
+    Returns:
+        list: A list of directories to create.
+    """
 
     dirs_list = []
 
