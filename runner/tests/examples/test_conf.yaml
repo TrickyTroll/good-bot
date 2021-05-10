@@ -1,6 +1,0 @@
-commands:
-  - echo 'hello world'
-  - ls
-expect:
-  - prompt
-  - prompt
