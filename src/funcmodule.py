@@ -17,7 +17,7 @@ Path = pathlib.Path
 
 
 def config_parser(file: pathlib.Path) -> dict:
-    """ Parses the YAML config and recturns it as a dictionnary.
+    """Parses the YAML config and recturns it as a dictionnary.
 
     Args:
         file: The path towards the config file.
@@ -338,11 +338,13 @@ def record_commands(scene: Path, save_path: Path) -> Path:
         file_name = Path(command.stem)
 
         subprocess.run(
-            ["asciinema",
-             "rec",
-             "-c",
-             f"runner {command.absolute()}",
-             save_path / file_name.with_suffix(".cast")]
+            [
+                "asciinema",
+                "rec",
+                "-c",
+                f"runner {command.absolute()}",
+                save_path / file_name.with_suffix(".cast"),
+            ]
         )
 
     return save_path
