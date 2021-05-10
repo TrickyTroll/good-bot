@@ -25,8 +25,8 @@ WORKDIR /install
 
 RUN pip3 install --upgrade google-cloud-texttospeech
 
-WORKDIR /runner
-COPY ./runner /runner/
+RUN git clone https://github.com/TrickyTroll/good-bot-runner.git /good-bot-runner
+WORKDIR /good-bot-runner
 RUN pip3 install .
 
 WORKDIR /app
