@@ -62,7 +62,12 @@ def config_info(parsed_config: dict) -> dict:
         "read": [],
     }
 
-    for keys, values in parsed_config.items():
+    breakpoint()
+    all_scenes = [(i + 1) for i in range(max(parsed_config.keys()))]
+
+    for key in all_scenes:
+
+        values = parsed_config[key]
 
         if not values:
             click.echo(f"Scene #{keys} is empty, please remove it.")
@@ -71,6 +76,7 @@ def config_info(parsed_config: dict) -> dict:
         conf_info = conf_template.copy()
 
         for item in values:
+            print("Value: " + str(item))
             for k, v in item.items():
                 if k == "commands":
                     to_append = {"commands": item["commands"]}
@@ -89,7 +95,7 @@ def config_info(parsed_config: dict) -> dict:
                     click.echo(f'"{k}" is not a supported command.')
                     sys.exit()
 
-        all_confs[keys] = conf_info
+        all_confs[key] = conf_info
 
     return all_confs
 

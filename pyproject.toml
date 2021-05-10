@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "good-bot"
+name = "goodbot"
 version = "0.1.0"
 description = "Automating the recording of documentation videos"
 authors = ["TrickyTroll <53831454+TrickyTroll@users.noreply.github.com>"]

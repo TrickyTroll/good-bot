@@ -161,4 +161,4 @@ toto
 .idea
 
 # Dev scrips
-./dev-scripts
+dev-scripts/
