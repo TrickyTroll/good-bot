@@ -100,6 +100,7 @@ def config_info(parsed_config: dict) -> dict:
 
 
 def create_dirs_list(all_confs: dict) -> Path:
+
     dirs_list = []
 
     for k, v in all_confs.items():
@@ -114,10 +115,7 @@ def create_dirs_list(all_confs: dict) -> Path:
             to_create.append("audio")  # MP3 files
 
         # Those dirs are created no matter the content
-        to_create.append("gifs")  # Gifs files
         to_create.append("asciicasts")  # asciicasts
-        to_create.append("recordings")  # MP4 files
-        to_create.append("project")  # Final video
 
         dirs_list.append({f"scene_{k}": to_create})
 
