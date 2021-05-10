@@ -10,3 +10,16 @@
     expect:
       - prompt
     read: I can run commands.
+2:
+  - commands:
+      - echo 'hello from another scene'
+    expect:
+      - prompt
+    read: Here is a new scene!
+
+3:
+  - commands:
+    - echo 'I can also be quiet...sometimes'
+  - expect:
+    - prompt
+
