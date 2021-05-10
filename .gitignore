@@ -159,3 +159,6 @@ toto
 
 # Pycharm
 .idea
+
+# Dev scrips
+./dev-scripts
