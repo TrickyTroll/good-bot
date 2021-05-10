@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "good-bot"
+version = "0.1.0"
+description = "Automating the recording of documentation videos"
+authors = ["TrickyTroll <53831454+TrickyTroll@users.noreply.github.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^7.1.2"
+PyYAML = "^5.4.1"
+pexpect = "^4.8.0"
+google-cloud-texttospeech = "^2.3.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
