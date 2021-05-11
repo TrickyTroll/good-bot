@@ -53,16 +53,6 @@ def config_info(parsed_config: dict) -> dict:
 
     all_confs = {}
 
-    conf_template = {
-        "commands": [],
-        "expect": [],
-        "scenes": [],
-        "editor": [],
-        "slides": [],
-        "read": [],
-    }
-
-    breakpoint()
     all_scenes = [(i + 1) for i in range(max(parsed_config.keys()))]
 
     for key in all_scenes:
@@ -73,7 +63,14 @@ def config_info(parsed_config: dict) -> dict:
             click.echo(f"Scene #{keys} is empty, please remove it.")
             sys.exit()
 
-        conf_info = conf_template.copy()
+        conf_info = {
+            "commands": [],
+            "expect": [],
+            "scenes": [],
+            "editor": [],
+            "slides": [],
+            "read": [],
+        }
 
         for item in values:
             print("Value: " + str(item))
@@ -84,6 +81,7 @@ def config_info(parsed_config: dict) -> dict:
                         to_append["expect"] = item["expect"]
                     conf_info["commands"].append(to_append)
                 elif k == "expect":
+                    # Expect key are handled in the previous case.
                     continue
                 elif k == "read":
                     conf_info["read"].append(v)
