@@ -19,10 +19,7 @@ class TestParser(unittest.TestCase):
 
     """
 
-    with open(CONFIGPATH / "test_conf.yaml", "r") as stream:
-        config = stream.read()
-        
-    PARSED = funcmodule.config_parser(config)
+    PARSED = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
 
     def test_returns_dict(self):
         """
@@ -34,21 +31,20 @@ class TestParser(unittest.TestCase):
         Making sure that every key in the parsed config is of type
         `int`.
         """
-        for key in PARSED.keys():
+        for key in self.PARSED.keys():
             self.assertEqual(type(key), int)
     def test_values_dict(self):
         """
         Making sure that every item in the parsed config is of type
-        `dict`.
+        `list`.
         """
-        for item in PARSED.items():
-            self.assertEqual(type(item), dict)
+        for item in self.PARSED.values():
+            self.assertEqual(type(item), list)
     def test_values_of_values_list(self):
         """
         Testing type of the items contained in the items of the
-        parsed configuration. They should be of type `list`.
+        parsed configuration. They should be of type `dict`.
         """
-        for item in PARSED.items():
-            for thing in item.items():
-                self.assertEqual(type(thing), list)
-
+        for item in self.PARSED.values():
+            for thing in item:
+                self.assertEqual(type(thing), dict)
