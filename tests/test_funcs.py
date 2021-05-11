@@ -5,6 +5,7 @@ from pathlib import Path
 
 CONFIGPATH = Path("./tests/examples")
 
+
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
 
@@ -26,6 +27,7 @@ class TestParser(unittest.TestCase):
         Testing if the function `config_parser()` returns a `dict`.
         """
         self.assertEqual(type(self.PARSED), dict)
+
     def test_keys_int(self):
         """
         Making sure that every key in the parsed config is of type
@@ -33,6 +35,7 @@ class TestParser(unittest.TestCase):
         """
         for key in self.PARSED.keys():
             self.assertEqual(type(key), int)
+
     def test_values_dict(self):
         """
         Making sure that every item in the parsed config is of type
@@ -40,6 +43,7 @@ class TestParser(unittest.TestCase):
         """
         for item in self.PARSED.values():
             self.assertEqual(type(item), list)
+
     def test_values_of_values_list(self):
         """
         Testing type of the items contained in the items of the
@@ -48,6 +52,7 @@ class TestParser(unittest.TestCase):
         for item in self.PARSED.values():
             for thing in item:
                 self.assertEqual(type(thing), dict)
+
 
 class TestInfo(unittest.TestCase):
     """Tests for the `config_info` function.
@@ -69,6 +74,7 @@ class TestInfo(unittest.TestCase):
         * Values are of type `list`.
 
     """
+
     parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
 
     RETURNED = funcmodule.config_info(parsed)
@@ -77,6 +83,7 @@ class TestInfo(unittest.TestCase):
     def test_returns_dict(self):
         """Testing that `config_parser()` returns a `dict`."""
         self.assertEqual(type(self.RETURNED), dict)
+
     def test_dict_keys(self):
         """Testing the type of the dictionnary keys.
 
@@ -85,6 +92,7 @@ class TestInfo(unittest.TestCase):
         """
         for key in self.RETURNED.keys():
             self.assertEqual(type(key), int)
+
     def test_dict_values(self):
         """Testing the type of the dictionnary values.
 
@@ -93,3 +101,34 @@ class TestInfo(unittest.TestCase):
         """
         for value in self.RETURNED.values():
             self.assertEqual(type(value), dict)
+
+    def test_value_keys(self):
+        """
+        From the values in the dictionnary returned by `config_info`.
+        These values should be of type `dict`, as tested previously.
+
+        * Testing that the keys of those `dict` are of type `str`.
+        * Testing that the keys are contained in the following list:
+
+        ```python
+        ["commands", "expect", "scenes", "editor", "slides", "read"]
+        ```
+        """
+        all_keys = ["commands", "expect", "scenes", "editor", "slides", "read"]
+
+        for item in self.VALUES:
+            for key in item.keys():
+                self.assertEqual(type(key), str)
+                self.assertTrue(key in all_keys)
+
+    def test_value_values(self):
+        """
+        From the values in the dictionnary returned by `config_info`.
+        These values should be of type `dict`, as tested previously.
+
+        Testing that the values of those `dict` are of type `list`.
+        """
+
+        for item in self.VALUES:
+            for value in item.values():
+                self.assertEqual(type(value), list)
