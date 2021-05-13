@@ -118,6 +118,8 @@ def create_dirs_list(all_confs: dict) -> list:
     Returns:
         list: A list of directories to create.
     """
+    if not isinstance(all_confs, dict):
+        raise TypeError("create_dirs_list(): This function takes a dictionnary as an input.")
 
     dirs_list = []
 
