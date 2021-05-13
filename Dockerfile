@@ -23,14 +23,14 @@ ENV LANG en_US.utf8
 
 WORKDIR /install
 
-RUN pip3 install --upgrade google-cloud-texttospeech
+RUN pip3 install pytest
 
 RUN git clone https://github.com/TrickyTroll/good-bot-runner.git /good-bot-runner
 WORKDIR /good-bot-runner
 RUN pip3 install .
 
 WORKDIR /app
-COPY ./src /app/
+COPY ./goodbot /app/
 COPY ./requirements.txt /app/
 RUN pip3 install -r requirements.txt
 
