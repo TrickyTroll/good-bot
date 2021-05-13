@@ -133,11 +133,27 @@ class TestInfo(unittest.TestCase):
             for value in item.values():
                 self.assertEqual(type(value), list)
 
-class TestDirsList():
+class TestDirsList(unittest.TestCase):
     """Testing the `create_dirs_list()` function.
 
     Testing:
-        * Returned value is a `dict`.
-        * Items in the list are of type string.
+        * Error handling on other input types.
+        * Returned value is a `list`.
+        * Items in the list are of type `dict`.
     """
-    pass
+    parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
+    RETURNED = funcmodule.config_info(parsed)
+    DIRS_LIST = funcmodule.create_dirs_list(RETURNED)
+
+    def test_error_handling(self):
+        """Testing error handling on bad input types."""
+        self.assertRaises(TypeError, funcmodule.create_dirs_list, "Hi!")
+        self.assertRaises(TypeError, funcmodule.create_dirs_list, ["a wrong type"])
+
+    def test_returns_dict(self):
+        """Making sure that `create_dirs_list()` returns a list."""
+        self.assertEqual(type(self.DIRS_LIST), list)
+
+    def test_contains_strings(self):
+        for item in self.DIRS_LIST:
+            self.assertEqual(type(item), dict)
