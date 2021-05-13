@@ -2,7 +2,8 @@ import pathlib
 import click
 import funcmodule
 
-PROJECT_ROOT = pathlib.Path("/project")
+# Should be /project if in container.
+PROJECT_ROOT = pathlib.Path(".")
 
 
 @click.group()
