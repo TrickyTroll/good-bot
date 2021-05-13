@@ -133,6 +133,7 @@ class TestInfo(unittest.TestCase):
             for value in item.values():
                 self.assertEqual(type(value), list)
 
+
 class TestDirsList(unittest.TestCase):
     """Testing the `create_dirs_list()` function.
 
@@ -141,6 +142,7 @@ class TestDirsList(unittest.TestCase):
         * Returned value is a `list`.
         * Items in the list are of type `dict`.
     """
+
     parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
     RETURNED = funcmodule.config_info(parsed)
     DIRS_LIST = funcmodule.create_dirs_list(RETURNED)
