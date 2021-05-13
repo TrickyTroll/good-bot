@@ -3,7 +3,7 @@ import click
 import funcmodule
 
 # Should be /project if in container.
-PROJECT_ROOT = pathlib.Path(".")
+PROJECT_ROOT = pathlib.Path("/project")
 
 
 @click.group()
