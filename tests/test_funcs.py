@@ -132,3 +132,12 @@ class TestInfo(unittest.TestCase):
         for item in self.VALUES:
             for value in item.values():
                 self.assertEqual(type(value), list)
+
+class TestDirsList():
+    """Testing the `create_dirs_list()` function.
+
+    Testing:
+        * Returned value is a `dict`.
+        * Items in the list are of type string.
+    """
+    pass
