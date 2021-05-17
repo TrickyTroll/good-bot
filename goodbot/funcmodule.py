@@ -158,6 +158,11 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
         the command succeded. If it didn't, this returns the path
         towards the current directory.
     """
+    if not isinstance(directories, list):
+        raise TypeError(f"`directories` must be a list of dictionnaries.")
+    if not isinstance(project_dir, str):
+        raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
+
     project_dir = Path(project_dir)
     overwrite = False
 
