@@ -175,6 +175,7 @@ class TestCreateDirs(unittest.TestCase):
     parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
     conf_info = funcmodule.config_info(parsed)
     dirs_list = funcmodule.create_dirs_list(conf_info)
+    path = funcmodule.create_dirs(dirs_list, project_name)
     def test_error_handling(self):
         """
         Testing that the function `create_dirs()` raises errors on
@@ -183,7 +184,7 @@ class TestCreateDirs(unittest.TestCase):
         # These should not create any dir and raise errors before
         # anything else.
         self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, self.temp)
-        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, self.project_name)
+        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, [self.project_name])
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
