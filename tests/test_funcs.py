@@ -1,8 +1,10 @@
 import unittest
 import tempfile
+import shutil
+import pathlib
 import goodbot.funcmodule as funcmodule
 
-from pathlib import Path
+Path = pathlib.Path
 
 CONFIGPATH = Path("./tests/examples")
 
@@ -167,20 +169,22 @@ class TestCreateDirs(unittest.TestCase):
     Testing:
         * Error handling on other input types.
         * Returns a value of type `pathlib.Path`.
-        * Creates a directory for every category.
-        * Does not create unnecessary directories.
     """
-    temp = tempfile.tmpdir("./test-dir")
+    temp = tempfile.mkdtemp()
+    project_name = Path(temp) / Path("toto")
     parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
     conf_info = funcmodule.config_info(parsed)
     dirs_list = funcmodule.create_dirs_list(conf_info)
-    path = funcmodule.create_dirs(dirs_list, temp)
     def test_error_handling(self):
         """
         Testing that the function `create_dirs()` raises errors on
         other input types than `list`
         """
+        # These should not create any dir and raise errors before
+        # anything else.
+        self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, self.temp)
+        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, self.project_name)
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
-        self.assertEqual(type(path), Path) # imported Path from pathlib
+        self.assertTrue(isinstance(self.path, (Path, pathlib.PosixPath)))
