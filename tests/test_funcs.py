@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 import goodbot.funcmodule as funcmodule
 
 from pathlib import Path
@@ -159,3 +160,27 @@ class TestDirsList(unittest.TestCase):
     def test_contains_strings(self):
         for item in self.DIRS_LIST:
             self.assertEqual(type(item), dict)
+
+class TestCreateDirs(unittest.TestCase):
+    """Testing the `create_dirs()` function.
+
+    Testing:
+        * Error handling on other input types.
+        * Returns a value of type `pathlib.Path`.
+        * Creates a directory for every category.
+        * Does not create unnecessary directories.
+    """
+    temp = tempfile.tmpdir("./test-dir")
+    parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
+    conf_info = funcmodule.config_info(parsed)
+    dirs_list = funcmodule.create_dirs_list(conf_info)
+    path = funcmodule.create_dirs(dirs_list, temp)
+    def test_error_handling(self):
+        """
+        Testing that the function `create_dirs()` raises errors on
+        other input types than `list`
+        """
+
+    def test_return_type(self):
+        """Testing that the returned value is of type `pathlib.Path`"""
+        self.assertEqual(type(path), Path) # imported Path from pathlib
