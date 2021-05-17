@@ -142,16 +142,15 @@ def create_dirs_list(all_confs: dict) -> list:
     return dirs_list
 
 
-def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
+def create_dirs(directories: list, project_dir: str or Path = "my_project") -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
     mount the project afterwards.
 
     Args:
         directories (list): A list of subdirs to create
-        project_dir (str, optional): The name of the project. It will
-        be used to name the root directory for the project.
-         Defaults to "my_project".
+        project_dir (str or Path, optional): The name of the project. It will
+        be used to name the root directory for the project. Defaults to "my_project".
 
     Returns:
         Path : The path towards where the project has been created if
@@ -160,7 +159,7 @@ def create_dirs(directories: list, project_dir: str = "my_project") -> Path:
     """
     if not isinstance(directories, list):
         raise TypeError(f"`directories` must be a list of dictionnaries.")
-    if not isinstance(project_dir, str):
+    if not isinstance(project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)):
         raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
 
     project_dir = Path(project_dir)
