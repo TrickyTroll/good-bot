@@ -34,11 +34,6 @@ COPY ./goodbot /app/
 COPY ./requirements.txt /app/
 RUN pip3 install -r requirements.txt
 
-WORKDIR /env
-COPY .env /env
-
-ENV GOOGLE_APPLICATION_CREDENTIALS="/env/google-tts.json"
-
 WORKDIR /project
 VOLUME ["/project"]
 
