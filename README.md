@@ -23,8 +23,23 @@ a name of your choosing.
 ### Adding voice-over
 
 If you want to use `Google TTS`, you will need an API key for the service.
-For now, `good-bot` looks for your key in a `.env` directory. The file
-must be named `google-tts.json`.
+To get your code, you can follow the [instructions](https://cloud.google.com/text-to-speech/docs/quickstart-protocol)
+provided by Google.
+
+Once you have activated the API, you'll be able to download a `.json` file that
+contains your key. You can also access your sercrets on the Google Cloud Console.
+When `goodbot` runs, it will look for the value of the
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable. Since your host's
+environment variables are not sent to the container by default, you will
+need to include the following line to the other Docker commands presented in
+this document.
+
+```bash
+-env GOOGLE_APPLICATION_CREDENTIALS=[YOUR-KEY]
+```
+
+Where `YOUR-KEY` needs to be replaced by the one that has been generated
+when activating the service.
 
 ### Creating a project
 
