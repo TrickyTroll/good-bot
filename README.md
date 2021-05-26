@@ -46,7 +46,7 @@ Once you have written your configuration file, you can create your project
 using `good-bot`'s `setup` command.
 
 ```bash
-docker run -it -v $(PWD):/project -t [SOME TAG] setup [CONFIG NAME]
+docker run -it -v $PWD:/project -t [SOME TAG] setup [CONFIG NAME]
 ```
 
 Where
@@ -63,7 +63,7 @@ Where
 If you have a project directory, you can record your clips using
 
 ```bash
-docker run -it -v $(PWD):/project -t [SOME TAG] record [PROJECT NAME]
+docker run -it -v $PWD:/project -t [SOME TAG] record [PROJECT NAME]
 ```
 
 Where
