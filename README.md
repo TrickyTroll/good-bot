@@ -31,8 +31,7 @@ contains your key. You can also access your sercrets on the Google Cloud Console
 When `goodbot` runs, it will look for the value of the
 `GOOGLE_APPLICATION_CREDENTIALS` environment variable. Since your host's
 environment variables are not sent to the container by default, you will
-need to include the following line to the other Docker commands presented in
-this document.
+need to include the following line when using the `Docker run` command later on.
 
 ```bash
 -env GOOGLE_APPLICATION_CREDENTIALS=[YOUR-KEY]
@@ -71,6 +70,9 @@ Where
 
 * `[SOME TAG]` is the tag previously chosen.
 * `[PROJECT NAME]` is the name of the project file.
+
+> **Note**: This is where you need to include the `--env`
+> argument mentionned [earlier](#adding-voice-over).
 
 ## For the old version
 
