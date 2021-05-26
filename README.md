@@ -34,7 +34,7 @@ environment variables are not sent to the container by default, you will
 need to include the following line when using the `Docker run` command later on.
 
 ```bash
--env GOOGLE_APPLICATION_CREDENTIALS=[YOUR-KEY]
+--env GOOGLE_APPLICATION_CREDENTIALS=[YOUR-KEY]
 ```
 
 Where `YOUR-KEY` needs to be replaced by the one that has been generated
