@@ -162,3 +162,7 @@ toto
 
 # Dev scrips
 dev-scripts/
+
+# nodejs
+node_modules/
+package-lock.json
