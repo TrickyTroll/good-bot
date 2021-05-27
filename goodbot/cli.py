@@ -22,7 +22,11 @@ def in_docker() -> bool:
         os.path.exists('/.dockerenv') or
         os.path.isfile(path) and any('docker' in line for line in open(path))
     )
-PROJECT_ROOT = pathlib.Path("/project")
+
+if in_docker():
+    PROJECT_ROOT = pathlib.Path(".")
+else:
+    PROJECT_ROOT = pathlib.Path("/project")
 
 
 @click.group()
