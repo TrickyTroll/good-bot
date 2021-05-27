@@ -2,3 +2,5 @@
 vscode:
   extensions:
     - njpwerner.autodocstring
+    - ms-azuretools.vscode-docker
+    - ms-python.python
