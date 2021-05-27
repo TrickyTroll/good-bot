@@ -1,10 +1,10 @@
 import os
 import sys
-import yaml
-import click
-import shutil
-import subprocess
 import pathlib
+import subprocess
+import shutil
+import click
+import yaml
 
 from google.cloud import texttospeech
 
@@ -30,7 +30,7 @@ def config_parser(file: pathlib.Path) -> dict:
 
     parsed_file = yaml.safe_load(configuration)
 
-    if type(parsed_file) != dict:
+    if not isinstance(parsed_file, dict):
         click.echo("Your config is not formatted properly.")
         click.echo(parsed_file)
         sys.exit()
@@ -60,7 +60,7 @@ def config_info(parsed_config: dict) -> dict:
         values = parsed_config[key]
 
         if not values:
-            click.echo(f"Scene #{keys} is empty, please remove it.")
+            click.echo(f"Scene #{key} is empty, please remove it.")
             sys.exit()
 
         conf_info = {
@@ -73,23 +73,23 @@ def config_info(parsed_config: dict) -> dict:
         }
 
         for item in values:
-            for k, v in item.items():
-                if k == "commands":
+            for key_2, value_2 in item.items():
+                if key_2 == "commands":
                     to_append = {"commands": item["commands"]}
                     if "expect" in item.keys():
                         to_append["expect"] = item["expect"]
                     conf_info["commands"].append(to_append)
-                elif k == "expect":
+                elif key_2 == "expect":
                     # Expect key are handled in the previous case.
                     continue
-                elif k == "read":
-                    conf_info["read"].append(v)
-                elif k == "slides":
-                    conf_info["slides"].append(v)
-                elif k == "editor":
-                    conf_info["editor"].append(v)
+                elif key_2 == "read":
+                    conf_info["read"].append(value_2)
+                elif key_2 == "slides":
+                    conf_info["slides"].append(value_2)
+                elif key_2 == "editor":
+                    conf_info["editor"].append(value_2)
                 else:
-                    click.echo(f'"{k}" is not a supported command.')
+                    click.echo(f'"{key_2}" is not a supported command.')
                     sys.exit()
 
         all_confs[key] = conf_info
@@ -124,13 +124,13 @@ def create_dirs_list(all_confs: dict) -> list:
 
     dirs_list = []
 
-    for k, v in all_confs.items():
+    for key, value in all_confs.items():
 
         to_create = []
 
-        for keys, values in v.items():
-            if values:  # There are items in the list.
-                to_create.append(keys)
+        for key_2, value_2 in value.items():
+            if value_2:  # There are items in the list.
+                to_create.append(key_2)
 
         if "read" in to_create:
             to_create.append("audio")  # MP3 files
@@ -138,7 +138,7 @@ def create_dirs_list(all_confs: dict) -> list:
         # Those dirs are created no matter the content
         to_create.append("asciicasts")  # asciicasts
 
-        dirs_list.append({f"scene_{k}": to_create})
+        dirs_list.append({f"scene_{key}": to_create})
 
     return dirs_list
 
@@ -159,7 +159,7 @@ def create_dirs(directories: list, project_dir: str or Path = "my_project") -> P
         towards the current directory.
     """
     if not isinstance(directories, list):
-        raise TypeError(f"`directories` must be a list of dictionnaries.")
+        raise TypeError("`directories` must be a list of dictionnaries.")
     if not isinstance(project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)):
         raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
 
@@ -228,28 +228,28 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
     todos = config_info(parsed)
 
     # This should probably be grouped
-    for k, v in todos.items():
+    for key, value in todos.items():
 
-        scene_path = Path(f"scene_{k}")
+        scene_path = Path(f"scene_{key}")
 
-        for key, value in v.items():
+        for key_2, value_2 in value.items():
 
-            write_path = Path(key)
+            write_path = Path(key_2)
 
-            if "read" in key:
+            if "read" in key_2:
                 ext = ".txt"
             else:
                 ext = ".yaml"
 
-            for i in range(len(value)):
+            for index, element in enumerate(value_2):
 
                 try:
-                    to_write = yaml.safe_dump(value[i])
+                    to_write = yaml.safe_dump(element)
 
                 except TypeError:
                     sys.exit()
 
-                file_name = Path(f"file_{i}")
+                file_name = Path(f"file_{index}")
                 file_path = project_path / scene_path / write_path / file_name
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
@@ -283,14 +283,7 @@ def is_scene(directory: Path) -> bool:
     else:
         return False
 
-    if dir_name[0:5] == "scene" and contains_something:
-
-        return True
-
-    else:
-
-        return False
-
+    return dir_name[0:5] == "scene" and contains_something
 
 def list_scenes(project_dir: click.Path) -> list:
     """Lists scenes in the project directory.
@@ -334,15 +327,13 @@ def record_commands(scene: Path, save_path: Path) -> Path:
     contains = list(scene.iterdir())
     categories = [command.name for command in contains]
 
-    if "commands" in categories:
-        is_commands = True
-    else:
-        is_commands = False
+    is_commands = "commands" in categories
 
     if not is_commands:
         return Path(os.getcwd())
-    else:
-        commands_path = scene / Path("commands")
+
+    commands_path = scene / Path("commands")
+
     click.echo(f"Recording shell commands for {str(scene)}.")
 
     for command in commands_path.iterdir():
@@ -378,17 +369,14 @@ def record_audio(scene: Path, save_path: Path) -> Path:
     contains = list(scene.iterdir())
     categories = [command.name for command in contains]
 
-    if "read" in categories:
-        is_read = True
-    else:
-        is_read = False
+    is_read = ("read" in categories)
 
     audio_dir = save_path
 
     if not is_read:
         return Path(os.getcwd())
-    else:
-        read_path = scene / Path("read")
+
+    read_path = scene / Path("read")
 
     for item in read_path.iterdir():
         with open(item, "r") as stream:
