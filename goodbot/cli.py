@@ -3,9 +3,25 @@
 
 import pathlib
 import click
+import os
 from goodbot import funcmodule
 
 # Should be /project if in container.
+
+def in_docker() -> bool:
+    """Checks if code is currently running in a Docker container.
+
+    Checks if Docker is in control groups or if there is a `.dockerenv`
+    file at the filesystem's root directory.
+
+    Returns:
+        bool: Whether or not the code is running in a Docker container.
+    """
+    path = '/proc/self/cgroup'
+    return (
+        os.path.exists('/.dockerenv') or
+        os.path.isfile(path) and any('docker' in line for line in open(path))
+    )
 PROJECT_ROOT = pathlib.Path("/project")
 
 
