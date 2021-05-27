@@ -27,18 +27,37 @@ To get your code, you can follow the [instructions](https://cloud.google.com/tex
 provided by Google.
 
 Once you have activated the API, you'll be able to download a `.json` file that
-contains your key. You can also access your sercrets on the Google Cloud Console.
+contains your key. As mentionned in the Google TTS documentation, you will also
+need to bind the path to your `.json` file to the `GOOGLE_APPLICATION_CREDENTIALS`
+variable. This is where instructions for `goodbot` differ from the ones in Google's
+documentation.
+
 When `goodbot` runs, it will look for the value of the
 `GOOGLE_APPLICATION_CREDENTIALS` environment variable. Since your host's
 environment variables are not sent to the container by default, you will
-need to include the following line when using the `Docker run` command later on.
+need to pass the `.json` credentials file to the container. The environment
+variable needs to be set for the container, not just the host.
 
-```bash
---env GOOGLE_APPLICATION_CREDENTIALS=[YOUR-KEY]
+To copy your private key to the container, you can add the following flag
+when running the container:
+
+```shell
+-v [PATH/TO/FILE]:/.env
 ```
 
-Where `YOUR-KEY` needs to be replaced by the one that has been generated
-when activating the service.
+Where `[PATH/TO/FILE]` needs to be replaced by the path towards the directory
+that contains your key on your host's filesystem. This mounts the previously
+mentionned directory in your container under the path `/.env`.
+
+Now that your API key is accessible from container, you can set the
+`GOOGLE_APPLICATION_CREDENTIALS` variable using the following command:
+
+```bash
+--env GOOGLE_APPLICATION_CREDENTIALS="/.env/[KEY-NAME].json
+```
+
+Where `KEY-NAME` needs to be replaced by the name of the `.json` file
+previously downloaded.
 
 ### Creating a project
 
