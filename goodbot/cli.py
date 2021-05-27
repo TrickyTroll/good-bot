@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+"""`goodbot`'s command line interface"""
+
 import pathlib
 import click
 import funcmodule
