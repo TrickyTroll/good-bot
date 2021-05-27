@@ -59,6 +59,22 @@ Now that your API key is accessible from container, you can set the
 Where `KEY-NAME` needs to be replaced by the name of the `.json` file
 previously downloaded.
 
+#### Voice-over summary
+
+To use voice-over, you will need to activate the Google Text to Speech
+API for your Google Cloud account. You will also need an API key, which
+can be downloaded as a `.json` file.
+
+Once you have your key on your host computer, you can share the key to
+the container and enable it by adding the following flags to the `docker run` 
+command (see [Recording your video](#recording-your-video)).
+
+```bash
+-v [PATH/TO/FILE]:/.env --env GOOGLE_APPLICATION_CREDENTIALS="/.env/[KEY-NAME].json
+```
+
+`[PATH/TO/FILE]` and `[KEY-NAME]` must be replaced by your own values.
+
 ### Creating a project
 
 Once you have written your configuration file, you can create your project
