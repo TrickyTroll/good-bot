@@ -3,7 +3,7 @@
 
 import pathlib
 import click
-import funcmodule
+from goodbot import funcmodule
 
 # Should be /project if in container.
 PROJECT_ROOT = pathlib.Path("/project")
@@ -85,5 +85,5 @@ app.add_command(greet)
 app.add_command(echo_config)
 app.add_command(record)
 
-if __name__ == "__main__":
+def mai
     app()
