@@ -182,9 +182,12 @@ class TestCreateDirs(unittest.TestCase):
         """
         # These should not create any dir and raise errors before
         # anything else.
+        # This fist tests has a wrong directory list argument.
         self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, self.temp)
-        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, self.project_name)
+        # The second test has a wrong path to create the directories.
+        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, ["path", "as", "list"])
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
-        self.assertTrue(isinstance(self.path, (Path, pathlib.PosixPath)))
+        returned_path = funcmodule.create_dirs(self.dirs_list)
+        self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
