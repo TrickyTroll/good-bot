@@ -107,7 +107,7 @@ Where
 * `[PROJECT NAME]` is the name of the project file.
 
 > **Note**: This is where you need to include the `--env`
-> argument mentionned [earlier](#adding-voice-over).
+> and `-v` flags mentionned [earlier](#adding-voice-over).
 
 ## For the old version
 
