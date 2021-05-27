@@ -1,3 +1,7 @@
+"""`goodbot`'s funcmodule.
+
+This module contains every function used by 
+"""
 import os
 import sys
 import pathlib
@@ -381,7 +385,6 @@ def record_audio(scene: Path, save_path: Path) -> Path:
     for item in read_path.iterdir():
         with open(item, "r") as stream:
             # Assuming everything to read is on one line
-            # TODO: Read a multi line file.
             to_read = stream.readlines()[0]
             to_read = to_read.strip()
 
