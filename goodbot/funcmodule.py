@@ -73,7 +73,6 @@ def config_info(parsed_config: dict) -> dict:
         }
 
         for item in values:
-            print("Value: " + str(item))
             for k, v in item.items():
                 if k == "commands":
                     to_append = {"commands": item["commands"]}
