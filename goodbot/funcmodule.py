@@ -292,6 +292,7 @@ def is_scene(directory: Path) -> bool:
 
     return dir_name[0:5] == "scene" and contains_something
 
+
 def list_scenes(project_dir: click.Path) -> list:
     """Lists scenes in the project directory.
 
@@ -376,7 +377,7 @@ def record_audio(scene: Path, save_path: Path) -> Path:
     contains = list(scene.iterdir())
     categories = [command.name for command in contains]
 
-    is_read = ("read" in categories)
+    is_read = "read" in categories
 
     audio_dir = save_path
 
