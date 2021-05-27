@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 """`goodbot`'s funcmodule.
 
-This module contains every function used by 
+This module contains every function used by `goodbot`'s command line
+interface.
 """
+
 import os
 import sys
 import pathlib
