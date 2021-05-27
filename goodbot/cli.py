@@ -9,7 +9,6 @@ PROJECT_ROOT = pathlib.Path("/project")
 @click.group()
 def app():
     """Automating the recording of documentation videos."""
-    pass
 
 
 @click.command()
@@ -21,8 +20,6 @@ def greet():
     """
     click.echo("Hello, world!")
 
-    return None
-
 
 @click.command()
 @click.argument("config", type=str)
@@ -30,7 +27,6 @@ def echo_config(config: str) -> None:
     file_name = pathlib.Path(config)
     parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
     click.echo(parsed)
-    return None
 
 
 @click.command()
@@ -57,8 +53,6 @@ def setup(config: str, project_name: str) -> None:
 
     click.echo(f"Your project has been setup at: {path}")
 
-    return None
-
 
 @click.command()
 @click.argument("projectpath", type=str)
@@ -79,10 +73,10 @@ def record(projectpath: str) -> None:
     for scene in all_scenes:
         click.echo(f"Working on {scene}...")
 
-        casts_path = funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
-        tts_path = funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
-
-    return None
+        funcmodule.record_commands(
+            scene, scene / pathlib.Path("asciicasts"))
+        funcmodule.record_audio(scene,
+                                           scene / pathlib.Path("audio"))
 
 
 app.add_command(setup)
