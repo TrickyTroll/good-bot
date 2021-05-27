@@ -8,6 +8,7 @@ from goodbot import funcmodule
 
 # Should be /project if in container.
 
+
 def in_docker() -> bool:
     """Checks if code is currently running in a Docker container.
 
@@ -17,11 +18,13 @@ def in_docker() -> bool:
     Returns:
         bool: Whether or not the code is running in a Docker container.
     """
-    path = '/proc/self/cgroup'
+    path = "/proc/self/cgroup"
     return (
-        os.path.exists('/.dockerenv') or
-        os.path.isfile(path) and any('docker' in line for line in open(path))
+        os.path.exists("/.dockerenv")
+        or os.path.isfile(path)
+        and any("docker" in line for line in open(path))
     )
+
 
 if in_docker():
     PROJECT_ROOT = pathlib.Path(".")
@@ -104,6 +107,7 @@ app.add_command(setup)
 app.add_command(greet)
 app.add_command(echo_config)
 app.add_command(record)
+
 
 def main():
     app()
