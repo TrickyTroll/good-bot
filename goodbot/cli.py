@@ -73,10 +73,8 @@ def record(projectpath: str) -> None:
     for scene in all_scenes:
         click.echo(f"Working on {scene}...")
 
-        funcmodule.record_commands(
-            scene, scene / pathlib.Path("asciicasts"))
-        funcmodule.record_audio(scene,
-                                           scene / pathlib.Path("audio"))
+        funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
+        funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
 
 
 app.add_command(setup)
