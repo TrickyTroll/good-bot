@@ -3,7 +3,7 @@
 Automating the recording of documentation videos.
 
 `good-bot` automates the process of recording documentation for your
-projects. It even provides voice-over using 
+projects. It even provides voice-over using
 [Google TTS](https://cloud.google.com/text-to-speech/).
 
 ## Try it out
@@ -66,7 +66,7 @@ API for your Google Cloud account. You will also need an API key, which
 can be downloaded as a `.json` file.
 
 Once you have your key on your host computer, you can share the key to
-the container and enable it by adding the following flags to the `docker run` 
+the container and enable it by adding the following flags to the `docker run`
 command (see [Recording your video](#recording-your-video)).
 
 ```bash
@@ -86,8 +86,8 @@ docker run -it -v $PWD:/project -t [SOME TAG] setup [CONFIG NAME]
 
 Where
 
-* `[SOME TAG]` is the tag previously chosen.
-* `[CONFIG NAME]` is the name of the configuration file.
+- `[SOME TAG]` is the tag previously chosen.
+- `[CONFIG NAME]` is the name of the configuration file.
 
 > Keep in mind that this command mounts the current working directory
 > in the container. If your configuration file is not under your
@@ -103,8 +103,8 @@ docker run -it -v $PWD:/project -t [SOME TAG] record [PROJECT NAME]
 
 Where
 
-* `[SOME TAG]` is the tag previously chosen.
-* `[PROJECT NAME]` is the name of the project file.
+- `[SOME TAG]` is the tag previously chosen.
+- `[PROJECT NAME]` is the name of the project file.
 
 > **Note**: This is where you need to include the `--env`
 > and `-v` flags mentionned [earlier](#adding-voice-over).
