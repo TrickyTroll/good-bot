@@ -85,5 +85,5 @@ app.add_command(greet)
 app.add_command(echo_config)
 app.add_command(record)
 
-def mai
+def main():
     app()
