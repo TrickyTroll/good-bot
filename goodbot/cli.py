@@ -27,9 +27,9 @@ def in_docker() -> bool:
 
 
 if in_docker():
-    PROJECT_ROOT = pathlib.Path(".")
-else:
     PROJECT_ROOT = pathlib.Path("/project")
+else:
+    PROJECT_ROOT = pathlib.Path(".")
 
 
 @click.group()
