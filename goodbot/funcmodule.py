@@ -12,6 +12,7 @@ import subprocess
 import shutil
 import click
 import yaml
+from typing import List, Dict, Union
 
 from google.cloud import texttospeech
 
@@ -42,9 +43,9 @@ def config_parser(file_path: pathlib.Path) -> dict:
             configuration file.
     """
     with open(file_path) as stream:
-        configuration = stream.read()
+        configuration: str = stream.read()
 
-    parsed_file = yaml.safe_load(configuration)
+    parsed_file: dict = yaml.safe_load(configuration)
 
     if not isinstance(parsed_file, dict):
         raise TypeError("Your config is not formatted properly.")
