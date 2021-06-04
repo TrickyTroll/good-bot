@@ -23,19 +23,25 @@ Path = pathlib.Path
 ########################################################################
 
 
-def config_parser(file: pathlib.Path) -> dict:
+def config_parser(file_path: pathlib.Path) -> dict:
     """Opens and parses a `yaml` configuration file.
 
-    Uses [PyYAML](https://pyyaml.org) to parse the
-    configuration file.
+    Uses [PyYAML](https://pyyaml.org) to parse the configuration file.
 
     Args:
-        file (pathlib.Path): [description]
+        file_path (pathlib.Path): The path towards the user's
+        configuration file.
+
+    Raises:
+        TypeError: Raises a `TypeError` if the parsed object is
+            not of type `dict`. It means that the configuration file
+            wasn't formatted properly.
 
     Returns:
-        dict: [description]
+        dict: A Python object representation of the `.yaml` 
+            configuration file.
     """
-    with open(file) as stream:
+    with open(file_path) as stream:
         configuration = stream.read()
 
     parsed_file = yaml.safe_load(configuration)
