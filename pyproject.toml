@@ -1,23 +1,36 @@
-[build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
-
-[tool]
-[tool.poetry]
-authors = ["TrickyTroll <53831454+TrickyTroll@users.noreply.github.com>"]
-description = "Automating the recording of documentation videos"
-license = "MIT"
-name = "goodbot"
+[project]
+name = "good-bot"
 version = "0.1.0"
-[tool.poetry.dependencies]
+description = "Automating the recording of documentation videos."
+authors = [
+    "Étienne Parent <etienne.parent@beon.ca>"
+]
+license = "MIT"
+readme = "README.md"
+python = "^3.8"
+repository = "https://github.com/TrickyTroll/good-bot/tree/main"
+
+keywords = ["documentation", "video", "bot"]
+
+# Requirements
+[dependencies]
 PyYAML = "^5.4.1"
 click = "^7.1.2"
 google-cloud-texttospeech = "^2.3.0"
 pexpect = "^4.8.0"
 python = "^3.8"
-[tool.poetry.dev-dependencies]
-pylint = "^2.8.2"
-black = "^21.5b1"
 
-[tool.poetry.scripts]
-goodbot = "goodbot.cli:main"
+[dev-dependencies]
+black = "^20.8b1"
+pylint = "^2.8.2"
+mypy = "^0.812"
+
+[scripts]
+poetry = "goodbot.cli:main"
+
+[build-system]
+requires = [
+    "setuptools >= 35.0.2",
+    "setuptools_scm >= 2.0.0, <3"
+]
+build-backend = "setuptools.build_meta"
