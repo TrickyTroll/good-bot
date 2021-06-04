@@ -24,13 +24,16 @@ Path = pathlib.Path
 
 
 def config_parser(file: pathlib.Path) -> dict:
-    """Parses the YAML config and recturns it as a dictionnary.
+    """Opens and parses a `yaml` configuration file.
+
+    Uses [PyYAML](https://pyyaml.org) to parse the
+    configuration file.
 
     Args:
-        file: The path towards the config file.
+        file (pathlib.Path): [description]
 
     Returns:
-        A dictionnary representation of the configuration file.
+        dict: [description]
     """
     with open(file) as stream:
         configuration = stream.read()
@@ -38,9 +41,7 @@ def config_parser(file: pathlib.Path) -> dict:
     parsed_file = yaml.safe_load(configuration)
 
     if not isinstance(parsed_file, dict):
-        click.echo("Your config is not formatted properly.")
-        click.echo(parsed_file)
-        sys.exit()
+        raise TypeError("Your config is not formatted properly.")
 
     return parsed_file
 
