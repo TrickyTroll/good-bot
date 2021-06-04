@@ -6,8 +6,6 @@ import click
 import os
 from goodbot import funcmodule
 
-# Should be /project if in container.
-
 
 def in_docker() -> bool:
     """Checks if code is currently running in a Docker container.
