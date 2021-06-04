@@ -9,3 +9,25 @@ author-email = "etienne.parent@beon.ca"
 home-page = "https://github.com/TrickyTroll/good-bot"
 classifiers = [ "License :: OSI Approved :: MIT License",]
 description-file = "README.md"
+requires-python=">=3.7"
+requires = [
+    "click==7.1.2",
+    "google-cloud-texttospeech==2.3.0",
+    "PyYAML==5.4.1"
+]
+
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest",
+    "black",
+    "hypothesis",
+    "mypy"
+]
+doc = ["sphinx"]
+
+[tool.flit.scripts]
+good-bot = "goodbot.cli:main"
+
+[tool.flit.sdist]
+include = ["doc/"]
+exclude = ["doc/*.html"]
