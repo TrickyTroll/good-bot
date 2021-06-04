@@ -12,7 +12,7 @@ import subprocess
 import shutil
 import click
 import yaml
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 
 from google.cloud import texttospeech
 
@@ -53,32 +53,42 @@ def config_parser(file_path: pathlib.Path) -> dict:
     return parsed_file
 
 
-def config_info(parsed_config: dict) -> dict:
-    """
-    Returns useful info on the configuration file.
+def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
+    """Gets useful information on the configuration file.
+
+    Useful to find:
+
+    * How many scene directories should be created.
+    * Whether or not to create audio directories.
+    * Types of things to do.
 
     Args:
-        parsed_config (dict): The parsed configuration file. This should
-        be handled by the config_parser func.
+        parsed_config (Dict[str, Union[str, dict]]): The parsed
+            configuration file. This should be returned by the
+            `config_parser()` function.
+
+    Raises:
+        ValueError: If a scene contains nothing. Tells the user to
+            remove the scene.
 
     Returns:
-        dict: A dictionary that contains usful information about the
-        configuration.
+        dict: A `dict` that contains every type of thing to create
+            as `keys`. The `values` are lists of instructions for
+            every type of thing to create.
     """
 
-    all_confs = {}
+    all_confs: Dict[str, list] = {}
 
-    all_scenes = [(i + 1) for i in range(max(parsed_config.keys()))]
+    all_scenes: List[int] = [(i + 1) for i in range(max(parsed_config.keys()))]
 
     for key in all_scenes:
 
-        values = parsed_config[key]
+        values: List[Dict[str, str]] = parsed_config[key]
 
         if not values:
-            click.echo(f"Scene #{key} is empty, please remove it.")
-            sys.exit()
+            raise ValueError(f"Scene #{key} is empty, please remove it.")
 
-        conf_info = {
+        conf_info: Dict[str, list] = {
             "commands": [],
             "expect": [],
             "scenes": [],
