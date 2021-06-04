@@ -127,31 +127,34 @@ def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
 ########################################################################
 
 
-def create_dirs_list(all_confs: dict) -> list:
+def create_dirs_list(all_confs: Dict[str, list]) -> List[dict]:
     """Creates required directories for a project.
 
-    Uses the information provided by ``config_info()``
+    Uses the information provided by `config_info()`
     to create directories according to the user's configuration
     file.
 
     Args:
-        all_confs (dict): A ``dict`` of configuration information.
-            This should be created using the ``config_info()``
-            function.
+        all_confs (Dict[str, list]): A `dict` of configuration 
+            information. This should be created using the 
+            `config_info()` function.
 
     Returns:
-        list: A list of directories to create.
+        List[dict]: A list of directories to create. Each `item` in
+            the list is a `dict` that contains scene names as `keys`
+            and scene elements as `values`. Scene elements are what
+            `good-bot` will record or create.
     """
     if not isinstance(all_confs, dict):
         raise TypeError(
             "create_dirs_list(): This function takes a dictionnary as an input."
         )
 
-    dirs_list = []
+    dirs_list: List[dict] = []
 
     for key, value in all_confs.items():
 
-        to_create = []
+        to_create: List[str] = []
 
         for key_2, value_2 in value.items():
             if value_2:  # There are items in the list.
