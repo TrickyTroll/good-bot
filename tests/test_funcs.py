@@ -1,5 +1,6 @@
 import unittest
 import tempfile
+import pytest
 import shutil
 import pathlib
 import goodbot.funcmodule as funcmodule
@@ -8,6 +9,13 @@ Path = pathlib.Path
 
 CONFIGPATH = Path("./tests/examples")
 
+# Creating a project
+TEMP_DIR = tempfile.mkdtemp()
+PROJECT_PATH = Path(TEMP_DIR) / Path("toto")
+PARSED = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
+CONF_INFO = funcmodule.config_info(PARSED)
+DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
+funcmodule.create_dirs(DIRS_LIST, PROJECT_PATH)
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
@@ -170,11 +178,6 @@ class TestCreateDirs(unittest.TestCase):
         * Error handling on other input types.
         * Returns a value of type `pathlib.Path`.
     """
-    temp = tempfile.mkdtemp()
-    project_name = Path(temp) / Path("toto")
-    parsed = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
-    conf_info = funcmodule.config_info(parsed)
-    dirs_list = funcmodule.create_dirs_list(conf_info)
     def test_error_handling(self):
         """
         Testing that the function `create_dirs()` raises errors on
@@ -183,11 +186,16 @@ class TestCreateDirs(unittest.TestCase):
         # These should not create any dir and raise errors before
         # anything else.
         # This fist tests has a wrong directory list argument.
-        self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, self.temp)
+        self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, TEMP_DIR)
         # The second test has a wrong path to create the directories.
-        self.assertRaises(TypeError, funcmodule.create_dirs, self.dirs_list, ["path", "as", "list"])
+        self.assertRaises(TypeError, funcmodule.create_dirs, DIRS_LIST, ["path", "as", "list"])
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
-        returned_path = funcmodule.create_dirs(self.dirs_list)
-        self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
+        with tempfile.TemporaryDirectory() as temp:
+            returned_path = funcmodule.create_dirs(DIRS_LIST, temp + "/my_project")
+            # This next assert would probably fail on Windows.
+            self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
+
+def test_split_config():
+    pass
