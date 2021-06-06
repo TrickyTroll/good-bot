@@ -29,7 +29,7 @@ RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0
 WORKDIR  /install/good-bot-runner-1.1.0
 RUN pip install .
 
-RUN pip install pytest hypothesis black mypy
+RUN pip install pytest hypothesis black mypy pytest-cov
 
 WORKDIR /app
 COPY . /app/
