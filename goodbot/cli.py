@@ -70,13 +70,12 @@ def setup(config: str, project_name: str) -> None:
     """
 
     file_name = pathlib.Path(config)
-    project_name = pathlib.Path(project_name)
     # Creating directories
     parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
     conf_info = funcmodule.config_info(parsed)
     to_create = funcmodule.create_dirs_list(conf_info)
 
-    path = funcmodule.create_dirs(to_create, PROJECT_ROOT / project_name)
+    path = funcmodule.create_dirs(to_create, PROJECT_ROOT / pathlib.Path(project_name))
 
     # Splitting script
     funcmodule.split_config(parsed, path)

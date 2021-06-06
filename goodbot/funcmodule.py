@@ -24,7 +24,7 @@ Path = pathlib.Path
 ########################################################################
 
 
-def config_parser(file_path: pathlib.Path) -> dict:
+def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
     """Opens and parses a `yaml` configuration file.
 
     Uses [PyYAML](https://pyyaml.org) to parse the configuration file.
@@ -53,7 +53,7 @@ def config_parser(file_path: pathlib.Path) -> dict:
     return parsed_file
 
 
-def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
+def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, list]]:
     """Gets useful information on the configuration file.
 
     Useful to find:
@@ -63,7 +63,7 @@ def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
     * Types of things to do.
 
     Args:
-        parsed_config (Dict[str, Union[str, dict]]): The parsed
+        parsed_config (Dict[int, List[dict]]): The parsed
             configuration file. This should be returned by the
             `config_parser()` function.
 
@@ -72,12 +72,12 @@ def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
             remove the scene.
 
     Returns:
-        dict: A `dict` that contains every type of thing to create
-            as `keys`. The `values` are lists of instructions for
+        Dict[int, Dict[str, list]]: A `dict` that contains every type of thing to 
+            create as `keys`. The `values` are lists of instructions for
             every type of thing to create.
     """
 
-    all_confs: Dict[str, list] = {}
+    all_confs: Dict[int, Dict[str, list]] = {}
 
     all_scenes: List[int] = [(i + 1) for i in range(max(parsed_config.keys()))]
 
@@ -127,7 +127,7 @@ def config_info(parsed_config: Dict[str, Union[str, dict]]) -> dict:
 ########################################################################
 
 
-def create_dirs_list(all_confs: Dict[str, list]) -> List[dict]:
+def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     """Creates required directories for a project.
 
     Uses the information provided by `config_info()`
@@ -171,7 +171,7 @@ def create_dirs_list(all_confs: Dict[str, list]) -> List[dict]:
     return dirs_list
 
 
-def create_dirs(directories: list, project_dir: str or Path = "my_project") -> Path:
+def create_dirs(directories: list, project_dir: Union[str, Path] = "my_project") -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
     mount the project afterwards.
@@ -240,7 +240,7 @@ def create_dirs(directories: list, project_dir: str or Path = "my_project") -> P
     return project_dir.absolute()
 
 
-def split_config(parsed: click.File, project_path: Path) -> Path:
+def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main config file into sub configurations for
     every type of action.
 
@@ -253,19 +253,20 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
     Returns:
         Path: The same project path that was passed.
     """
-    todos = config_info(parsed)
+    # TODO: update docstring
+    todos: dict = config_info(parsed)
 
     # This should probably be grouped
     for key, value in todos.items():
 
-        scene_path = Path(f"scene_{key}")
+        scene_path: Path = Path(f"scene_{key}")
 
         for key_2, value_2 in value.items():
 
-            write_path = Path(key_2)
+            write_path: Path = Path(key_2)
 
             if "read" in key_2:
-                ext = ".txt"
+                ext: str = ".txt"
             else:
                 ext = ".yaml"
 
@@ -277,8 +278,8 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
                 except TypeError:
                     sys.exit()
 
-                file_name = Path(f"file_{index}")
-                file_path = project_path / scene_path / write_path / file_name
+                file_name: Path = Path(f"file_{index}")
+                file_path: Path = project_path / scene_path / write_path / file_name
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
 
@@ -314,7 +315,7 @@ def is_scene(directory: Path) -> bool:
     return dir_name[0:5] == "scene" and contains_something
 
 
-def list_scenes(project_dir: click.Path) -> list:
+def list_scenes(project_dir: Path) -> List[Path]:
     """Lists scenes in the project directory.
 
     Args:
@@ -323,8 +324,9 @@ def list_scenes(project_dir: click.Path) -> list:
     Returns:
         list: A list of directories (Paths).
     """
-    project_dir = Path(project_dir)
-    all_scenes = []
+    # TODO: redo this docstring
+
+    all_scenes: List[Path] = []
 
     for directory in project_dir.iterdir():
 
