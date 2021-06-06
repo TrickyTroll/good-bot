@@ -254,3 +254,22 @@ def test_split_config_read():
             continue
 
     assert read_amount == read_expected
+
+def test_is_scene_false():
+    """
+    Makes sure that the `is_scene()` function does not recognize
+    a project path as a scene path.
+    """
+    not_a_scene_path = PROJECT_PATH
+    assert funcmodule.is_scene(not_a_scene_path) == False
+
+def test_is_scene_true():
+    """
+    Makes sure that the `is_scene()` function recognizes proper
+    scene paths.
+    """
+    a_scene_path = PROJECT_PATH / "scene_1"
+    assert funcmodule.is_scene(a_scene_path)
+
+def test_list_scenes():
+    pass
