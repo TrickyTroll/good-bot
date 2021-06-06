@@ -1,23 +1,33 @@
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
 
-[tool]
-[tool.poetry]
-authors = ["TrickyTroll <53831454+TrickyTroll@users.noreply.github.com>"]
-description = "Automating the recording of documentation videos"
-license = "MIT"
-name = "goodbot"
-version = "0.1.0"
-[tool.poetry.dependencies]
-PyYAML = "^5.4.1"
-click = "^7.1.2"
-google-cloud-texttospeech = "^2.3.0"
-pexpect = "^4.8.0"
-python = "^3.8"
-[tool.poetry.dev-dependencies]
-pylint = "^2.8.2"
-black = "^21.5b1"
+[tool.flit.metadata]
+module = "goodbot"
+author = "Etienne Parent"
+author-email = "etienne.parent@beon.ca"
+home-page = "https://github.com/TrickyTroll/good-bot"
+classifiers = [ "License :: OSI Approved :: MIT License",]
+description-file = "README.md"
+requires-python=">=3.7"
+requires = [
+    "click==7.1.2",
+    "google-cloud-texttospeech==2.3.0",
+    "PyYAML==5.4.1"
+]
 
-[tool.poetry.scripts]
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest",
+    "black",
+    "hypothesis",
+    "mypy"
+]
+doc = ["sphinx"]
+
+[tool.flit.scripts]
 goodbot = "goodbot.cli:main"
+
+[tool.flit.sdist]
+include = ["doc/"]
+exclude = ["doc/*.html"]

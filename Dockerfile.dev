@@ -27,10 +27,10 @@ WORKDIR /install
 RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0.zip \
 	&& unzip v1.1.0.zip
 WORKDIR  /install/good-bot-runner-1.1.0
-RUN pip3 install .
+RUN pip install .
+
+RUN pip install pytest hypothesis black mypy pytest-cov
 
 WORKDIR /app
 COPY . /app/
 RUN pip install /app/
-
-ENTRYPOINT [ "good-bot" ]

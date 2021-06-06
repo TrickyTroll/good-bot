@@ -12,6 +12,7 @@ import subprocess
 import shutil
 import click
 import yaml
+from typing import List, Dict, Union, Any
 
 from google.cloud import texttospeech
 
@@ -23,54 +24,71 @@ Path = pathlib.Path
 ########################################################################
 
 
-def config_parser(file: pathlib.Path) -> dict:
-    """Parses the YAML config and recturns it as a dictionnary.
+def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
+    """Opens and parses a `yaml` configuration file.
+
+    Uses [PyYAML](https://pyyaml.org) to parse the configuration file.
 
     Args:
-        file: The path towards the config file.
+        file_path (pathlib.Path): The path towards the user's
+        configuration file.
+
+    Raises:
+        TypeError: Raises a `TypeError` if the parsed object is
+            not of type `dict`. It means that the configuration file
+            wasn't formatted properly.
 
     Returns:
-        A dictionnary representation of the configuration file.
+        dict: A Python object representation of the `.yaml`
+            configuration file.
     """
-    with open(file) as stream:
-        configuration = stream.read()
+    with open(file_path) as stream:
+        configuration: str = stream.read()
 
-    parsed_file = yaml.safe_load(configuration)
+    parsed_file: dict = yaml.safe_load(configuration)
 
     if not isinstance(parsed_file, dict):
-        click.echo("Your config is not formatted properly.")
-        click.echo(parsed_file)
-        sys.exit()
+        raise TypeError("Your config is not formatted properly.")
 
     return parsed_file
 
 
-def config_info(parsed_config: dict) -> dict:
-    """
-    Returns useful info on the configuration file.
+def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, list]]:
+    """Gets useful information on the configuration file.
+
+    Useful to find:
+
+    * How many scene directories should be created.
+    * Whether or not to create audio directories.
+    * Types of things to do.
 
     Args:
-        parsed_config (dict): The parsed configuration file. This should
-        be handled by the config_parser func.
+        parsed_config (Dict[int, List[dict]]): The parsed
+            configuration file. This should be returned by the
+            `config_parser()` function.
+
+    Raises:
+        ValueError: If a scene contains nothing. Tells the user to
+            remove the scene.
 
     Returns:
-        dict: A dictionary that contains usful information about the
-        configuration.
+        Dict[int, Dict[str, list]]: A `dict` that contains every type of thing to
+            create as `keys`. The `values` are lists of instructions for
+            every type of thing to create.
     """
 
-    all_confs = {}
+    all_confs: Dict[int, Dict[str, list]] = {}
 
-    all_scenes = [(i + 1) for i in range(max(parsed_config.keys()))]
+    all_scenes: List[int] = [(i + 1) for i in range(max(parsed_config.keys()))]
 
     for key in all_scenes:
 
-        values = parsed_config[key]
+        values: List[Dict[str, str]] = parsed_config[key]
 
         if not values:
-            click.echo(f"Scene #{key} is empty, please remove it.")
-            sys.exit()
+            raise ValueError(f"Scene #{key} is empty, please remove it.")
 
-        conf_info = {
+        conf_info: Dict[str, list] = {
             "commands": [],
             "expect": [],
             "scenes": [],
@@ -109,31 +127,34 @@ def config_info(parsed_config: dict) -> dict:
 ########################################################################
 
 
-def create_dirs_list(all_confs: dict) -> list:
+def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     """Creates required directories for a project.
 
-    Uses the information provided by ``config_info()``
+    Uses the information provided by `config_info()`
     to create directories according to the user's configuration
     file.
 
     Args:
-        all_confs (dict): A ``dict`` of configuration information.
-            This should be created using the ``config_info()``
-            function.
+        all_confs (Dict[str, list]): A `dict` of configuration
+            information. This should be created using the
+            `config_info()` function.
 
     Returns:
-        list: A list of directories to create.
+        List[dict]: A list of directories to create. Each `item` in
+            the list is a `dict` that contains scene names as `keys`
+            and scene elements as `values`. Scene elements are what
+            `good-bot` will record or create.
     """
     if not isinstance(all_confs, dict):
         raise TypeError(
             "create_dirs_list(): This function takes a dictionnary as an input."
         )
 
-    dirs_list = []
+    dirs_list: List[dict] = []
 
     for key, value in all_confs.items():
 
-        to_create = []
+        to_create: List[str] = []
 
         for key_2, value_2 in value.items():
             if value_2:  # There are items in the list.
@@ -150,7 +171,9 @@ def create_dirs_list(all_confs: dict) -> list:
     return dirs_list
 
 
-def create_dirs(directories: list, project_dir: str or Path = "my_project") -> Path:
+def create_dirs(
+    directories: list, project_dir: Union[str, Path] = "my_project"
+) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
     mount the project afterwards.
@@ -219,32 +242,37 @@ def create_dirs(directories: list, project_dir: str or Path = "my_project") -> P
     return project_dir.absolute()
 
 
-def split_config(parsed: click.File, project_path: Path) -> Path:
-    """Splits the main config file into sub configurations for
-    every type of action.
+def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
+    """Splits the main `yaml` script file in many smaller scripts.
+
+    The subscripts are then written in directories that correspond
+    to their categories. For example, commands to send to the `runner`
+    program will be written in the `commands` directory, while the
+    text files sent to the text to speech program will be written in
+    the `read` directory.
 
     Args:
-        parsed (click.File): The parsed configuration file. This
-        should be handled by the `parse_config` function.
-        project_path (Path): The path towards the project. This
-        path is returned by the `create_dirs` function.
+        parsed (Dict[int, List[dict]]): The parsed configuration file.
+            This should be created by the `config_parser()` function.
+        project_path (Path): The path towards the project directory.
+            This value is returned by `create_dirs`.
 
     Returns:
-        Path: The same project path that was passed.
+        Path: The path towards the project.
     """
-    todos = config_info(parsed)
+    todos: dict = config_info(parsed)
 
     # This should probably be grouped
     for key, value in todos.items():
 
-        scene_path = Path(f"scene_{key}")
+        scene_path: Path = Path(f"scene_{key}")
 
         for key_2, value_2 in value.items():
 
-            write_path = Path(key_2)
+            write_path: Path = Path(key_2)
 
             if "read" in key_2:
-                ext = ".txt"
+                ext: str = ".txt"
             else:
                 ext = ".yaml"
 
@@ -256,8 +284,8 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
                 except TypeError:
                     sys.exit()
 
-                file_name = Path(f"file_{index}")
-                file_path = project_path / scene_path / write_path / file_name
+                file_name: Path = Path(f"file_{index}")
+                file_path: Path = project_path / scene_path / write_path / file_name
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
 
@@ -276,11 +304,16 @@ def split_config(parsed: click.File, project_path: Path) -> Path:
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
 
-    Args:
-        directory (pathlib.Path): The path towards the directory to
+    To be a scene, a directory must:
+
+        * Contain files.
+        * Its name must start with `scene`.
+
+    Args
+        directory (Path): The path towards the directory to
         check.
     Returns:
-        bool: Wether the directory is a scene that contains elements
+        bool: Whether the directory is a scene that contains elements
         or not.
     """
 
@@ -293,17 +326,32 @@ def is_scene(directory: Path) -> bool:
     return dir_name[0:5] == "scene" and contains_something
 
 
-def list_scenes(project_dir: click.Path) -> list:
-    """Lists scenes in the project directory.
+def list_scenes(project_dir: Path) -> List[Path]:
+    """Lists every scene contained in the `project_dir` path.
+
+    `list_scenes` uses the `is_scene` function to check whether
+    or not a directory si a "scene".
+
+    To be a scene, a directory must:
+
+        * Contain files.
+        * Its name must start with `scene`.
+
+    This function will also tell the user if a subdirectory of
+    `project_dir` was ignored.
 
     Args:
-        project_dir (click.Path): The path towards the location of the
-        project.
+        project_dir (Path): The path towards the directory that
+            potentially contains scenes.
+
     Returns:
-        list: A list of directories (Paths).
+        List[Path]: A `list` of `Path`s towards each scene contained
+            in `project_dir`. If `project_dir` did not contain
+            any scene, the returned `list` will be empty.
+
     """
-    project_dir = Path(project_dir)
-    all_scenes = []
+
+    all_scenes: List[Path] = []
 
     for directory in project_dir.iterdir():
 
