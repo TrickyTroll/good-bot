@@ -1,3 +1,4 @@
+from os import read
 import unittest
 import tempfile
 import pytest
@@ -16,6 +17,7 @@ PARSED = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
 CONF_INFO = funcmodule.config_info(PARSED)
 DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
 funcmodule.create_dirs(DIRS_LIST, PROJECT_PATH)
+funcmodule.split_config(PARSED, PROJECT_PATH)
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
@@ -197,5 +199,40 @@ class TestCreateDirs(unittest.TestCase):
             # This next assert would probably fail on Windows.
             self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
 
-def test_split_config():
-    pass
+def test_split_config_commands():
+
+    scene_amount = len(PARSED)
+    commands_expected = 0
+    commands_amount = 0
+
+    for i in range(scene_amount):
+
+        for item in PARSED[i+1]:
+            if "commands" in item.keys():
+                commands_expected += 1
+
+        try:
+            commands_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/commands")).iterdir()))
+        except FileNotFoundError:
+            continue
+
+    assert commands_amount == commands_expected
+
+def test_split_config_read():
+
+    scene_amount = len(PARSED)
+    read_expected = 0
+    read_amount = 0
+
+    for i in range(scene_amount):
+
+        for item in PARSED[i+1]:
+            if "read" in item.keys():
+                read_expected += 1
+
+        try:
+            read_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/read")).iterdir()))
+        except FileNotFoundError:
+            continue
+
+    assert read_amount == read_expected
