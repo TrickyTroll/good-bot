@@ -87,7 +87,7 @@ def setup(config: str, project_name: str) -> None:
 @click.argument("projectpath", type=str)
 def record(projectpath: str) -> None:
     """
-    Record a video according to the instructions provided a directory. 
+    Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
 
     If you want to create audio content, make sure that your

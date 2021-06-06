@@ -39,7 +39,7 @@ def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
             wasn't formatted properly.
 
     Returns:
-        dict: A Python object representation of the `.yaml` 
+        dict: A Python object representation of the `.yaml`
             configuration file.
     """
     with open(file_path) as stream:
@@ -72,7 +72,7 @@ def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, lis
             remove the scene.
 
     Returns:
-        Dict[int, Dict[str, list]]: A `dict` that contains every type of thing to 
+        Dict[int, Dict[str, list]]: A `dict` that contains every type of thing to
             create as `keys`. The `values` are lists of instructions for
             every type of thing to create.
     """
@@ -135,8 +135,8 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     file.
 
     Args:
-        all_confs (Dict[str, list]): A `dict` of configuration 
-            information. This should be created using the 
+        all_confs (Dict[str, list]): A `dict` of configuration
+            information. This should be created using the
             `config_info()` function.
 
     Returns:
@@ -171,7 +171,9 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     return dirs_list
 
 
-def create_dirs(directories: list, project_dir: Union[str, Path] = "my_project") -> Path:
+def create_dirs(
+    directories: list, project_dir: Union[str, Path] = "my_project"
+) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
     mount the project afterwards.
@@ -334,7 +336,7 @@ def list_scenes(project_dir: Path) -> List[Path]:
 
         * Contain files.
         * Its name must start with `scene`.
-    
+
     This function will also tell the user if a subdirectory of
     `project_dir` was ignored.
 

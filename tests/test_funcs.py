@@ -19,6 +19,7 @@ DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
 funcmodule.create_dirs(DIRS_LIST, PROJECT_PATH)
 funcmodule.split_config(PARSED, PROJECT_PATH)
 
+
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
 
@@ -173,6 +174,7 @@ class TestDirsList(unittest.TestCase):
         for item in self.DIRS_LIST:
             self.assertEqual(type(item), dict)
 
+
 class TestCreateDirs(unittest.TestCase):
     """Testing the `create_dirs()` function.
 
@@ -180,6 +182,7 @@ class TestCreateDirs(unittest.TestCase):
         * Error handling on other input types.
         * Returns a value of type `pathlib.Path`.
     """
+
     def test_error_handling(self):
         """
         Testing that the function `create_dirs()` raises errors on
@@ -188,9 +191,13 @@ class TestCreateDirs(unittest.TestCase):
         # These should not create any dir and raise errors before
         # anything else.
         # This fist tests has a wrong directory list argument.
-        self.assertRaises(TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, TEMP_DIR)
+        self.assertRaises(
+            TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, TEMP_DIR
+        )
         # The second test has a wrong path to create the directories.
-        self.assertRaises(TypeError, funcmodule.create_dirs, DIRS_LIST, ["path", "as", "list"])
+        self.assertRaises(
+            TypeError, funcmodule.create_dirs, DIRS_LIST, ["path", "as", "list"]
+        )
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
@@ -198,6 +205,7 @@ class TestCreateDirs(unittest.TestCase):
             returned_path = funcmodule.create_dirs(DIRS_LIST, temp + "/my_project")
             # This next assert would probably fail on Windows.
             self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
+
 
 # Using pytest from now on.
 def test_split_config_commands():
@@ -209,7 +217,7 @@ def test_split_config_commands():
 
     This number is then compared to the real amount of files created
     for commands.
-    
+
     This test will only pass if they are equal.
 
     """
@@ -220,16 +228,19 @@ def test_split_config_commands():
 
     for i in range(scene_amount):
 
-        for item in PARSED[i+1]:
+        for item in PARSED[i + 1]:
             if "commands" in item.keys():
                 commands_expected += 1
 
         try:
-            commands_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/commands")).iterdir()))
+            commands_amount += len(
+                list((PROJECT_PATH / Path(f"scene_{i + 1}/commands")).iterdir())
+            )
         except FileNotFoundError:
             continue
 
     assert commands_amount == commands_expected
+
 
 def test_split_config_read():
     """Tests that the `split_config` command creates every read files.
@@ -244,16 +255,19 @@ def test_split_config_read():
 
     for i in range(scene_amount):
 
-        for item in PARSED[i+1]:
+        for item in PARSED[i + 1]:
             if "read" in item.keys():
                 read_expected += 1
 
         try:
-            read_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/read")).iterdir()))
+            read_amount += len(
+                list((PROJECT_PATH / Path(f"scene_{i + 1}/read")).iterdir())
+            )
         except FileNotFoundError:
             continue
 
     assert read_amount == read_expected
+
 
 def test_is_scene_false():
     """
@@ -263,6 +277,7 @@ def test_is_scene_false():
     not_a_scene_path = PROJECT_PATH
     assert funcmodule.is_scene(not_a_scene_path) == False
 
+
 def test_is_scene_true():
     """
     Makes sure that the `is_scene()` function recognizes proper
@@ -270,6 +285,7 @@ def test_is_scene_true():
     """
     a_scene_path = PROJECT_PATH / "scene_1"
     assert funcmodule.is_scene(a_scene_path)
+
 
 def test_list_scenes():
     """Testing that `list_scenes()` really lists every scene.
@@ -285,4 +301,6 @@ def test_list_scenes():
     scene_amount = len(PARSED.keys())
     listed_scenes = funcmodule.list_scenes(PROJECT_PATH)
     all_scenes = [PROJECT_PATH / f"scene_{i+1}" for i in range(scene_amount)]
-    assert len(all_scenes) == len(listed_scenes) and sorted(all_scenes) == sorted(listed_scenes)
+    assert len(all_scenes) == len(listed_scenes) and sorted(all_scenes) == sorted(
+        listed_scenes
+    )
