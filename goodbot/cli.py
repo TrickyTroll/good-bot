@@ -113,7 +113,6 @@ def record(projectpath: str) -> None:
 
 
 app.add_command(setup)
-app.add_command(greet)
 app.add_command(echo_config)
 app.add_command(record)
 
