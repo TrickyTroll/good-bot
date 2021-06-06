@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
 	python3.9 \
 	ffmpeg \
 	ttyrec \
+	unzip \
 	wget \
 	git \
     && rm -rf /var/lib/apt/lists/*
