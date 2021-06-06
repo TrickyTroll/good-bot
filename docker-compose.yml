@@ -37,6 +37,6 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     working_dir: /good-bot-source
-    command: pytest --cov goodbot tests/
+    command: pytest --cov ./goodbot tests/
     volumes:
       - .:/good-bot-source
