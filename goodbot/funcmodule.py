@@ -241,19 +241,23 @@ def create_dirs(directories: list, project_dir: Union[str, Path] = "my_project")
 
 
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
-    """Splits the main config file into sub configurations for
-    every type of action.
+    """Splits the main `yaml` script file in many smaller scripts.
+
+    The subscripts are then written in directories that correspond
+    to their categories. For example, commands to send to the `runner`
+    program will be written in the `commands` directory, while the
+    text files sent to the text to speech program will be written in
+    the `read` directory.
 
     Args:
-        parsed (click.File): The parsed configuration file. This
-        should be handled by the `parse_config` function.
-        project_path (Path): The path towards the project. This
-        path is returned by the `create_dirs` function.
+        parsed (Dict[int, List[dict]]): The parsed configuration file.
+            This should be created by the `config_parser()` function.
+        project_path (Path): The path towards the project directory.
+            This value is returned by `create_dirs`.
 
     Returns:
-        Path: The same project path that was passed.
+        Path: The path towards the project.
     """
-    # TODO: update docstring
     todos: dict = config_info(parsed)
 
     # This should probably be grouped
