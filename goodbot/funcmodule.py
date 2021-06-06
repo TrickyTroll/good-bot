@@ -316,15 +316,29 @@ def is_scene(directory: Path) -> bool:
 
 
 def list_scenes(project_dir: Path) -> List[Path]:
-    """Lists scenes in the project directory.
+    """Lists every scene contained in the `project_dir` path.
+
+    `list_scenes` uses the `is_scene` function to check whether
+    or not a directory si a "scene".
+
+    To be a scene, a directory must:
+
+        * Contain files.
+        * Its name must start with `scene`.
+    
+    This function will also tell the user if a subdirectory of
+    `project_dir` was ignored.
 
     Args:
-        project_dir (click.Path): The path towards the location of the
-        project.
+        project_dir (Path): The path towards the directory that
+            potentially contains scenes.
+
     Returns:
-        list: A list of directories (Paths).
+        List[Path]: A `list` of `Path`s towards each scene contained
+            in `project_dir`. If `project_dir` did not contain
+            any scene, the returned `list` will be empty.
+
     """
-    # TODO: redo this docstring
 
     all_scenes: List[Path] = []
 
