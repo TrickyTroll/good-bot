@@ -38,6 +38,14 @@ def app():
 @click.command()
 @click.argument("config", type=str)
 def echo_config(config: str) -> None:
+    """Prints a configuration file as seen by `good-bot`.
+
+    This is useful if you want to see how your file has been
+    interpreted by the program. Sometimes, common words will
+    be interpreted as keywords. This can create very different
+    results than what you expected from your script.
+
+    """
     file_name = pathlib.Path(config)
     parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
     click.echo(parsed)
@@ -52,6 +60,14 @@ def echo_config(config: str) -> None:
     """,
 )
 def setup(config: str, project_name: str) -> None:
+    """
+    Sets up a directory that contains everything needed to record a
+    video using `good-bot`.
+
+    `setup` uses your configuration file to create a directory with
+    recording instructions that `good-bot` understands.
+
+    """
 
     file_name = pathlib.Path(config)
     project_name = pathlib.Path(project_name)
@@ -72,7 +88,12 @@ def setup(config: str, project_name: str) -> None:
 @click.argument("projectpath", type=str)
 def record(projectpath: str) -> None:
     """
-    Records everything that is required for the documentation.
+    Record a video according to the instructions provided a directory. 
+    The directory should be created by the `setup` command.
+
+    If you want to create audio content, make sure that your
+    `GOOGLE_APPLICATION_CREDENTIALS` environment variable has been
+    set to the path towards your API key.
     """
     dir_path = pathlib.Path(projectpath)
 
