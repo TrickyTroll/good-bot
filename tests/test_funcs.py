@@ -199,7 +199,20 @@ class TestCreateDirs(unittest.TestCase):
             # This next assert would probably fail on Windows.
             self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
 
+# Using pytest from now on.
 def test_split_config_commands():
+    """Tests that the `split_config()` functions writes every command.
+
+    This test counts the amount of files that `split_config()` should
+    create. This number can be obtained from the parsed configuration
+    file.
+
+    This number is then compared to the real amount of files created
+    for commands.
+    
+    This test will only pass if they are equal.
+
+    """
 
     scene_amount = len(PARSED)
     commands_expected = 0
@@ -219,6 +232,11 @@ def test_split_config_commands():
     assert commands_amount == commands_expected
 
 def test_split_config_read():
+    """Tests that the `split_config` command creates every read files.
+
+    This is very similar to the `test_split_config_commands()` test,
+    but for read files that will be sent to the text-to-speech program.
+    """
 
     scene_amount = len(PARSED)
     read_expected = 0
