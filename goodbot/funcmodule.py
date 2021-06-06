@@ -298,11 +298,16 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
 
-    Args:
-        directory (pathlib.Path): The path towards the directory to
+    To be a scene, a directory must:
+
+        * Contain files.
+        * Its name must start with `scene`.
+
+    Args
+        directory (Path): The path towards the directory to
         check.
     Returns:
-        bool: Wether the directory is a scene that contains elements
+        bool: Whether the directory is a scene that contains elements
         or not.
     """
 
