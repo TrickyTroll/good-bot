@@ -30,11 +30,7 @@ WORKDIR  /install/good-bot-runner-1.1.0
 RUN pip3 install .
 
 WORKDIR /app
-COPY ./goodbot /app/
-COPY ./requirements.txt /app/
-RUN pip3 install -r requirements.txt
+COPY . /app/
+RUN pip install /app/
 
-WORKDIR /project
-VOLUME ["/project"]
-
-ENTRYPOINT ["python3", "/app/cli.py"]
+ENTRYPOINT [ "good-bot" ]
