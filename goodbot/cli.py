@@ -36,16 +36,6 @@ def app():
 
 
 @click.command()
-def greet():
-    """Greets the user.
-
-    Returns:
-        None: None
-    """
-    click.echo("Hello, world!")
-
-
-@click.command()
 @click.argument("config", type=str)
 def echo_config(config: str) -> None:
     file_name = pathlib.Path(config)
