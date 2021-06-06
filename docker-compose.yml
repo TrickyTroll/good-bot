@@ -25,7 +25,18 @@ services:
       - .:/root
 
   test:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     command: pytest /good-bot-source/.
+    volumes:
+      - .:/good-bot-source
+
+  test-cov:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /good-bot-source
+    command: pytest --cov goodbot tests/
     volumes:
       - .:/good-bot-source
