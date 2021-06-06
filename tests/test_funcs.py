@@ -272,4 +272,17 @@ def test_is_scene_true():
     assert funcmodule.is_scene(a_scene_path)
 
 def test_list_scenes():
-    pass
+    """Testing that `list_scenes()` really lists every scene.
+
+    This test assumes that the previous tests passed. If they
+    didn't, this might fail even if `list_scenes()` is right.
+
+    For example, if some directories are not created by the
+    `create_dirs()` function, the amount of scenes in the file
+    and the amount of scene directories won't match.
+
+    """
+    scene_amount = len(PARSED.keys())
+    listed_scenes = funcmodule.list_scenes(PROJECT_PATH)
+    all_scenes = [PROJECT_PATH / f"scene_{i+1}" for i in range(scene_amount)]
+    assert len(all_scenes) == len(listed_scenes) and sorted(all_scenes) == sorted(listed_scenes)
