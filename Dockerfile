@@ -23,10 +23,9 @@ ENV LANG en_US.utf8
 
 WORKDIR /install
 
-RUN pip3 install pytest
-
-RUN git clone https://github.com/TrickyTroll/good-bot-runner.git /good-bot-runner
-WORKDIR /good-bot-runner
+RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0.zip \
+	&& unzip v1.1.0.zip
+WORKDIR  /install/good-bot-runner-1.1.0
 RUN pip3 install .
 
 WORKDIR /app
