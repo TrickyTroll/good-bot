@@ -1,0 +1,12 @@
+commands:
+- echo "I'm in a container."
+- ssh -p 2222 tricky@ssh-test-server
+- 'yes'
+- password: SSH_TRICKY
+- echo 'Hello from another container!'
+expect:
+- prompt
+- (yes/no)
+- assword
+- prompt
+- prompt

@@ -1,0 +1,3 @@
+Good bot also lets you use passwords by setting environment variables. In this example,
+  a password is used to connect to a remote machine.
+...
