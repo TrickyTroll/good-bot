@@ -1,0 +1,17 @@
+version: "2.1"
+services:
+  openssh-server:
+    image: ghcr.io/linuxserver/openssh-server
+    container_name: test-server
+    hostname: ssh-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+      - SUDO_ACCESS=false
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=yonder-nomad-DECOY-rumba
+      - USER_NAME=tricky
+    ports:
+      - 2222:2222
+    restart: unless-stopped
