@@ -2,8 +2,8 @@ version: "2.1"
 services:
   openssh-server:
     image: ghcr.io/linuxserver/openssh-server
-    container_name: test-server
-    hostname: ssh-server
+    container_name: openssh-server
+    hostname: ssh-test-server
     environment:
       - PUID=1000
       - PGID=1000
@@ -15,3 +15,10 @@ services:
     ports:
       - 2222:2222
     restart: unless-stopped
+
+services: 
+  good-bot:
+    image: trickytroll/good-bot:latest
+    conatiner_name: gb
+    command: record passwords-example
+    environment: SSH_TRICKY=yonder-nomad-DECOY-rumba
