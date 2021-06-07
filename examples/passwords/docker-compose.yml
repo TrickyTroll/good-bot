@@ -20,5 +20,7 @@ services:
   good-bot:
     image: trickytroll/good-bot:latest
     conatiner_name: gb
-    command: record passwords-example
+    command: record /project/passwords-example
     environment: SSH_TRICKY=yonder-nomad-DECOY-rumba
+    volumes:
+      - .:/project
