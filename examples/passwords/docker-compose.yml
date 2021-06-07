@@ -16,11 +16,14 @@ services:
       - 2222:2222
     restart: unless-stopped
 
-services: 
   good-bot:
+    depends_on:
+      - openssh-server
     image: trickytroll/good-bot:latest
-    conatiner_name: gb
-    command: record /project/passwords-example
-    environment: SSH_TRICKY=yonder-nomad-DECOY-rumba
+    container_name: good-bot
     volumes:
       - .:/project
+    environment: 
+      - SSH_TRICKY=yonder-nomad-DECOY-rumba
+      - GOOGLE_APPLICATION_CREDENTIALS=/project/.env/good-bot-tts.json
+    command: record /project/passwords-example
