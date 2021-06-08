@@ -165,7 +165,7 @@ Where
 > in the container. If your configuration file is not under your
 > current working directory, the previous command won't work.
 
-### Recording your video
+#### Recording your video in a container
 
 If you have a project directory, you can record your clips using
 
@@ -181,7 +181,12 @@ Where
 > **Note**: This is where you need to include the `--env`
 > and `-v` flags mentionned [earlier](#adding-voice-over).
 
-### Local install usage
+### Local usage
+
+If installed locally, this program's command line interface can be
+used with the `good-bot` command.
+
+#### Setting up
 
 ### Adding voice-over
 
