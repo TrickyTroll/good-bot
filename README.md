@@ -6,12 +6,62 @@ Automating the recording of documentation videos.
 projects. It even provides voice-over using
 [Google TTS](https://cloud.google.com/text-to-speech/).
 
-## Try it out
+## Quickstart
 
-If you want to try good-bot for yourself, you can use the provided
-[example](https://github.com/TrickyTroll/good-bot/blob/main/examples/goodbot.yaml).
+> How to quickly get started with `good-bot`.
 
-### Building the container
+The easiest way to install `good-bot` is to pull the Docker
+[image](https://hub.docker.com/r/trickytroll/good-bot). The
+image has every tool required by the program pre-installed.
+The only requirement is that you have a working 
+Docker(https://www.docker.com) installation.
+
+Once you have pulled the image, you can try good bot using
+the following command.
+
+```shell
+docker run -it trickytroll/good-bot:latest
+```
+
+> **Note:** You can also just run the previous command and
+> the image will be pulled automatically.
+
+Every `good-bot` command also requires a configuration file.
+Since those files reside on your computer, you will need to
+pass them to the container so that the program can read
+them.
+
+Passing file to a container is quite simple using 
+[`volumes`](https://docs.docker.com/storage/volumes/). In short
+you will need to add the following flag and argument to the
+previous `docker run` command.
+
+```shell
+--volume $PWD:/project
+```
+
+The complete command looks like this:
+
+```shell
+docker run -it --volume $PWD:/project trickytroll/good-bot:latest
+```
+
+This will bind your current working directory to the container's
+`/project` directory.
+
+You can now use `good-bot`'s command line interface to record
+a video.
+
+If you are not feeling like writing a script for now but still
+want to see what `good-bot` is capable of, you can use the
+[no audio](./examples/basics/no-audio.yaml) example.
+
+> **For more detailed instructions on unlocking all of `good-bot`'s
+> capabilities, si the full installation [instructions](#install).
+
+## Install
+
+> Installing the most recent version of `good-bot` locally.
 
 `good-bot` is a containerized application. To use the app, you must have
 a working [Docker](https://www.docker.com) installation.
