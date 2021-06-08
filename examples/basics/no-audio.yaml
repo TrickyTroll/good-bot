@@ -1,0 +1,11 @@
+1:
+  - commands:
+    - echo 'Hello, world!'
+    - echo 'I can run commands.'
+    - ls -la
+    - echo 'Goodbye!'
+    expect:
+      - prompt
+      - prompt
+      - prompt
+      - prompt
