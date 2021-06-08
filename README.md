@@ -144,7 +144,42 @@ docker pull trickytroll/good-bot:latest
 > Instructions on how to use `good-bot`, whether it is installed locally
 > or in a Docker container.
 
+
 ### Docker usage
+
+#### Creating a project with the Docker image
+
+Once you have written your configuration file, you can create your project
+using `good-bot`'s `setup` command.
+
+```bash
+docker run -it -v $PWD:/project -t [SOME TAG] setup [CONFIG NAME]
+```
+
+Where
+
+- `[SOME TAG]` is the tag previously chosen.
+- `[CONFIG NAME]` is the name of the configuration file.
+
+> Keep in mind that this command mounts the current working directory
+> in the container. If your configuration file is not under your
+> current working directory, the previous command won't work.
+
+### Recording your video
+
+If you have a project directory, you can record your clips using
+
+```bash
+docker run -it -v $PWD:/project -t [SOME TAG] record [PROJECT NAME]
+```
+
+Where
+
+- `[SOME TAG]` is the tag previously chosen.
+- `[PROJECT NAME]` is the name of the project file.
+
+> **Note**: This is where you need to include the `--env`
+> and `-v` flags mentionned [earlier](#adding-voice-over).
 
 ### Local install usage
 
@@ -221,40 +256,6 @@ command (see [Recording your video](#recording-your-video)).
 ```
 
 `[PATH/TO/FILE]` and `[KEY-NAME]` must be replaced by your own values.
-
-### Creating a project
-
-Once you have written your configuration file, you can create your project
-using `good-bot`'s `setup` command.
-
-```bash
-docker run -it -v $PWD:/project -t [SOME TAG] setup [CONFIG NAME]
-```
-
-Where
-
-- `[SOME TAG]` is the tag previously chosen.
-- `[CONFIG NAME]` is the name of the configuration file.
-
-> Keep in mind that this command mounts the current working directory
-> in the container. If your configuration file is not under your
-> current working directory, the previous command won't work.
-
-### Recording your video
-
-If you have a project directory, you can record your clips using
-
-```bash
-docker run -it -v $PWD:/project -t [SOME TAG] record [PROJECT NAME]
-```
-
-Where
-
-- `[SOME TAG]` is the tag previously chosen.
-- `[PROJECT NAME]` is the name of the project file.
-
-> **Note**: This is where you need to include the `--env`
-> and `-v` flags mentionned [earlier](#adding-voice-over).
 
 ## For the old version
 
