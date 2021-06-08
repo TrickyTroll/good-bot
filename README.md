@@ -157,11 +157,30 @@ provided by Google.
 Once you have activated the API, you'll be able to download a `.json` file that
 contains your key. As mentionned in the Google TTS documentation, you will also
 need to bind the path to your `.json` file to the `GOOGLE_APPLICATION_CREDENTIALS`
-variable. This is where instructions for `goodbot` differ from the ones in Google's
-documentation.
+variable.
 
 When `goodbot` runs, it will look for the value of the
-`GOOGLE_APPLICATION_CREDENTIALS` environment variable. Since your host's
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable. Instructions on setting
+this variable depend on the installation method.
+
+#### TTS on your local machine
+
+Once you have downloaded the API key file, the last step is to set the
+`GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path
+towards the location of the key on your computer. On UNIX-like systems
+this can be done using the following command.
+
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=[path/to/file.json]
+```
+
+where `[path/to/file.json]` must be replaced by the path to your own
+credentials file.
+
+#### TTS with the Docker image
+
+This is where instructions differ from the ones in Google's documentation.
+Since your host's
 environment variables are not sent to the container by default, you will
 need to pass the `.json` credentials file to the container. The environment
 variable needs to be set for the container, not just the host.
