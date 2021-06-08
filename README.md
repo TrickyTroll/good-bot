@@ -67,9 +67,9 @@ want to see what `good-bot` is capable of, you can use the
 
 ### Local install
 
-> ⚠️ **Warnings:**
+#### ⚠️ Warnings
 >
-> 1. `good-bot` has *a lot* of dependencies.
+> 1. `good-bot` has quite a few dependencies.
 >    Installing locally is not the most straightforward way
 >    of using this program.
 >
@@ -81,6 +81,39 @@ want to see what `good-bot` is capable of, you can use the
 >    lets you install programs many times in a row for your
 >    demos without having to uninstall them between each
 >    recording session.
+
+#### Dependencies
+
+The Docker image is built on the Ubuntu linux distribution, which
+uses the `apt` package manager and a specific repository to fetch
+it's packages.
+
+The following program can be installed on `Ubuntu` using `apt`, but
+they are probably distributed for your package manager too. If they
+are not, please see each program's website for more in depth
+installation instructions.
+
+| Dependency | Version |
+| ---------- | ------- |
+| `python`   | `3.9`   |
+| `asciinema`| `2.0.3` |
+| `pip`      | `20.0.2`|
+
+Python dependencies are specified in the
+[`requirements.txt`](./requirements.txt) file.
+
+These dependencies are only the ones required for `good-bot` to work.
+Your own scripts might requires other programs to work. It is up to
+you to install those other missing parts.
+
+#### Install locally
+
+`good-bot` should be installed using `pip`. From the root of this 
+project, run the following command.
+
+```shell
+pip install .
+```
 
 ### Docker install
 
