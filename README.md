@@ -186,7 +186,21 @@ Where
 If installed locally, this program's command line interface can be
 used with the `good-bot` command.
 
-#### Setting up
+#### Setting up locally
+
+The `setup` command separates your script in shorter ones that
+`good-bot`'s extensions understand. It also creates a directory
+that will be used by the program to save its recordings.
+
+Once you have written your script, you can use the `setup` command
+like so.
+
+```shell
+good-bot setup [path/to/script.yaml]
+```
+
+Where `[path/to/script.yaml]` is to be replaced by the path to your
+own script.
 
 ### Adding voice-over
 
