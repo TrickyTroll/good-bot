@@ -56,12 +56,33 @@ If you are not feeling like writing a script for now but still
 want to see what `good-bot` is capable of, you can use the
 [no audio](./examples/basics/no-audio.yaml) example.
 
-> **For more detailed instructions on unlocking all of `good-bot`'s
+> For more detailed instructions on unlocking all of `good-bot`'s
 > capabilities, si the full installation [instructions](#install).
 
 ## Install
 
-> Installing the most recent version of `good-bot` locally.
+> Installing the most recent version of `good-bot` locally. This
+> sections also dives deeper on how to use Text-to-Speech and other
+> extensions.
+
+### Local install
+
+> ⚠️ **Warnings:**
+>
+> 1. `good-bot` has *a lot* of dependencies.
+>    Installing locally is not the most straightforward way
+>    of using this program.
+>
+> 2. By following your instructions, this program might
+>    install new software on your computer. It might also
+>    edit text files and modify you system.
+>    Using this program in a container ensures that your
+>    environment is not affected by your demos. It also
+>    lets you install programs many times in a row for your
+>    demos without having to uninstall them between each
+>    recording session.
+
+### Docker install
 
 `good-bot` is a containerized application. To use the app, you must have
 a working [Docker](https://www.docker.com) installation.
