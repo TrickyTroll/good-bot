@@ -147,7 +147,35 @@ docker pull trickytroll/good-bot:latest
 ### Writing a configuration file
 
 To tell `good-bot` what you want to record, you will need to write a
-`script`.
+script. A script is a `yaml` file so that the syntax is easy
+to get used to.
+
+#### Keywords
+
+For now, `good-bot` has 3 keywords:
+
+* `commands`: A list of shell commands that the program will type to a
+  `bash` prompt.
+* `expect`: A list of things that you expect will be printed to the
+  prompt following the completion of the corresponding command.
+* `read`: What will be read by the Text-to-Speech application while
+  the commands are running. This is how you can add narration to your
+  video documentation.
+
+#### Scenes
+
+Those keywords are used in what is called a `scene`. A scene is a
+group of `commands`, `expect`, and `read` statements that will be
+executed in order.
+
+Statements are grouped that way so that things can run in parallel.
+This means that you cannot expect that `scene_1` will be recorded
+before `scene_3`, for example.
+
+**If you want some commands to be executed in a certain order, you**
+**must group them in the same scene.**
+
+#### An example
 
 ### Docker usage
 
