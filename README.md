@@ -202,6 +202,22 @@ good-bot setup [path/to/script.yaml]
 Where `[path/to/script.yaml]` is to be replaced by the path to your
 own script.
 
+#### Recording locally
+
+Once your project has been setup, you can record it using the
+`record` command.
+
+```shell
+good-bot record [path/to/setup]
+```
+
+Where `[path/to/setup]` is the path towards the directory created
+using the `setup` command. The recordings will be added to your
+setup directory.
+
+If your script contains audio instructions (with the `read` keyword),
+see the [adding voice-over](#adding-voice-over) section.
+
 ### Adding voice-over
 
 If you want to use `Google TTS`, you will need an API key for the service.
