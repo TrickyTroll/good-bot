@@ -177,6 +177,10 @@ before `scene_3`, for example.
 
 #### An example
 
+![A configuration file example](img/config-example.png)
+
+You can find other examples in the [`examples`](./examples)
+directory.
 ### Docker usage
 
 #### Creating a project with the Docker image
