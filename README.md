@@ -108,14 +108,21 @@ you to install those other missing parts.
 
 #### Install locally
 
-`good-bot` should be installed using `pip`. From the root of this 
-project, run the following command.
+`good-bot` should be installed using `pip`. From the root of this
+project, run the following command. Also make sure that you are
+installing from branch `main`. The `latest` branch contains more
+recent changes, but there is no guarantee that the program will
+work if installed from `latest`.
 
 ```shell
 pip install .
 ```
 
+This will install `runner` in your current Python environment.
+
 ### Docker install
+
+#### Using `docker build`
 
 `good-bot` is a containerized application. To use the app, you must have
 a working [Docker](https://www.docker.com) installation.
@@ -123,6 +130,21 @@ a working [Docker](https://www.docker.com) installation.
 To build the container, simply run `docker build -t [SOME TAG] .` in the
 same directory as the `Dockerfile`. `[SOME TAG]` is to be replaced by
 a name of your choosing.
+
+#### Pull the image
+
+The image is built on the `main` branch on every changes. The following
+command will pull the `good-bot` container image.
+
+```shell
+docker pull trickytroll/good-bot:latest
+```
+
+## Usage
+
+### Docker usage
+
+### Local install usage
 
 ### Adding voice-over
 
