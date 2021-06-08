@@ -14,7 +14,7 @@ The easiest way to install `good-bot` is to pull the Docker
 [image](https://hub.docker.com/r/trickytroll/good-bot). The
 image has every tool required by the program pre-installed.
 The only requirement is that you have a working 
-Docker(https://www.docker.com) installation.
+[Docker](https://www.docker.com) installation.
 
 Once you have pulled the image, you can try good bot using
 the following command.
@@ -61,9 +61,8 @@ want to see what `good-bot` is capable of, you can use the
 
 ## Install
 
-> Installing the most recent version of `good-bot` locally. This
-> sections also dives deeper on how to use Text-to-Speech and other
-> extensions.
+> Installing the most recent version of `good-bot` locally and
+> with Docker.
 
 ### Local install
 
@@ -141,6 +140,9 @@ docker pull trickytroll/good-bot:latest
 ```
 
 ## Usage
+
+> Instructions on how to use `good-bot`, whether it is installed locally
+> or in a Docker container.
 
 ### Docker usage
 
