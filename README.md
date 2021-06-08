@@ -144,6 +144,10 @@ docker pull trickytroll/good-bot:latest
 > Instructions on how to use `good-bot`, whether it is installed locally
 > or in a Docker container.
 
+### Writing a configuration file
+
+To tell `good-bot` what you want to record, you will need to write a
+`script`.
 
 ### Docker usage
 
