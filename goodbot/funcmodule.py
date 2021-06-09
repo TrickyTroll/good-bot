@@ -53,7 +53,9 @@ def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
     return parsed_file
 
 
-def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, list]]:
+def config_info(
+    parsed_config: Dict[int, List[dict]]
+) -> Dict[int, Dict[str, list]]:
     """Gets useful information on the configuration file.
 
     Useful to find:
@@ -190,8 +192,12 @@ def create_dirs(
     """
     if not isinstance(directories, list):
         raise TypeError("`directories` must be a list of dictionnaries.")
-    if not isinstance(project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)):
-        raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
+    if not isinstance(
+        project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)
+    ):
+        raise TypeError(
+            f"`project_dir` must be of type `str`, not {type(project_dir)}"
+        )
 
     project_dir = Path(project_dir)
     overwrite = False
@@ -285,7 +291,9 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                     sys.exit()
 
                 file_name: Path = Path(f"file_{index}")
-                file_path: Path = project_path / scene_path / write_path / file_name
+                file_path: Path = (
+                    project_path / scene_path / write_path / file_name
+                )
 
                 click.echo(f"Creating {file_path.with_suffix(ext)}")
 
@@ -445,7 +453,8 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
         voice = texttospeech.VoiceSelectionParams(
-            language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            language_code="en-US",
+            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
         )
 
         audio_config = texttospeech.AudioConfig(
