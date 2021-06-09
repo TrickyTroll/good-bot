@@ -26,8 +26,12 @@ test = [
 doc = ["sphinx"]
 
 [tool.flit.scripts]
-goodbot = "goodbot.cli:main"
+good-bot = "goodbot.cli:main"
 
 [tool.flit.sdist]
 include = ["doc/"]
 exclude = ["doc/*.html"]
+
+[tool.black]
+line-length = 80
+target-version = ['py38']

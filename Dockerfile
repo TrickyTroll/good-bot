@@ -33,4 +33,4 @@ WORKDIR /app
 COPY . /app/
 RUN pip install /app/
 
-ENTRYPOINT [ "goodbot" ]
+ENTRYPOINT [ "good-bot" ]

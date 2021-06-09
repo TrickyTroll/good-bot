@@ -164,7 +164,9 @@ class TestDirsList(unittest.TestCase):
     def test_error_handling(self):
         """Testing error handling on bad input types."""
         self.assertRaises(TypeError, funcmodule.create_dirs_list, "Hi!")
-        self.assertRaises(TypeError, funcmodule.create_dirs_list, ["a wrong type"])
+        self.assertRaises(
+            TypeError, funcmodule.create_dirs_list, ["a wrong type"]
+        )
 
     def test_returns_dict(self):
         """Making sure that `create_dirs_list()` returns a list."""
@@ -192,7 +194,10 @@ class TestCreateDirs(unittest.TestCase):
         # anything else.
         # This fist tests has a wrong directory list argument.
         self.assertRaises(
-            TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, TEMP_DIR
+            TypeError,
+            funcmodule.create_dirs,
+            {"1": "This is a scene!"},
+            TEMP_DIR,
         )
         # The second test has a wrong path to create the directories.
         self.assertRaises(
@@ -202,9 +207,13 @@ class TestCreateDirs(unittest.TestCase):
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
         with tempfile.TemporaryDirectory() as temp:
-            returned_path = funcmodule.create_dirs(DIRS_LIST, temp + "/my_project")
+            returned_path = funcmodule.create_dirs(
+                DIRS_LIST, temp + "/my_project"
+            )
             # This next assert would probably fail on Windows.
-            self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
+            self.assertTrue(
+                isinstance(returned_path, (Path, pathlib.PosixPath))
+            )
 
 
 # Using pytest from now on.
@@ -301,6 +310,6 @@ def test_list_scenes():
     scene_amount = len(PARSED.keys())
     listed_scenes = funcmodule.list_scenes(PROJECT_PATH)
     all_scenes = [PROJECT_PATH / f"scene_{i+1}" for i in range(scene_amount)]
-    assert len(all_scenes) == len(listed_scenes) and sorted(all_scenes) == sorted(
-        listed_scenes
-    )
+    assert len(all_scenes) == len(listed_scenes) and sorted(
+        all_scenes
+    ) == sorted(listed_scenes)
