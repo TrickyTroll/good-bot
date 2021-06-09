@@ -31,7 +31,7 @@ Since those files reside on your computer, you will need to
 pass them to the container so that the program can read
 them.
 
-Passing file to a container is quite simple using 
+Passing files to a container is quite simple using 
 [`volumes`](https://docs.docker.com/storage/volumes/). In short
 you will need to add the following flag and argument to the
 previous `docker run` command.
@@ -62,9 +62,9 @@ want to see what `good-bot` is capable of, you can use the
 ## Install
 
 > Installing the most recent version of `good-bot` locally and
-> with Docker.
+> installing with Docker.
 
-### Local install
+### Local installation
 
 #### ⚠️ Warnings
 >
@@ -74,7 +74,7 @@ want to see what `good-bot` is capable of, you can use the
 >
 > 2. By following your instructions, this program might
 >    install new software on your computer. It might also
->    edit text files and modify you system.
+>    edit text files and modify your system.
 >    Using this program in a container ensures that your
 >    environment is not affected by your demos. It also
 >    lets you install programs many times in a row for your
@@ -83,13 +83,13 @@ want to see what `good-bot` is capable of, you can use the
 
 #### Dependencies
 
-The Docker image is built on the Ubuntu linux distribution, which
+The Docker image is built on the Ubuntu Linux distribution, which
 uses the `apt` package manager and a specific repository to fetch
 it's packages.
 
 The following program can be installed on `Ubuntu` using `apt`, but
 they are probably distributed for your package manager too. If they
-are not, please see each program's website for more in depth
+are not, please see each program's website for more in-depth
 installation instructions.
 
 | Dependency | Version |
@@ -102,7 +102,7 @@ Python dependencies are specified in the
 [`requirements.txt`](./requirements.txt) file.
 
 These dependencies are only the ones required for `good-bot` to work.
-Your own scripts might requires other programs to work. It is up to
+Your own scripts might require other programs to work. It is up to
 you to install those other missing parts.
 
 #### Install locally
@@ -119,7 +119,7 @@ pip install .
 
 This will install `runner` in your current Python environment.
 
-### Docker install
+### Docker installation
 
 #### Using `docker build`
 
@@ -132,7 +132,7 @@ a name of your choosing.
 
 #### Pull the image
 
-The image is built on the `main` branch on every changes. The following
+The image is built on the `main` branch on every change. The following
 command will pull the `good-bot` container image.
 
 ```shell
@@ -215,7 +215,7 @@ Where
 - `[PROJECT NAME]` is the name of the project file.
 
 > **Note**: This is where you need to include the `--env`
-> and `-v` flags mentionned [earlier](#adding-voice-over).
+> and `-v` flags mentioned [earlier](#adding-voice-over).
 
 ### Local usage
 
@@ -240,7 +240,7 @@ own script.
 
 #### Recording locally
 
-Once your project has been setup, you can record it using the
+Once your project has been set up, you can record it using the
 `record` command.
 
 ```shell
@@ -261,7 +261,7 @@ To get your code, you can follow the [instructions](https://cloud.google.com/tex
 provided by Google.
 
 Once you have activated the API, you'll be able to download a `.json` file that
-contains your key. As mentionned in the Google TTS documentation, you will also
+contains your key. As mentioned in the Google TTS documentation, you will also
 need to bind the path to your `.json` file to the `GOOGLE_APPLICATION_CREDENTIALS`
 variable.
 
@@ -273,7 +273,7 @@ this variable depend on the installation method.
 
 Once you have downloaded the API key file, the last step is to set the
 `GOOGLE_APPLICATION_CREDENTIALS` environment variable to the path
-towards the location of the key on your computer. On UNIX-like systems
+towards the location of the key on your computer. On UNIX-like systems,
 this can be done using the following command.
 
 ```shell
@@ -292,17 +292,18 @@ need to pass the `.json` credentials file to the container. The environment
 variable needs to be set for the container, not just the host.
 
 To copy your private key to the container, you can add the following flag
-when running the container:
+when using the run
+command:
 
 ```shell
 -v [PATH/TO/FILE]:/.env
 ```
 
 Where `[PATH/TO/FILE]` needs to be replaced by the path towards the directory
-that contains your key on your host's filesystem. This mounts the previously
-mentionned directory in your container under the path `/.env`.
+that contains your key on your host's file system. This mounts the previously
+mentioned directory in your container under the path `/.env`.
 
-Now that your API key is accessible from container, you can set the
+Now that your API key is accessible from the container, you can set the
 `GOOGLE_APPLICATION_CREDENTIALS` variable using the following command:
 
 ```bash
