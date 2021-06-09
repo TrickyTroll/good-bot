@@ -23,19 +23,6 @@ by running the following command from the root of this project.
 flit install
 ```
 
-### Using `pip`
-
-You can also install the required dependencies just with `pip`.
-
-```shell
-pip install .
-```
-
-> **Note:** `pip` can be used to install the required dependencies
-> on your local machine, but you won't be able to publish a new
-> version of this package without `flit`. `flit` also lets you
-> easily build a `wheel` and `sdist`.
-
 ## Testing
 
 ### How?
