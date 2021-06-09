@@ -1,13 +1,13 @@
 # Contribution guidelines
 
-## Installing developpement dependencies
+## Installing development dependencies
 
 ### Using `flit`
 
 `good-bot` is packaged using
 [`flit`](https://flit.readthedocs.io/en/latest/index.html).
 This is also the program to use if you want to install the
-developpement dependencies.
+development dependencies.
 
 To install `flit` in your current environment, you can use
 `pip`.
