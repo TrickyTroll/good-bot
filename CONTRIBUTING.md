@@ -1,5 +1,41 @@
 # Contribution guidelines
 
+## Installing developpement dependencies
+
+### Using `flit`
+
+`good-bot` is packaged using
+[`flit`](https://flit.readthedocs.io/en/latest/index.html).
+This is also the program to use if you want to install the
+developpement dependencies.
+
+To install `flit` in your current environment, you can use
+`pip`.
+
+```shell
+pip install flit
+```
+
+Once `flit` is installed, installing dependencies can be done
+by running the following command from the root of this project.
+
+```shell
+flit install
+```
+
+### Using `pip`
+
+You can also install the required dependencies just with `pip`.
+
+```shell
+pip install .
+```
+
+> **Note:** `pip` can be used to install the required dependencies
+> on your local machine, but you won't be able to publish a new
+> version of this package without `flit`. `flit` also lets you
+> easily build a `wheel` and `sdist`.
+
 ## Testing
 
 ### How?
@@ -74,3 +110,13 @@ docker-compose run test-cov
 ```
 
 from the root of this project.
+
+## Style guidelines
+
+`good-bot` is styled using [`black`](https://github.com/psf/black).
+
+Once you are ready to push your code, simply run black
+
+The style guidelines are defined in the
+[`pyproject.toml`](./pyproject.toml) file under the
+`tool.black` section.
