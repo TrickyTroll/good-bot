@@ -102,7 +102,11 @@ from the root of this project.
 
 `good-bot` is styled using [`black`](https://github.com/psf/black).
 
-Once you are ready to push your code, simply run black
+Once you are ready to push your code, simply run black on the whole project.
+
+```shell
+black .
+```
 
 The style guidelines are defined in the
 [`pyproject.toml`](./pyproject.toml) file under the
