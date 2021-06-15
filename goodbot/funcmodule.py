@@ -156,7 +156,8 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
     for key, value in all_confs.items():
 
-        to_create: List[str] = []
+        # Those dirs are created no matter the content
+        to_create: List[str] = ["asciicasts", "embeds", "gifs", "video"]
 
         for key_2, value_2 in value.items():
             if value_2:  # There are items in the list.
@@ -164,9 +165,6 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
         if "read" in to_create:
             to_create.append("audio")  # MP3 files
-
-        # Those dirs are created no matter the content
-        to_create.append("asciicasts")  # asciicasts
 
         dirs_list.append({f"scene_{key}": to_create})
 
