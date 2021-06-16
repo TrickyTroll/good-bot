@@ -5,15 +5,23 @@ ENV TERM linux
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
+	libgtkextra-dev \
+	libgconf2-dev \
+	libxtst-dev \
 	python3-pip \
-    asciinema \
+	libasound2 \
+	x11-common \
+	libgtk-3.0 \
     asciinema \
 	python3.9 \
+	libnss3 \
+	libxss1 \
 	ffmpeg \
 	ttyrec \
 	unzip \
+	sudo \
 	wget \
-	npm \
+    npm \
 	git \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,11 +31,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 
 ENV LANG en_US.utf8
 
-RUN useradd -ms /bin/bash presenter
-USER presenter
-
 WORKDIR /install
-
 RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0.zip \
 	&& unzip v1.1.0.zip
 WORKDIR  /install/good-bot-runner-1.1.0
@@ -37,6 +41,8 @@ WORKDIR /app
 COPY . /app/
 RUN pip install /app/
 
-WORKDIR /home/presenter
+WORKDIR /install
+RUN npm install terminalizer
 
 ENTRYPOINT [ "good-bot" ]
+
