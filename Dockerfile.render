@@ -1,1 +1,29 @@
 FROM node:latest
+
+RUN apt update -y && apt upgrade -y
+
+RUN apt install -y \
+    libgtkextra-dev \
+	libgconf2-dev \
+	libxtst-dev \
+	python3-pip \
+	libasound2 \
+	x11-common \
+	libgtk-3.0 \
+	python3 \
+	libnss3 \
+	libxss1 \
+	ffmpeg \
+	wget \
+	git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /install
+
+RUN adduser tricky
+
+USER tricky
+
+RUN npm install -g terminalizer
+
+ENTRYPOINT [ "/bin/bash" ]
