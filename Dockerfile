@@ -6,8 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
 	python3-pip \
-    asciinema \
-    asciinema \
+   	asciinema \
 	python3.9 \
 	ffmpeg \
 	ttyrec \
