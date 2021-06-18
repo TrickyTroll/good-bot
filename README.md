@@ -57,7 +57,7 @@ want to see what `good-bot` is capable of, you can use the
 [no audio](./examples/basics/no-audio.yaml) example.
 
 > For more detailed instructions on unlocking all of `good-bot`'s
-> capabilities, si the full installation [instructions](#install).
+> capabilities, see the full installation [instructions](#install).
 
 ## Install
 
