@@ -12,3 +12,11 @@ docker image.
 
 This module requires ffmpeg.
 """
+import sys
+from shutil import which
+
+# Checking ffmpeg installation
+if not which("ffmpeg"):
+    print("Missing requirement: ffmpeg")
+    sys.exit()
+
