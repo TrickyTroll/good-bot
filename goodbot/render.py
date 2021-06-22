@@ -20,3 +20,5 @@ if not which("ffmpeg"):
     print("Missing requirement: ffmpeg")
     sys.exit()
 
+def createScene(scene_path: str):
+    pass
