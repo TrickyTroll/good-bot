@@ -254,7 +254,8 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 
     Args:
         read_instructions (str): A string of text that will be written to the
-            `.txt` file. Can contain `ssml` syntax.
+            `.txt` file. Can contain `ssml` syntax. The string is written 
+            as-is.
         scene_path (Path): The path towards the scene where 
             `read_instructions` come from.
         index (int): The index of the command block.
@@ -273,6 +274,23 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
     return file_path
 
 def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path, index: int) -> Path:
+    """Writes a command instruction `yaml` file.
+
+    These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner) 
+    takes as input to type commands and expect stuff.
+
+    Args:
+        commands_instructions (Dict[str, List[str]]): A dictionary of commands 
+            and things to expect. Keys should be either `commands` or
+            `expect`. The values should be a list of commands and a list of
+            things to expect.
+        scene_path (Path): The path towards the scene where the 
+            `commands_instructions` come from.
+        index (int): The index of the command block.
+
+    Returns:
+        Path: The path towards where the new `yaml` file has been written.
+    """
     commands_path: Path = scene_path / Path("commands")
     file_path: Path = commands_path / Path(f"commands_{index}")
     to_write: str = yaml.safe_dump(commands_instructions)
