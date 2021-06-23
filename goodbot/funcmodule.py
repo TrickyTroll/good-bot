@@ -245,7 +245,7 @@ def create_dirs(
 
     return project_dir.absolute()
 
-def write_read_instructions(read_instructions: List[str], scene_path: Path) -> Path:
+def write_read_instructions(read_instructions: str, scene_path: Path) -> Path:
     read_path: Path = scene_path / Path("read")
     for index, item in enumerate(read_instructions):
         file_name: str = f"read_{index + 1}.txt"
@@ -281,28 +281,28 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     todos: dict = config_info(parsed)
 
     # This should probably be grouped
-    for key, value in todos.items():
+    for scene_number, scene_info in todos.items():
 
-        scene_path: Path = Path(f"scene_{key}")
+        scene_path: Path = Path(f"scene_{scene_number}")
 
-        for key_2, value_2 in value.items():
+        for scene_item, item_info in scene_info.items():
 
-            write_path: Path = Path(key_2)
+            write_path: Path = Path(scene_item)
 
-            if "read" in key_2:
+            if "read" in scene_item:
                 ext: str = ".txt"
             else:
                 ext = ".yaml"
 
-            for index, element in enumerate(value_2):
+            for category, instructions in enumerate(item_info):
 
                 try:
-                    to_write = yaml.safe_dump(element)
+                    to_write = yaml.safe_dump(instructions)
 
                 except TypeError:
                     sys.exit()
 
-                file_name: Path = Path(f"file_{index}")
+                file_name: Path = Path(f"file_{category}")
                 file_path: Path = (
                     project_path / scene_path / write_path / file_name
                 )
