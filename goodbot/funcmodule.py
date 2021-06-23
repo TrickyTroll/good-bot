@@ -256,10 +256,16 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 
     return file_path
 
-def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path) -> Path:
+def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path, index: int) -> Path:
     commands_path: Path = scene_path / Path("commands")
-    for key, value in commands_instructions.items
-    pass
+    file_path: Path = commands_path / Path(f"commands_{index}")
+    to_write: str = yaml.safe_dump(commands_instructions)
+
+    with open(file_path, "w") as stream:
+        stream.write(to_write)
+
+    return file_path
+    
 
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main `yaml` script file in many smaller scripts.
