@@ -254,6 +254,12 @@ def write_read_instructions(read_instructions: List[str], scene_path: Path) -> P
             stream.write(item)
     return read_path
 
+def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path) -> Path:
+    commands_path: Path = scene_path / Path("commands")
+    index = 1
+    for key, value in commands_instructions.items
+    pass
+
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main `yaml` script file in many smaller scripts.
 
