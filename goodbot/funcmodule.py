@@ -245,6 +245,14 @@ def create_dirs(
 
     return project_dir.absolute()
 
+def write_read_instructions(read_instructions: List[str], scene_path: Path) -> Path:
+    read_path: Path = scene_path / Path("read")
+    for index, item in enumerate(read_instructions):
+        file_name: str = f"read_{index + 1}.txt"
+        file_path: Path = read_path / Path(file_name)
+        with open(file_path, "w") as stream:
+            stream.write(item)
+    return read_path
 
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main `yaml` script file in many smaller scripts.
