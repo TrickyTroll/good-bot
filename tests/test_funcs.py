@@ -466,4 +466,4 @@ def test_getting_same_result(commands, file_index):
         )
         with open(new_file) as stream:
             read_file = stream.read()
-        assert read_file == commands
+        assert yaml.safe_load(read_file) == commands
