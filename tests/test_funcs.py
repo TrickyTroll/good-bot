@@ -36,8 +36,9 @@ read_strings = [
   Or to take arms against a sea of troubles
   And by opposing end them.
 </speak>""",
-    "Je vais vous présenter mon super héros préféré."
+    "Je vais vous présenter mon super héros préféré.",
 ]
+
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
@@ -333,29 +334,36 @@ def test_list_scenes():
         all_scenes
     ) == sorted(listed_scenes)
 
+
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
 def test_write_read_instructions_rtype(to_read, file_index):
     """Making sure that the return value is ok.
 
     To be ok, return value must either be of type `str` or `Path`.
     This ensures that the returned value can then be used to open
-    the file later on. 
+    the file later on.
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+        new_file = funcmodule.write_read_instructions(
+            to_read, temp_dir, file_index
+        )
     assert isinstance(new_file, (Path, str))
+
 
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
 def test_write_read_instructions_path(to_read, file_index):
     """Testing that the returned path is the right one.
-    
+
     Only testing that the path exists for now.
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+        new_file = funcmodule.write_read_instructions(
+            to_read, temp_dir, file_index
+        )
         assert os.path.exists(new_file)
+
 
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
 def test_write_read_instructions_file_name(to_read, file_index):
@@ -368,8 +376,11 @@ def test_write_read_instructions_file_name(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+        new_file = funcmodule.write_read_instructions(
+            to_read, temp_dir, file_index
+        )
     assert str(file_index + 1) in new_file.name
+
 
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
 def test_getting_same_result(to_read, file_index):
@@ -379,7 +390,9 @@ def test_getting_same_result(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+        new_file = funcmodule.write_read_instructions(
+            to_read, temp_dir, file_index
+        )
         with open(new_file) as stream:
             read_file = stream.read()
         assert read_file == to_read

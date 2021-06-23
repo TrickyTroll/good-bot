@@ -245,7 +245,10 @@ def create_dirs(
 
     return project_dir.absolute()
 
-def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
+
+def write_read_instructions(
+    read_instructions: str, scene_path: Path, index: int
+) -> Path:
     """Writes a new `read` instructions file.
 
     The instructions come from the `read` key in the user's `yaml`
@@ -254,9 +257,9 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 
     Args:
         read_instructions (str): A string of text that will be written to the
-            `.txt` file. Can contain `ssml` syntax. The string is written 
+            `.txt` file. Can contain `ssml` syntax. The string is written
             as-is.
-        scene_path (Path): The path towards the scene where 
+        scene_path (Path): The path towards the scene where
             `read_instructions` come from.
         index (int): The index of the command block.
 
@@ -273,18 +276,21 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 
     return file_path
 
-def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path, index: int) -> Path:
+
+def write_commands_instructions(
+    commands_instructions: Dict[str, List[str]], scene_path: Path, index: int
+) -> Path:
     """Writes a command instruction `yaml` file.
 
-    These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner) 
+    These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner)
     takes as input to type commands and expect stuff.
 
     Args:
-        commands_instructions (Dict[str, List[str]]): A dictionary of commands 
+        commands_instructions (Dict[str, List[str]]): A dictionary of commands
             and things to expect. Keys should be either `commands` or
             `expect`. The values should be a list of commands and a list of
             things to expect.
-        scene_path (Path): The path towards the scene where the 
+        scene_path (Path): The path towards the scene where the
             `commands_instructions` come from.
         index (int): The index of the command block.
 
@@ -299,7 +305,7 @@ def write_commands_instructions(commands_instructions: Dict[str, List[str]], sce
         stream.write(to_write)
 
     return file_path
-    
+
 
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main `yaml` script file in many smaller scripts.
