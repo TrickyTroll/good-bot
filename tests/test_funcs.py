@@ -22,6 +22,22 @@ DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
 funcmodule.create_dirs(DIRS_LIST, PROJECT_PATH)
 funcmodule.split_config(PARSED, PROJECT_PATH)
 
+# Read strings samples for hypothesis
+read_strings = [
+    "Hello, world!",
+    """\
+<speak>
+  <emphasis level="strong">To be</emphasis>
+  <break time="200ms"/> or not to be, <break time="400ms"/>
+  <emphasis level="moderate">that</emphasis>
+  is the question.<break time="400ms"/>
+  Whether ‘tis nobler in the mind to suffer
+  The slings and arrows of outrageous fortune,<break time="200ms"/>
+  Or to take arms against a sea of troubles
+  And by opposing end them.
+</speak>""",
+    "Je vais vous présenter mon super héros préféré."
+]
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
@@ -317,37 +333,53 @@ def test_list_scenes():
         all_scenes
     ) == sorted(listed_scenes)
 
+@given(to_read=st.sampled_from(read_strings), file_index=st.integers())
+def test_write_read_instructions_rtype(to_read, file_index):
+    """Making sure that the return value is ok.
 
-def test_write_read_instructions():
-    """Tests for the `write_read_instructions()` function.
+    To be ok, return value must either be of type `str` or `Path`.
+    This ensures that the returned value can then be used to open
+    the file later on. 
     """
-    file_index = 1
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/read")
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+    assert isinstance(new_file, (Path, str))
 
-    with tempfile.TemporaryDirectory as temp_dir:
-        new_file = funcmodule.write_read_instructions("Hello, world", temp_dir, file_index)
-
-    def test_write_read_instructions_rtype():
-        """Making sure that the return value is ok.
-
-        To be ok, return value must either be of type `str` or `Path`.
-        This ensures that the returned value can then be used to open
-        the file later on. 
-        """
-        assert isinstance(new_file, (Path, str))
-
-    def test_write_read_instructions_path():
-        """Testing that the returned path is the right one.
-        
-        Only testing that the path exists for now.
-        """
+@given(to_read=st.sampled_from(read_strings), file_index=st.integers())
+def test_write_read_instructions_path(to_read, file_index):
+    """Testing that the returned path is the right one.
+    
+    Only testing that the path exists for now.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/read")
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
         assert os.path.exists(new_file)
 
-    def test_write_read_instructions_file_name():
-        """
-        Testing that the name of the file created by
-        `write_read_instructions()` is correct.
+@given(to_read=st.sampled_from(read_strings), file_index=st.integers())
+def test_write_read_instructions_file_name(to_read, file_index):
+    """
+    Testing that the name of the file created by
+    `write_read_instructions()` is correct.
 
-        The file must be named `read_[id]`, where `id` must be
-        equal to the index passed to the function + 1.
-        """
-        assert str(file_index + 1) in new_file.name
+    The file must be named `read_[id]`, where `id` must be
+    equal to the index passed to the function + 1.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/read")
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+    assert str(file_index + 1) in new_file.name
+
+@given(to_read=st.sampled_from(read_strings), file_index=st.integers())
+def test_getting_same_result(to_read, file_index):
+    """
+    Testing that opening and reading the final file
+    gives the same result as the original string.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/read")
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
+        with open(new_file) as stream:
+            read_file = stream.read()
+        assert read_file == to_read
