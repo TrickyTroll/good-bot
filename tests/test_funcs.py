@@ -46,8 +46,7 @@ sample_configs = []
 for file in Path("./examples").iterdir():
     with open(file, "r") as stream:
         config = stream.read()
-    sample_configs.append(yaml.safe_dump(config))
-
+    sample_configs.append(yaml.safe_load(config))
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
@@ -407,7 +406,7 @@ def test_read_getting_same_result(to_read, file_index):
         assert read_file == to_read
 
 
-@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+@given(st.sampled_from(sample_configs), st.integers())
 def test_write_commands(commands, file_index):
     """Making sure that the return value is ok.
 
@@ -423,7 +422,7 @@ def test_write_commands(commands, file_index):
     assert isinstance(new_file, (Path, str))
 
 
-@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+@given(st.sampled_from(sample_configs), st.integers())
 def test_write_commands_instructions_path(commands, file_index):
     """Testing that the returned path is the right one.
 
@@ -437,7 +436,7 @@ def test_write_commands_instructions_path(commands, file_index):
         assert os.path.exists(new_file)
 
 
-@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+@given(st.sampled_from(sample_configs), st.integers())
 def test_write_commands_instructions_file_name(commands, file_index):
     """
     Testing that the name of the file created by
@@ -454,7 +453,7 @@ def test_write_commands_instructions_file_name(commands, file_index):
     assert str(file_index + 1) in new_file.name
 
 
-@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+@given(st.sampled_from(sample_configs), st.integers())
 def test_getting_same_result(commands, file_index):
     """
     Testing that opening and reading the final file
