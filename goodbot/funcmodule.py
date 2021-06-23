@@ -246,6 +246,22 @@ def create_dirs(
     return project_dir.absolute()
 
 def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
+    """Writes a new `read` instructions file.
+
+    The instructions come from the `read` key in the user's `yaml`
+    configuration file. Files created by this function are what is
+    sent to the TTS engine by the `record_audio()` function.
+
+    Args:
+        read_instructions (str): A string of text that will be written to the
+            `.txt` file. Can contain `ssml` syntax.
+        scene_path (Path): The path towards the scene where 
+            `read_instructions` come from.
+        index (int): The index of the command block.
+
+    Returns:
+        Path: The path towards where the new text file has been written.
+    """
     read_path: Path = scene_path / Path("read")
 
     file_name: str = f"read_{index + 1}.txt"
