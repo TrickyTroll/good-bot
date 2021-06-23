@@ -4,6 +4,7 @@ import tempfile
 import pytest
 import shutil
 import pathlib
+import yaml
 import goodbot.funcmodule as funcmodule
 
 from hypothesis import given, strategies as st
@@ -38,6 +39,14 @@ read_strings = [
 </speak>""",
     "Je vais vous présenter mon super héros préféré.",
 ]
+
+# Adding examples to the `sample_configs` list.
+sample_configs = []
+
+for file in Path("./examples").iterdir():
+    with open(file, "r") as stream:
+        config = stream.read()
+    sample_configs.append(yaml.safe_dump(config))
 
 
 class TestParser(unittest.TestCase):
@@ -383,7 +392,7 @@ def test_write_read_instructions_file_name(to_read, file_index):
 
 
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
-def test_getting_same_result(to_read, file_index):
+def test_read_getting_same_result(to_read, file_index):
     """
     Testing that opening and reading the final file
     gives the same result as the original string.
@@ -396,3 +405,66 @@ def test_getting_same_result(to_read, file_index):
         with open(new_file) as stream:
             read_file = stream.read()
         assert read_file == to_read
+
+
+@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+def test_write_commands(commands, file_index):
+    """Making sure that the return value is ok.
+
+    To be ok, return value must either be of type `str` or `Path`.
+    This ensures that the returned value can then be used to open
+    the file later on.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/commands")
+        new_file = funcmodule.write_commands_instructions(
+            commands, temp_dir, file_index
+        )
+    assert isinstance(new_file, (Path, str))
+
+
+@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+def test_write_commands_instructions_path(commands, file_index):
+    """Testing that the returned path is the right one.
+
+    Only testing that the path exists for now.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/commands")
+        new_file = funcmodule.write_commands_instructions(
+            commands, temp_dir, file_index
+        )
+        assert os.path.exists(new_file)
+
+
+@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+def test_write_commands_instructions_file_name(commands, file_index):
+    """
+    Testing that the name of the file created by
+    `write_commands_instructions()` is correct.
+
+    The file must be named `read_[id]`, where `id` must be
+    equal to the index passed to the function + 1.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/commands")
+        new_file = funcmodule.write_commands_instructions(
+            commands, temp_dir, file_index
+        )
+    assert str(file_index + 1) in new_file.name
+
+
+@given(to_read=st.sampled_from(sample_configs), file_index=st.integers())
+def test_getting_same_result(commands, file_index):
+    """
+    Testing that opening and reading the final file
+    gives the same result as the original string.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        os.mkdir(temp_dir + "/commands")
+        new_file = funcmodule.write_commands_instructions(
+            commands, temp_dir, file_index
+        )
+        with open(new_file) as stream:
+            read_file = stream.read()
+        assert read_file == commands
