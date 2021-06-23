@@ -245,18 +245,19 @@ def create_dirs(
 
     return project_dir.absolute()
 
-def write_read_instructions(read_instructions: str, scene_path: Path) -> Path:
+def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
     read_path: Path = scene_path / Path("read")
-    for index, item in enumerate(read_instructions):
-        file_name: str = f"read_{index + 1}.txt"
-        file_path: Path = read_path / Path(file_name)
-        with open(file_path, "w") as stream:
-            stream.write(item)
-    return read_path
+
+    file_name: str = f"read_{index + 1}.txt"
+    file_path: Path = read_path / Path(file_name)
+
+    with open(file_path, "w") as stream:
+        stream.write(read_instructions)
+
+    return file_path
 
 def write_commands_instructions(commands_instructions: Dict[str, List[str]], scene_path: Path) -> Path:
     commands_path: Path = scene_path / Path("commands")
-    index = 1
     for key, value in commands_instructions.items
     pass
 
