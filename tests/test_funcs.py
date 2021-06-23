@@ -1,4 +1,4 @@
-from os import read
+import os
 import unittest
 import tempfile
 import pytest
@@ -6,7 +6,10 @@ import shutil
 import pathlib
 import goodbot.funcmodule as funcmodule
 
+from hypothesis import given, strategies as st
+
 Path = pathlib.Path
+read = os.read
 
 CONFIGPATH = Path("./tests/examples")
 
@@ -313,3 +316,38 @@ def test_list_scenes():
     assert len(all_scenes) == len(listed_scenes) and sorted(
         all_scenes
     ) == sorted(listed_scenes)
+
+
+def test_write_read_instructions():
+    """Tests for the `write_read_instructions()` function.
+    """
+    file_index = 1
+
+    with tempfile.TemporaryDirectory as temp_dir:
+        new_file = funcmodule.write_read_instructions("Hello, world", temp_dir, file_index)
+
+    def test_write_read_instructions_rtype():
+        """Making sure that the return value is ok.
+
+        To be ok, return value must either be of type `str` or `Path`.
+        This ensures that the returned value can then be used to open
+        the file later on. 
+        """
+        assert isinstance(new_file, (Path, str))
+
+    def test_write_read_instructions_path():
+        """Testing that the returned path is the right one.
+        
+        Only testing that the path exists for now.
+        """
+        assert os.path.exists(new_file)
+
+    def test_write_read_instructions_file_name():
+        """
+        Testing that the name of the file created by
+        `write_read_instructions()` is correct.
+
+        The file must be named `read_[id]`, where `id` must be
+        equal to the index passed to the function + 1.
+        """
+        assert str(file_index + 1) in new_file.name
