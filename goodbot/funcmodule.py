@@ -328,7 +328,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     # This should probably be grouped
     for scene_number, scene_contents in parsed.items():
 
-        scene_path: Path = Path(f"scene_{scene_number}")
+        scene_path: Path = project_path / Path(f"scene_{scene_number}")
 
         for index, scene_item in enumerate(scene_contents):
 
