@@ -328,37 +328,22 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     todos: dict = config_info(parsed)
 
     # This should probably be grouped
-    for scene_number, scene_info in todos.items():
+    for scene_number, scene_contents in todos.items():
 
         scene_path: Path = Path(f"scene_{scene_number}")
 
-        for scene_item, item_info in scene_info.items():
+        for index, scene_item in enumerate(scene_contents):
 
-            write_path: Path = Path(scene_item)
-
-            if "read" in scene_item:
-                ext: str = ".txt"
-            else:
-                ext = ".yaml"
-
-            for category, instructions in enumerate(item_info):
-
-                try:
-                    to_write = yaml.safe_dump(instructions)
-
-                except TypeError:
-                    sys.exit()
-
-                file_name: Path = Path(f"file_{category}")
-                file_path: Path = (
-                    project_path / scene_path / write_path / file_name
-                )
-
-                click.echo(f"Creating {file_path.with_suffix(ext)}")
-
-                with open(file_path.with_suffix(ext), "w") as file:
-
-                    file.write(to_write)
+            if "read" in scene_item.keys():
+                to_read: str = scene_item["read"]
+                write_read_instructions(to_read, scene_path, index)
+            
+            if "commands" in scene_item.keys():
+                commands: Dict[str, List[str]]= {
+                    "commands": scene_item["commands"],
+                    "expect": scene_item["expect"]
+                }
+                write_commands_instructions(commands, scene_path, index)
 
     return project_path
 
