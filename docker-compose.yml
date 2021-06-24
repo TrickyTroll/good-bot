@@ -3,24 +3,32 @@ version: "3.9"
 services:
 
   app:
-    build: .
-    command: python3 /app/cli.py
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: python3 /app/goodbot/cli.py
     volumes:
         - .:/project
 
   runner: 
-    build: .
-    command: runner /runner/tests/examples/test_conf.yaml
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: runner /install/good-bot-runner-1.1.0/tests/examples/test_conf.yaml
 
   setup:
-    build: .
-    command: python3 /app/cli.py setup /project/examples/goodbot.yaml
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: python3 /project/goodbot/cli.py setup /project/examples/basics/goodbot.yaml
     volumes:
        - .:/project
 
   record:
-    build: .
-    command: python3 /app/cli.py record ./toto
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: python3 /app/goodbot/cli.py record ./toto
     volumes:
       - .:/root
 
