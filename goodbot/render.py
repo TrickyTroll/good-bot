@@ -13,13 +13,27 @@ docker image.
 This module requires ffmpeg.
 """
 import sys
+import pathlib
 from shutil import which
 
+Path = pathlib.Path
+
 # Checking ffmpeg installation
-if not which("ffmpeg"):
-    print("Missing requirement: ffmpeg")
-    sys.exit()
+def check_dependencies() -> None:
+    """Checks if every dependency is installed.
 
+    If not, the missing requirements are printed to the user
+    and the program exits.
 
-def createScene(scene_path: str):
-    pass
+    Current dependencies checks:
+
+    * `ffmpeg`.
+    """
+    missing = False
+    if not which("ffmpeg"):
+        missing = True
+        print("Missing requirement: ffmpeg")
+    if missing:
+        sys.exit()
+
+def fetch_asciicasts(project_path: Path) -> List
