@@ -325,10 +325,8 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     Returns:
         Path: The path towards the project.
     """
-    todos: dict = config_info(parsed)
-
     # This should probably be grouped
-    for scene_number, scene_contents in todos.items():
+    for scene_number, scene_contents in parsed.items():
 
         scene_path: Path = Path(f"scene_{scene_number}")
 
