@@ -41,8 +41,5 @@ WORKDIR /app
 COPY . /app/
 RUN pip install /app/
 
-WORKDIR /install
-RUN npm install terminalizer
-
 ENTRYPOINT [ "good-bot" ]
 
