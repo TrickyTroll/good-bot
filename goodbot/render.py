@@ -145,7 +145,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     """
     videos_path: Path = gif_and_audio[0].parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
-    output_path: Path = videos_path + Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
+    output_path: Path = videos_path / Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
     if not gif_and_audio[1]:
         # There is no audio file, just render the video.
         subprocess.run([
