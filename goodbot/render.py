@@ -183,7 +183,19 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     return output_path
 
 def render_all(project_path: Path) -> List[Path]:
+    """Uses the `render()` function on each combination of a project.
+
+    Combinations a found using the `scene_matches()` function.
+
+    Args:
+        project_path (Path): The path towards the project to render.
+
+    Returns:
+        List[Path]: A list of paths towards the location of each
+            rendered mp4 file.
+    """
     scenes: List[Path] = []
+    all_renders: List[Path] = []
     # Making sure that we are only adding scenes. Other
     # files could have been added by the user.
     for directory in project_path.iterdir():
@@ -192,3 +204,7 @@ def render_all(project_path: Path) -> List[Path]:
 
     for scene in scenes:
         scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
+        for match in scene_matches:
+            all_renders.append(render(match))
+    
+    return all_renders
