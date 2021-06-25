@@ -91,6 +91,27 @@ def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
 
 
 def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
+    """Tries to link an audio file to each `gif` recording.
+
+    If there is no corresponding audio file for a recording, it is
+    matched with a `None` value.
+
+    This function uses `corresponding_audio()` for the matching.
+    
+    In the case that there are no `audio` directory in the scene,
+    the function matches each recording to `None`.
+
+    Args:
+        scene_path (Path): The path towards the scene to match
+            gifs and audio from.
+
+    Returns:
+        List[Tuple[Path, Union[Path, None]]]: A list of matches. Each
+            match is a tuple that contains the gif path at index `[0]`
+            and the audio path at index `[1]`. If there was no
+            corresponding audio files, the tuple contains a `None`
+            value at index `[1]`.
+    """
     scene_gifs: List[Path] = fetch_scene_gifs(scene_path)
     audio_path: Path = scene_path / Path("audio")
     linked: List[Tuple[Path, Union[Path, None]]] = []
@@ -104,14 +125,14 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
     return linked
 
 
-# def fetch_all(project_path: Path) -> List[Path]:
-#     scenes: List[Path] = []
-#     all_gif_paths: List[Path] = []
-#     # Making sure that we are only adding scenes. Other
-#     # files could have been added by the user.
-#     for directory in project_path.iterdir():
-#         if "scene_" in directory.name:
-#             scenes.append(directory)
+def fetch_all(project_path: Path) -> List[Path]:
+    scenes: List[Path] = []
+    all_gif_paths: List[Path] = []
+    # Making sure that we are only adding scenes. Other
+    # files could have been added by the user.
+    for directory in project_path.iterdir():
+        if "scene_" in directory.name:
+            scenes.append(directory)
 
-#     for scene in scenes:
-#         pass
+    for scene in scenes:
+        pass
