@@ -15,6 +15,7 @@ This module requires ffmpeg.
 import sys
 import pathlib
 from shutil import which
+from typing import List, Dict, Union
 
 Path = pathlib.Path
 
@@ -36,4 +37,33 @@ def check_dependencies() -> None:
     if missing:
         sys.exit()
 
-def fetch_asciicasts(project_path: Path) -> List
+def fetch_all(project_path: Path) -> List[Path]:
+    scenes: List[Path] = []
+    all_gif_paths: List[Path] = []
+    # Making sure that we are only adding scenes. Other
+    # files could have been added by the user.
+    for directory in project_path.iterdir():
+        if "scene_" in directory.name:
+            scenes.append(directory)
+
+    for scene in scenes:
+        pass
+
+def fetch_scene_gifs(scene_path: Path) -> List[Path]:
+    """Fetches each gifs that has been rendered for a scene.
+
+    Args:
+        scene_path (Path): The path towards the scene.
+
+    Returns:
+        List[Path]: List of paths towards each gif. Paths
+            are constructed like so:
+                [project-path]/[scene-path]/gifs/[gif-name].gif  
+    """
+    gifs_path: Path = scene_path / Path("gifs")
+    all_gifs: List[Path] = []
+    for file in gifs_path.iterdir():
+        # Assuming a user won't add a `.gif` file.
+        if file.suffix == "gif":
+            all_gifs.append(file)
+    return all_gifs
