@@ -37,6 +37,7 @@ def check_dependencies() -> None:
     if missing:
         sys.exit()
 
+
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     """Fetches each gif that has been rendered for a scene.
 
@@ -46,7 +47,7 @@ def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     Returns:
         List[Path]: List of paths towards each gif. Paths
             are constructed like so:
-                [project-path]/[scene-path]/gifs/[gif-name].gif  
+                [project-path]/[scene-path]/gifs/[gif-name].gif
     """
     gifs_path: Path = scene_path / Path("gifs")
     all_gifs: List[Path] = []
@@ -55,6 +56,7 @@ def fetch_scene_gifs(scene_path: Path) -> List[Path]:
         if file.suffix == "gif":
             all_gifs.append(file)
     return all_gifs
+
 
 def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
     """
@@ -87,23 +89,29 @@ def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
 
     return (gif_path, None)
 
+
 def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
     scene_gifs: List[Path] = fetch_scene_gifs(scene_path)
     audio_path: Path = scene_path / Path("audio")
+    linked: List[Tuple[Path, Union[Path, None]]] = []
+
     if not audio_path.exists():
         return [(gif_path, None) for gif_path in scene_gifs]
     else:
         for gif_path in scene_gifs:
-            if
+            linked.append(corresponding_audio(gif_path))
 
-def fetch_all(project_path: Path) -> List[Path]:
-    scenes: List[Path] = []
-    all_gif_paths: List[Path] = []
-    # Making sure that we are only adding scenes. Other
-    # files could have been added by the user.
-    for directory in project_path.iterdir():
-        if "scene_" in directory.name:
-            scenes.append(directory)
+    return linked
 
-    for scene in scenes:
-        pass
+
+# def fetch_all(project_path: Path) -> List[Path]:
+#     scenes: List[Path] = []
+#     all_gif_paths: List[Path] = []
+#     # Making sure that we are only adding scenes. Other
+#     # files could have been added by the user.
+#     for directory in project_path.iterdir():
+#         if "scene_" in directory.name:
+#             scenes.append(directory)
+
+#     for scene in scenes:
+#         pass
