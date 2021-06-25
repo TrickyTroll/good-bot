@@ -157,7 +157,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     for key, value in all_confs.items():
 
         # Those dirs are created no matter the content
-        to_create: List[str] = ["asciicasts", "embeds", "gifs", "video"]
+        to_create: List[str] = ["asciicasts", "embeds", "gifs", "videos"]
 
         for key_2, value_2 in value.items():
             if value_2:  # There are items in the list.
