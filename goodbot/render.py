@@ -38,7 +38,7 @@ def check_dependencies() -> None:
         sys.exit()
 
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
-    """Fetches each gifs that has been rendered for a scene.
+    """Fetches each gif that has been rendered for a scene.
 
     Args:
         scene_path (Path): The path towards the scene.
