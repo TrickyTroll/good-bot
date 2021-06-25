@@ -12,13 +12,11 @@ docker image.
 
 This module requires ffmpeg.
 """
-from os import link
 import sys
 import pathlib
 import subprocess
-import shlex
 from shutil import which
-from typing import List, Dict, Tuple, Union
+from typing import List, Tuple, Union
 
 Path = pathlib.Path
 
@@ -100,7 +98,7 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
     matched with a `None` value.
 
     This function uses `corresponding_audio()` for the matching.
-    
+
     In the case that there are no `audio` directory in the scene,
     the function matches each recording to `None`.
 
@@ -121,9 +119,9 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
 
     if not audio_path.exists():
         return [(gif_path, None) for gif_path in scene_gifs]
-    else:
-        for gif_path in scene_gifs:
-            linked.append(corresponding_audio(gif_path))
+
+    for gif_path in scene_gifs:
+        linked.append(corresponding_audio(gif_path))
 
     return linked
 
@@ -159,7 +157,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "-vf",
             '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
             f"{output_path}"
-        ])
+        ], check=True)
     else:
         # Merge the audio too
         subprocess.run([
@@ -178,7 +176,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "copy",
             "-shortest",
             f"{output_path}"
-        ])
+        ], check=True)
 
     return output_path
 
@@ -206,5 +204,5 @@ def render_all(project_path: Path) -> List[Path]:
         scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
         for match in scene_matches:
             all_renders.append(render(match))
-    
+
     return all_renders
