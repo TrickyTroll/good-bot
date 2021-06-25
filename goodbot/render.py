@@ -15,7 +15,7 @@ This module requires ffmpeg.
 import sys
 import pathlib
 from shutil import which
-from typing import List, Dict, Union
+from typing import List, Dict, Tuple, Union
 
 Path = pathlib.Path
 
@@ -55,6 +55,46 @@ def fetch_scene_gifs(scene_path: Path) -> List[Path]:
         if file.suffix == "gif":
             all_gifs.append(file)
     return all_gifs
+
+def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
+    """
+    Finds an audio file that corresponds to the provided gif recording.
+
+    This function should be called by `link_audio()`. Checking whether
+    or not the audio path exists is done in the `link_audio()`
+    function.
+
+    Args:
+        gif_path (Path): The path towards the gif file. The file
+            is going to be associated with an audio file with the
+            same id.
+
+    Returns:
+        Tuple[Path, Union[Path, None]]: A tuple that contains the path
+            towards the `gif` at index `[0]`, and the path towards the
+            audio file at index `[1]`. If there is no corresponding
+            audio file, index `[1]` is `None`.
+    """
+    audio_path: Path = gif_path.parent / Path("audio")
+    # The file name is formatted like:
+    # file_[id].gif
+    identifier: str = gif_path.name.split("_")[1]
+    # This function assumes an audio path exists.
+    for audio_file in audio_path.iterdir():
+
+        if identifier in audio_file.name:
+            return (gif_path, audio_file)
+
+    return (gif_path, None)
+
+def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
+    scene_gifs: List[Path] = fetch_scene_gifs(scene_path)
+    audio_path: Path = scene_path / Path("audio")
+    if not audio_path.exists():
+        return [(gif_path, None) for gif_path in scene_gifs]
+    else:
+        for gif_path in scene_gifs:
+            if
 
 def fetch_all(project_path: Path) -> List[Path]:
     scenes: List[Path] = []
