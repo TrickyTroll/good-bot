@@ -12,8 +12,11 @@ docker image.
 
 This module requires ffmpeg.
 """
+from os import link
 import sys
 import pathlib
+import subprocess
+import shlex
 from shutil import which
 from typing import List, Dict, Tuple, Union
 
@@ -124,10 +127,63 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
 
     return linked
 
+def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
+    """Renders and mp4 file using `ffmpeg`.
 
-def fetch_all(project_path: Path) -> List[Path]:
+    An mp4 file is created at the same location and under the same
+    name wheter there is a corresponding audio file or not.
+
+    Args:
+        gif_and_audio (Tuple[Path, Union[Path, None]]): A typle
+            that contains the gif path at index `0` and the audio
+            path at index `0`. The audio path can be `None`.
+
+    Returns:
+        Path: The path towards the rendered video. Follows this
+            scheme:
+                [project-path]/[scene-name]/video/[video_name].mp4
+    """
+    videos_path: Path = gif_and_audio[0].parent / Path("videos")
+    # Changing extension from `.gif` to `.mp4`
+    output_path: Path = videos_path + Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
+    if not gif_and_audio[1]:
+        # There is no audio file, just render the video.
+        subprocess.run([
+            "ffmpeg",
+            "-i",
+            f"{gif_and_audio[0]}",
+            "-movflags",
+            "faststart",
+            "-pix_fmt",
+            "yuv420p",
+            "-vf",
+            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
+            f"{output_path}"
+        ])
+    else:
+        # Merge the audio too
+        subprocess.run([
+            "ffmpeg",
+            "f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            f"{gif_and_audio[0]}",
+            "-i",
+            f"{gif_and_audio[1]}",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "copy",
+            "-shortest",
+            f"{output_path}"
+        ])
+
+    return output_path
+
+def render_all(project_path: Path) -> List[Path]:
     scenes: List[Path] = []
-    all_gif_paths: List[Path] = []
     # Making sure that we are only adding scenes. Other
     # files could have been added by the user.
     for directory in project_path.iterdir():
@@ -135,4 +191,4 @@ def fetch_all(project_path: Path) -> List[Path]:
             scenes.append(directory)
 
     for scene in scenes:
-        pass
+        scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
