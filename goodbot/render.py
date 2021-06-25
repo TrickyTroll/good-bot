@@ -37,18 +37,6 @@ def check_dependencies() -> None:
     if missing:
         sys.exit()
 
-def fetch_all(project_path: Path) -> List[Path]:
-    scenes: List[Path] = []
-    all_gif_paths: List[Path] = []
-    # Making sure that we are only adding scenes. Other
-    # files could have been added by the user.
-    for directory in project_path.iterdir():
-        if "scene_" in directory.name:
-            scenes.append(directory)
-
-    for scene in scenes:
-        pass
-
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     """Fetches each gifs that has been rendered for a scene.
 
@@ -67,3 +55,15 @@ def fetch_scene_gifs(scene_path: Path) -> List[Path]:
         if file.suffix == "gif":
             all_gifs.append(file)
     return all_gifs
+
+def fetch_all(project_path: Path) -> List[Path]:
+    scenes: List[Path] = []
+    all_gif_paths: List[Path] = []
+    # Making sure that we are only adding scenes. Other
+    # files could have been added by the user.
+    for directory in project_path.iterdir():
+        if "scene_" in directory.name:
+            scenes.append(directory)
+
+    for scene in scenes:
+        pass
