@@ -44,6 +44,8 @@ read_strings = [
 sample_configs = []
 
 for file in Path("./examples").iterdir():
+    if file.is_dir():
+        pass
     with open(file, "r") as stream:
         config = stream.read()
     sample_configs.append(yaml.safe_load(config))
