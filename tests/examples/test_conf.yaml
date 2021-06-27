@@ -20,6 +20,6 @@
 3:
   - commands:
     - echo 'I can also be quiet...sometimes'
-  - expect:
+    expect:
     - prompt
 
