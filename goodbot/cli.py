@@ -114,7 +114,7 @@ def record(projectpath: str) -> None:
 
 @click.command()
 @click.argument("projectpath", type=str)
-def render(projectpath: str) -> None:
+def render_video(projectpath: str) -> None:
     """
     Renders a project using pre-recorded gifs and mp3 files.
 
@@ -131,7 +131,7 @@ def render(projectpath: str) -> None:
 app.add_command(setup)
 app.add_command(echo_config)
 app.add_command(record)
-app.add_command(render)
+app.add_command(render_video)
 
 
 def main():
