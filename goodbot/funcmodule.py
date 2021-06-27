@@ -337,11 +337,16 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                 write_read_instructions(to_read, scene_path, index)
             
             if "commands" in scene_item.keys():
-                commands: Dict[str, List[str]]= {
-                    "commands": scene_item["commands"],
-                    "expect": scene_item["expect"]
-                }
-                write_commands_instructions(commands, scene_path, index)
+                try:
+                    commands: Dict[str, List[str]]= {
+                        "commands": scene_item["commands"],
+                        "expect": scene_item["expect"]
+                    }
+                    write_commands_instructions(commands, scene_path, index)
+                except KeyError as error:
+                    print(f"Missing key: {error.args[0]}")
+                    print("Scene items:")
+                    print(scene_item)
 
     return project_path
 
