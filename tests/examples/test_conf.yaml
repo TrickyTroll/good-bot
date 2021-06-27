@@ -16,10 +16,8 @@
     expect:
       - prompt
     read: Here is a new scene!
-
 3:
   - commands:
-    - echo 'I can also be quiet...sometimes'
+      - echo 'I can also be quiet...sometimes'
     expect:
-    - prompt
-
+      - prompt
