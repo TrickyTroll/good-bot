@@ -32,6 +32,14 @@ services:
     volumes:
       - .:/root
 
+  render:
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: python3 /app/goodbot/cli.py render ./toto
+    volumes:
+      - .:/root
+
   test:
     build:
       context: .
