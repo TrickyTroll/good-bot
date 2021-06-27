@@ -123,7 +123,7 @@ def render(projectpath: str) -> None:
     """
     project_path = pathlib.Path(projectpath)
 
-    rec_paths = render.render_all(project_path)
+    rec_paths = render.render_all(PROJECT_ROOT / project_path)
     
     click.echo(rec_paths)
 
