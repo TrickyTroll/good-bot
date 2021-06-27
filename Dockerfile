@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 
 ENV LANG en_US.utf8
 
+RUN pip3 install --upgrade pip
+RUN python3 -m pip install --upgrade setuptools
+
 WORKDIR /install
 RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0.zip \
 	&& unzip v1.1.0.zip
