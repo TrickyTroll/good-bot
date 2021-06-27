@@ -28,7 +28,7 @@ services:
     build:
         context: .
         dockerfile: Dockerfile.dev
-    command: python3 /app/goodbot/cli.py record ./toto
+    command: python3 /app/goodbot/cli.py record /root/toto
     volumes:
       - .:/root
 
