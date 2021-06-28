@@ -155,6 +155,9 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     An mp4 file is created at the same location and under the same
     name wheter there is a corresponding audio file or not.
 
+    This function also calls `remove_first_frame()` before doing
+    any conversion.
+
     Args:
         gif_and_audio (Tuple[Path, Union[Path, None]]): A typle
             that contains the gif path at index `0` and the audio
@@ -165,6 +168,8 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             scheme:
                 [project-path]/[scene-name]/video/[video_name].mp4
     """
+    remove_first_frame(gif_and_audio[0])
+
     videos_path: Path = gif_and_audio[0].parent.parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
     output_path: Path = videos_path / Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
