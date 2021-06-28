@@ -140,8 +140,9 @@ cython_debug/
 # Vscode
 .vscode
 
-# Testing folder
+# Testing folders
 toto
+tata
 
 # Bash in the container
 .bash_history
