@@ -7,7 +7,7 @@ from goodbot import render
 
 Path = pathlib.Path
 
-SAMPLE_PROJECT = Path("./examples/render-sample")
+SAMPLE_PROJECT = Path("./tests/examples/render-sample")
 
 def test_fetch_scene_gifs():
     scene_1_path = SAMPLE_PROJECT / Path("scene_1")
