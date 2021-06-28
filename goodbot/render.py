@@ -184,6 +184,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "-pix_fmt",
             "yuv420p",
             "-vf",
+            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
             f"{output_path}"
         ], check=True)
     else:
