@@ -78,7 +78,7 @@ def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
             audio file at index `[1]`. If there is no corresponding
             audio file, index `[1]` is `None`.
     """
-    audio_path: Path = gif_path.parent / Path("audio")
+    audio_path: Path = gif_path.parent.parent / Path("audio")
     # The file name is formatted like:
     # file_[id].gif
     identifier: str = gif_path.name.split("_")[1]
@@ -141,7 +141,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             scheme:
                 [project-path]/[scene-name]/video/[video_name].mp4
     """
-    videos_path: Path = gif_and_audio[0].parent / Path("videos")
+    videos_path: Path = gif_and_audio[0].parent.parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
     output_path: Path = videos_path / Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
     if not gif_and_audio[1]:
@@ -155,25 +155,25 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "-pix_fmt",
             "yuv420p",
             "-vf",
-            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
             f"{output_path}"
         ], check=True)
     else:
         # Merge the audio too
         subprocess.run([
             "ffmpeg",
-            "f",
-            "concat",
-            "-safe",
-            "0",
             "-i",
             f"{gif_and_audio[0]}",
-            "-i",
             f"{gif_and_audio[1]}",
-            "-c:v",
-            "copy",
-            "-c:a",
-            "copy",
+            "-movflags",
+            "faststart",
+            "-pix_fmt",
+            "yuv420p",
+            "-vf",
+            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
+            "-map",
+            "0",
+            "-map",
+            "1",
             "-shortest",
             f"{output_path}"
         ], check=True)
