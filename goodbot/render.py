@@ -15,6 +15,7 @@ This module requires ffmpeg.
 import sys
 import pathlib
 import subprocess
+from PIL import Image
 from shutil import which
 from typing import List, Tuple, Union
 
@@ -124,6 +125,18 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
         linked.append(corresponding_audio(gif_path))
 
     return linked
+
+def remove_first_frame(gif_path: Path) -> Path:
+    im = Image.open(gif_path)
+    all_frames = []
+    while True:
+        try:
+            all_frames.append(im.seek(im.tell() + 1))
+        except EOFError:
+            break
+    all_frames.pop(0)
+    im.save(gif_path, save_all=True, append_images=all_frames)
+    return gif_path
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     """Renders and mp4 file using `ffmpeg`.
