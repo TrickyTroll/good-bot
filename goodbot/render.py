@@ -127,6 +127,17 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
     return linked
 
 def remove_first_frame(gif_path: Path) -> Path:
+    """Removes the first frame from a gif file.
+
+    Args:
+        gif_path (Path): The path towards the gif from which the
+            first frame will be removed. This is also where the
+            shorter gif will be saved.
+
+    Returns:
+        Path: The path towards the newly created gif. This is the
+            same value as the `gif_path` argument. 
+    """
     im = Image.open(gif_path)
     all_frames = []
     while True:
