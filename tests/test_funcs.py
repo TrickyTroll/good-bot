@@ -1,10 +1,12 @@
 import os
+import sys
 import unittest
 import tempfile
 import pytest
 import shutil
 import pathlib
 import yaml
+import yaml.parser
 import goodbot.funcmodule as funcmodule
 
 from hypothesis import given, strategies as st
@@ -43,12 +45,21 @@ read_strings = [
 # Adding examples to the `sample_configs` list.
 sample_configs = []
 
-for file in Path("./examples").iterdir():
-    if file.is_dir():
-        pass
-    with open(file, "r") as stream:
-        config = stream.read()
-    sample_configs.append(yaml.safe_load(config))
+for file in Path("./tests/examples").iterdir():
+    print(file)
+    if file.suffix == ".yaml":
+
+        with open(file, "r") as stream:
+            config = stream.read()
+        try:
+            sample_configs.append(yaml.safe_load(config))
+        except yaml.parser.ParserError:
+            print(f"Could not parse {file}.")
+            print("It might not be a valid YAML file.")
+
+if not sample_configs:
+    print("Found no valid sample.")
+    sys.exit()
 
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
