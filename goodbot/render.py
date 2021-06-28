@@ -54,7 +54,7 @@ def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     all_gifs: List[Path] = []
     for file in gifs_path.iterdir():
         # Assuming a user won't add a `.gif` file.
-        if file.suffix == "gif":
+        if file.suffix == ".gif":
             all_gifs.append(file)
     return all_gifs
 
