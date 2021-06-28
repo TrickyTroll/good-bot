@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     asciinema \
     asciinema \
 	python3.9 \
+	gifsicle \
 	ffmpeg \
 	ttyrec \
 	unzip \

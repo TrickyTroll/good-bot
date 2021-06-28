@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
 	libgtk-3.0 \
     asciinema \
 	python3.9 \
+	gifsicle \
 	libnss3 \
 	libxss1 \
 	ffmpeg \
