@@ -36,6 +36,7 @@ packaging==20.9
 pastel==0.2.1
 pathspec==0.8.1
 pexpect==4.8.0
+Pillow==8.2.0
 pkginfo==1.7.0
 pluggy==0.13.1
 poetry==1.1.6
