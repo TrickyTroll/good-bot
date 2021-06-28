@@ -10,6 +10,9 @@ Path = pathlib.Path
 SAMPLE_PROJECT = Path("./tests/examples/render-sample")
 
 def test_fetch_scene_gifs():
+    """
+    Making sure that `fetch_scene_gifs` finds the right amount of gifs.
+    """
     scene_1_path = SAMPLE_PROJECT / Path("scene_1")
     all_gifs = render.fetch_scene_gifs(scene_1_path)
     assert len(all_gifs) == 2
