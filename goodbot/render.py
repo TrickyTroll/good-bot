@@ -235,6 +235,24 @@ def render_all(project_path: Path) -> List[Path]:
     return all_renders
 
 def sort_videos(project_path: Path) -> List[Path]:
+    """Sorts each videos in a project.
+
+    Videos are sorted by scene and then by videos.
+
+    The scenes are sorted using their `id`. The minimal
+    `id` value is `1`, and there is no maximum.
+
+    Once the scenes are sorted, each video in each scene
+    is sorted, starting with the scene with id `1`. Each
+    video is appended to a list of paths.
+
+    Args:
+        project_path (Path): The path towards the project
+            from which the videos will be found and sorted.
+
+    Returns:
+        List[Path]: A sorted list of paths towards the video recordings.
+    """
 
     # Sorting scenes
     scene_amount: int = 0
