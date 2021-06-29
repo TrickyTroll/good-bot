@@ -15,6 +15,7 @@ This module requires ffmpeg.
 import os
 import sys
 import pathlib
+import tempfile
 import time
 import subprocess
 from shutil import which
@@ -165,12 +166,15 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 [project-path]/[scene-name]/video/[video_name].mp4
     """
     gif_path: Path = remove_first_frame(gif_and_audio[0])
-
     videos_path: Path = gif_path.parent.parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
-    output_path: Path = videos_path / Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
-    if not gif_and_audio[1]:
-        # There is no audio file, just render the video.
+    video_name: Path = Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
+    output_path: Path = videos_path / video_name
+
+    with tempfile.TemporaryDirectory as tempdir:
+
+        temp_filename: Path = Path(tempdir) / video_name
+        # Create a temporaty video
         subprocess.run([
             "ffmpeg",
             "-i",
@@ -181,29 +185,28 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "yuv420p",
             '-vf',
             'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-            f"{output_path}"
+            f"{temp_filename}"
         ], check=True)
-    else:
-        # Merge the audio too
-        subprocess.run([
-            "ffmpeg",
-            "-i",
-            f"{gif_path}",
-            "-i",
-            f"{gif_and_audio[1]}",
-            "-movflags",
-            "faststart",
-            "-pix_fmt",
-            "yuv420p",
-            "-vf",
-            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-            "-map",
-            "0",
-            "-map",
-            "1",
-            "-shortest",
-            f"{output_path}"
-        ], check=True)
+
+        if gif_and_audio[1]:
+            # Merge the audio too
+            subprocess.run([
+                "ffmpeg",
+                "-i",
+                f"{temp_filename}",
+                "-i",
+                f"{gif_and_audio[1]}",
+                "-map",
+                "0:v",
+                "-map",
+                "1:a",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                f"{output_path}",
+                "-y"
+            ], check=True)
 
     return output_path
 
