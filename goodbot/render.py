@@ -138,17 +138,17 @@ def remove_first_frame(gif_path: Path) -> Path:
         Path: The path towards the newly created gif. This is the
             same value as the `gif_path` argument. 
     """
+    save_path: Path = Path(gif_path.name + "_edited" + ".gif")
     subprocess.run([
         "gifsicle",
         "--unoptimize", # Ensures no transparent background added.
         f"{gif_path}",
         "--delete"
         '"#0"',
-        "--done",
-        "-o",
-        f"{gif_path}"
+        ">",
+        f"{save_path}"
     ])
-    return gif_path
+    return save_path
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     """Renders and mp4 file using `ffmpeg`.
@@ -169,9 +169,9 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             scheme:
                 [project-path]/[scene-name]/video/[video_name].mp4
     """
-    remove_first_frame(gif_and_audio[0])
+    gif_path: Path = remove_first_frame(gif_and_audio[0])
 
-    videos_path: Path = gif_and_audio[0].parent.parent / Path("videos")
+    videos_path: Path = gif_path.parent.parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
     output_path: Path = videos_path / Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
     if not gif_and_audio[1]:
@@ -179,7 +179,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
         subprocess.run([
             "ffmpeg",
             "-i",
-            f"{gif_and_audio[0]}",
+            f"{gif_path}",
             "-movflags",
             "faststart",
             "-pix_fmt",
@@ -193,7 +193,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
         subprocess.run([
             "ffmpeg",
             "-i",
-            f"{gif_and_audio[0]}",
+            f"{gif_path}",
             f"{gif_and_audio[1]}",
             "-movflags",
             "faststart",
