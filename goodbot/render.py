@@ -320,14 +320,30 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
     
     return file_path
 
-def render_final(project_path: Path) -> None:
-    
+def render_final(project_path: Path) -> Path:
+    """Renders the final video using `ffmpeg`.
+
+    This function uses the `write_ffmpeg_instructions()` function,
+    which in turn uses `sort_videos()` to get a list of rendered
+    videos in order.
+
+    Args:
+        project_path (Path): The path to the project to merge
+            videos from. `mp4` files must be created beforehand
+            using the `render_all()` function.
+
+    Returns:
+        Path: The path towards the final video.
+    """
     final_path: Path = project_path / Path("final/")
 
     if not final_path.exists():
         os.mkdir(final_path)
     
     instructions_file: Path = write_ffmpeg_instructions(project_path)
+    output_path: Path = final_path / Path("final.mp4")
 
-    subprocess.run(["ffmpeg, "])
+    subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-i", f"{instructions_file}", "-c", "copy", f"{output_path}"])
+
+    return output_path
     
