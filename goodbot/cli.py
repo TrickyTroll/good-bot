@@ -127,7 +127,7 @@ def render_video(projectpath: str) -> None:
 
     final_project = render.render_final(PROJECT_ROOT / project_path)
     
-    click.echo(f"Your video has been saved under {project_path / final_project.dir / final_project.name}.")
+    click.echo(f"Your video has been saved under {project_path / final_project.parent / final_project.name}.")
 
 
 app.add_command(setup)
