@@ -196,16 +196,11 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 f"{temp_video_path}",
                 "-i",
                 f"{gif_and_audio[1]}",
-                "-map",
-                "0:v",
-                "-map",
-                "1:a",
                 "-c:v",
                 "copy",
                 "-c:a",
-                "copy",
-                f"{output_path}",
-                "-y"
+                "aac",
+                f"{output_path}"
             ], check=True)
 
     return output_path
