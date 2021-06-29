@@ -168,10 +168,10 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     gif_path: Path = remove_first_frame(gif_and_audio[0])
     videos_path: Path = gif_path.parent.parent / Path("videos")
     # Changing extension from `.gif` to `.mp4`
-    video_name: Path = Path(f"{gif_and_audio[0].name.split('.')[0]}.mp4")
+    video_name: Path = Path(f"{gif_and_audio[0].stem}.mp4")
     output_path: Path = videos_path / video_name
 
-    with tempfile.TemporaryDirectory as tempdir:
+    with tempfile.TemporaryDirectory() as tempdir:
 
         temp_filename: Path = Path(tempdir) / video_name
         # Create a temporaty video
