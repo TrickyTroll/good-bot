@@ -14,8 +14,8 @@ This module requires ffmpeg.
 """
 import sys
 import pathlib
+import time
 import subprocess
-from PIL import Image
 from shutil import which
 from typing import List, Tuple, Union
 
@@ -138,15 +138,16 @@ def remove_first_frame(gif_path: Path) -> Path:
         Path: The path towards the newly created gif. This is the
             same value as the `gif_path` argument. 
     """
-    im = Image.open(gif_path)
-    all_frames = []
-    while True:
-        try:
-            all_frames.append(im.seek(im.tell() + 1))
-        except EOFError:
-            break
-    all_frames.pop(0)
-    im.save(gif_path, save_all=True, append_images=all_frames)
+    subprocess.run([
+        "gifsicle",
+        "--unoptimize", # Ensures no transparent background added.
+        f"{gif_path}",
+        "--delete"
+        '"#0"',
+        "--done",
+        "-o",
+        f"{gif_path}"
+    ])
     return gif_path
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
@@ -183,8 +184,8 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "faststart",
             "-pix_fmt",
             "yuv420p",
-            "-vf",
-            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
+            '-vf',
+            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
             f"{output_path}"
         ], check=True)
     else:
@@ -199,7 +200,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "-pix_fmt",
             "yuv420p",
             "-vf",
-            '"scale=trunc(iw/2)*2:trunc(ih/2)*2"',
+            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
             "-map",
             "0",
             "-map",
@@ -232,6 +233,8 @@ def render_all(project_path: Path) -> List[Path]:
 
     for scene in scenes:
         scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
+        print(scene_matches)
+        time.sleep(10)
         for match in scene_matches:
             all_renders.append(render(match))
 
