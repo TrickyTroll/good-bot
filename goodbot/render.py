@@ -315,7 +315,8 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
     video_paths: List[Path] = sort_videos(project_path)
 
     with open(file_path, "w") as stream:
-        stream.writelines(video_paths)
+        for video_path in video_paths:
+            stream.write(f"file '{video_path}'")
     
     return file_path
 
@@ -327,4 +328,6 @@ def render_final(project_path: Path) -> None:
         os.mkdir(final_path)
     
     instructions_file: Path = write_ffmpeg_instructions(project_path)
+
+    subprocess.run(["ffmpeg, "])
     
