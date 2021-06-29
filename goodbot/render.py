@@ -12,6 +12,7 @@ docker image.
 
 This module requires ffmpeg.
 """
+import os
 import sys
 import pathlib
 import time
@@ -232,3 +233,57 @@ def render_all(project_path: Path) -> List[Path]:
             all_renders.append(render(match))
 
     return all_renders
+
+def sort_videos(project_path: Path) -> List[Path]:
+
+    # Sorting scenes
+    scene_amount: int = 0
+    all_scenes: List[Path] = []
+
+    for dir in project_path.iterdir():
+        if "scene_" in dir.name:
+            scene_amount += 1
+    
+    for scene_index in range(scene_amount):
+        for dir in project_path.iterdir():
+            try:
+                scene_id: int = int(dir.stem.split("_")[1])
+            except ValueError:
+                continue
+            if scene_index + 1 == scene_id:
+                # All scenes will be in order
+                all_scenes.append(dir)
+    
+    all_videos: List[Path] = []
+
+    # Sorting per scene.
+    for scene in all_scenes:
+
+        videos_path: Path = scene / Path("videos")
+        videos_amount: int = 0
+        for file in videos_path.iterdir():
+            if file.suffix == ".mp4":
+                videos_amount += 1
+        
+        for video_index in range(videos_amount):
+            for video in videos_path.iterdir():
+                try:
+                    video_id: int = int(video.stem.split("_")[1])
+                except ValueError:
+                    continue
+                
+                if video_index + 1 == video_id:
+
+                    all_videos.append(video)
+    
+    return all_videos
+    
+
+
+def render_final(project_path: Path) -> None:
+    
+    final_path: Path = project_path / Path("final/")
+
+    if not final_path.exists():
+        os.mkdir(final_path)
+    
