@@ -264,13 +264,14 @@ def sort_videos(project_path: Path) -> List[Path]:
     
     for scene_index in range(scene_amount):
         for dir in project_path.iterdir():
-            try:
-                scene_id: int = int(dir.stem.split("_")[1])
-            except ValueError:
-                continue
-            if scene_index + 1 == scene_id:
-                # All scenes will be in order
-                all_scenes.append(dir)
+            if "scene_" in dir.name:
+                try:
+                    scene_id: int = int(dir.stem.split("_")[1])
+                except ValueError:
+                    continue
+                if scene_index + 1 == scene_id:
+                    # All scenes will be in order
+                    all_scenes.append(dir)
     
     all_videos: List[Path] = []
 
@@ -285,14 +286,16 @@ def sort_videos(project_path: Path) -> List[Path]:
         
         for video_index in range(videos_amount):
             for video in videos_path.iterdir():
-                try:
-                    video_id: int = int(video.stem.split("_")[1])
-                except ValueError:
-                    continue
-                
-                if video_index + 1 == video_id:
+                if "file_" in video.name:
 
-                    all_videos.append(video.absolute())
+                    try:
+                        video_id: int = int(video.stem.split("_")[1])
+                    except ValueError:
+                        continue
+                
+                    if video_index + 1 == video_id:
+
+                        all_videos.append(video.absolute())
     
     return all_videos
     
