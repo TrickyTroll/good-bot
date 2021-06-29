@@ -124,8 +124,10 @@ def render_video(projectpath: str) -> None:
     project_path = pathlib.Path(projectpath)
 
     rec_paths = render.render_all(PROJECT_ROOT / project_path)
+
+    final_project = render.render_final(PROJECT_ROOT / project_path)
     
-    click.echo(rec_paths)
+    click.echo(f"Your video has been saved under {project_path / final_project.dir / final_project.name}.")
 
 
 app.add_command(setup)
