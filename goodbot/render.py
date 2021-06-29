@@ -138,16 +138,10 @@ def remove_first_frame(gif_path: Path) -> Path:
         Path: The path towards the newly created gif. This is the
             same value as the `gif_path` argument. 
     """
-    save_path: Path = Path(gif_path.stem + "_edited" + ".gif")
-    subprocess.run([
-        "gifsicle",
-        "--unoptimize", # Ensures no transparent background added.
-        f"{gif_path}",
-        "--delete"
-        '"#0"',
-        ">",
-        f"{save_path}"
-    ])
+    save_path: Path = gif_path.parent / Path(gif_path.stem + "_edited" + ".gif")
+    # `unoptimize` option ensures no transparent background added.
+    subprocess.run(['gifsicle', '--unoptimize', f"{gif_path}", '--delete', '#0', '-o', f"{save_path}"])
+
     return save_path
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
@@ -194,6 +188,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "ffmpeg",
             "-i",
             f"{gif_path}",
+            "-i",
             f"{gif_and_audio[1]}",
             "-movflags",
             "faststart",
@@ -233,8 +228,6 @@ def render_all(project_path: Path) -> List[Path]:
 
     for scene in scenes:
         scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
-        print(scene_matches)
-        time.sleep(10)
         for match in scene_matches:
             all_renders.append(render(match))
 
