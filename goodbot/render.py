@@ -292,11 +292,32 @@ def sort_videos(project_path: Path) -> List[Path]:
                 
                 if video_index + 1 == video_id:
 
-                    all_videos.append(video)
+                    all_videos.append(video.absolute())
     
     return all_videos
     
+def write_ffmpeg_instructions(project_path: Path) -> Path:
+    """Writes paths to files to merge in a `.txt` file.
 
+    Each path is on its own line. The paths are provided
+    by the `sort_videos()` function.
+
+    Args:
+        project_path (Path): The path towards the project
+            to write the instructions to. This is also
+            where the `sort_videos()` function will look
+            for videos.
+
+    Returns:
+        Path: The path towards the newly created `.txt` file.
+    """
+    file_path: Path = project_path / Path("instructions.txt")
+    video_paths: List[Path] = sort_videos(project_path)
+
+    with open(file_path, "w") as stream:
+        stream.writelines(video_paths)
+    
+    return file_path
 
 def render_final(project_path: Path) -> None:
     
@@ -304,4 +325,6 @@ def render_final(project_path: Path) -> None:
 
     if not final_path.exists():
         os.mkdir(final_path)
+    
+    instructions_file: Path = write_ffmpeg_instructions(project_path)
     
