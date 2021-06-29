@@ -173,7 +173,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
 
     with tempfile.TemporaryDirectory() as tempdir:
 
-        temp_filename: Path = Path(tempdir) / video_name
+        temp_video_path: Path = Path(tempdir) / video_name
         # Create a temporaty video
         subprocess.run([
             "ffmpeg",
@@ -185,7 +185,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             "yuv420p",
             '-vf',
             'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-            f"{temp_filename}"
+            f"{temp_video_path}"
         ], check=True)
 
         if gif_and_audio[1]:
@@ -193,7 +193,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             subprocess.run([
                 "ffmpeg",
                 "-i",
-                f"{temp_filename}",
+                f"{temp_video_path}",
                 "-i",
                 f"{gif_and_audio[1]}",
                 "-map",
