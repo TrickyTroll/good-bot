@@ -138,7 +138,7 @@ def remove_first_frame(gif_path: Path) -> Path:
         Path: The path towards the newly created gif. This is the
             same value as the `gif_path` argument. 
     """
-    save_path: Path = Path(gif_path.name + "_edited" + ".gif")
+    save_path: Path = Path(gif_path.stem + "_edited" + ".gif")
     subprocess.run([
         "gifsicle",
         "--unoptimize", # Ensures no transparent background added.
