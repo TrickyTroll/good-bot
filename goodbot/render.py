@@ -155,6 +155,8 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     This function also calls `remove_first_frame()` before doing
     any conversion.
 
+    The older gifs are also removed from the project.
+
     Args:
         gif_and_audio (Tuple[Path, Union[Path, None]]): A typle
             that contains the gif path at index `0` and the audio
@@ -215,6 +217,9 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
             'scale=trunc(iw/2)*2:trunc(ih/2)*2',
             f"{output_path}"
         ], check=True)
+    
+    # Removing older gif (the one with too many frames.)
+    os.remove(gif_and_audio[0])
 
     return output_path
 
