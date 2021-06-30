@@ -128,6 +128,7 @@ def link_audio(scene_path: Path) -> List[Tuple[Path, Union[Path, None]]]:
 
     return linked
 
+
 def remove_first_frame(gif_path: Path) -> Path:
     """Removes the first frame from a gif file.
 
@@ -138,13 +139,24 @@ def remove_first_frame(gif_path: Path) -> Path:
 
     Returns:
         Path: The path towards the newly created gif. This is the
-            same value as the `gif_path` argument. 
+            same value as the `gif_path` argument.
     """
     save_path: Path = gif_path.parent / Path(gif_path.stem + "_edited" + ".gif")
     # `unoptimize` option ensures no transparent background added.
-    subprocess.run(['gifsicle', '--unoptimize', f"{gif_path}", '--delete', '#0', '-o', f"{save_path}"])
+    subprocess.run(
+        [
+            "gifsicle",
+            "--unoptimize",
+            f"{gif_path}",
+            "--delete",
+            "#0",
+            "-o",
+            f"{save_path}",
+        ]
+    )
 
     return save_path
+
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     """Renders and mp4 file using `ffmpeg`.
@@ -173,11 +185,46 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     video_name: Path = Path(f"{gif_and_audio[0].stem}.mp4")
     output_path: Path = videos_path / video_name
 
-    if gif_and_audio[1]: # If there is an audio file.
+    if gif_and_audio[1]:  # If there is an audio file.
         with tempfile.TemporaryDirectory() as tempdir:
             # Create a temporaty video
             temp_video_path: Path = Path(tempdir) / video_name
-            subprocess.run([
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-i",
+                    f"{gif_path}",
+                    "-movflags",
+                    "faststart",
+                    "-pix_fmt",
+                    "yuv420p",
+                    "-vf",
+                    "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                    f"{temp_video_path}",
+                ],
+                check=True,
+            )
+            # Merge the audio too
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-i",
+                    f"{temp_video_path}",
+                    "-i",
+                    f"{gif_and_audio[1]}",
+                    "-c:v",
+                    "copy",
+                    "-c:a",
+                    "aac",
+                    f"{output_path}",
+                ],
+                check=True,
+            )
+    else:
+        # There is no audio to merge.
+        # No need to make a temp dir.
+        subprocess.run(
+            [
                 "ffmpeg",
                 "-i",
                 f"{gif_path}",
@@ -185,43 +232,18 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 "faststart",
                 "-pix_fmt",
                 "yuv420p",
-                '-vf',
-                'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-                f"{temp_video_path}"
-            ], check=True)
-            # Merge the audio too
-            subprocess.run([
-                "ffmpeg",
-                "-i",
-                f"{temp_video_path}",
-                "-i",
-                f"{gif_and_audio[1]}",
-                "-c:v",
-                "copy",
-                "-c:a",
-                "aac",
-                f"{output_path}"
-            ], check=True)
-    else:
-        # There is no audio to merge.
-        # No need to make a temp dir.
-        subprocess.run([
-            "ffmpeg",
-            "-i",
-            f"{gif_path}",
-            "-movflags",
-            "faststart",
-            "-pix_fmt",
-            "yuv420p",
-            '-vf',
-            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-            f"{output_path}"
-        ], check=True)
-    
+                "-vf",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                f"{output_path}",
+            ],
+            check=True,
+        )
+
     # Removing older gif (the one with too many frames.)
     os.remove(gif_and_audio[0])
 
     return output_path
+
 
 def render_all(project_path: Path) -> List[Path]:
     """Uses the `render()` function on each combination of a project.
@@ -250,6 +272,7 @@ def render_all(project_path: Path) -> List[Path]:
 
     return all_renders
 
+
 def sort_videos(project_path: Path) -> List[Path]:
     """Sorts each videos in a project.
 
@@ -277,7 +300,7 @@ def sort_videos(project_path: Path) -> List[Path]:
     for dir in project_path.iterdir():
         if "scene_" in dir.name:
             scene_amount += 1
-    
+
     for scene_index in range(scene_amount):
         for dir in project_path.iterdir():
             if "scene_" in dir.name:
@@ -288,7 +311,7 @@ def sort_videos(project_path: Path) -> List[Path]:
                 if scene_index + 1 == scene_id:
                     # All scenes will be in order
                     all_scenes.append(dir)
-    
+
     all_videos: List[Path] = []
 
     # Sorting per scene.
@@ -300,7 +323,7 @@ def sort_videos(project_path: Path) -> List[Path]:
         for file in videos_path.iterdir():
             if file.suffix == ".mp4":
                 videos_amount += 1
-        
+
         for video_index in range(videos_amount):
 
             for video in videos_path.iterdir():
@@ -310,13 +333,14 @@ def sort_videos(project_path: Path) -> List[Path]:
                         video_id: int = int(video.stem.split("_")[1])
                     except ValueError:
                         continue
-                
+
                     if video_index == video_id:
 
                         all_videos.append(video.absolute())
-    
+
     return all_videos
-    
+
+
 def write_ffmpeg_instructions(project_path: Path) -> Path:
     """Writes paths to files to merge in a `.txt` file.
 
@@ -338,8 +362,9 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
     with open(file_path, "w") as stream:
         for video_path in video_paths:
             stream.write(f"file '{video_path}'\n")
-    
+
     return file_path
+
 
 def render_final(project_path: Path) -> Path:
     """Renders the final video using `ffmpeg`.
@@ -360,11 +385,25 @@ def render_final(project_path: Path) -> Path:
 
     if not final_path.exists():
         os.mkdir(final_path)
-    
+
     instructions_file: Path = write_ffmpeg_instructions(project_path)
     output_path: Path = final_path / Path("final.mp4")
 
-    subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-segment_time_metadata", "1", "-i", f"{instructions_file}", "-af", "aresample=async=1",  f"{output_path}"])
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-segment_time_metadata",
+            "1",
+            "-i",
+            f"{instructions_file}",
+            "-af",
+            "aresample=async=1",
+            f"{output_path}",
+        ]
+    )
 
     return output_path
-    
