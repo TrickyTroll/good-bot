@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
 	python3-pip \
    	asciinema \
 	python3.9 \
+	gifsicle \
 	libnss3 \
 	libxss1 \
 	ffmpeg \
@@ -28,6 +29,9 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 
 ENV LANG en_US.utf8
 
+RUN pip3 install --upgrade pip
+RUN python3 -m pip install --upgrade setuptools
+
 WORKDIR /install
 RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0.zip \
 	&& unzip v1.1.0.zip
@@ -37,9 +41,6 @@ RUN pip3 install .
 WORKDIR /app
 COPY . /app/
 RUN pip install /app/
-
-WORKDIR /install
-RUN npm install terminalizer
 
 ENTRYPOINT [ "good-bot" ]
 

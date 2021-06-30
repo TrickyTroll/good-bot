@@ -157,7 +157,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
     for key, value in all_confs.items():
 
         # Those dirs are created no matter the content
-        to_create: List[str] = ["asciicasts", "embeds", "gifs", "video"]
+        to_create: List[str] = ["asciicasts", "embeds", "gifs", "videos"]
 
         for key_2, value_2 in value.items():
             if value_2:  # There are items in the list.
@@ -246,6 +246,67 @@ def create_dirs(
     return project_dir.absolute()
 
 
+def write_read_instructions(
+    read_instructions: str, scene_path: Path, index: int
+) -> Path:
+    """Writes a new `read` instructions file.
+
+    The instructions come from the `read` key in the user's `yaml`
+    configuration file. Files created by this function are what is
+    sent to the TTS engine by the `record_audio()` function.
+
+    Args:
+        read_instructions (str): A string of text that will be written to the
+            `.txt` file. Can contain `ssml` syntax. The string is written
+            as-is.
+        scene_path (Path): The path towards the scene where
+            `read_instructions` come from.
+        index (int): The index of the command block.
+
+    Returns:
+        Path: The path towards where the new text file has been written.
+    """
+    read_path: Path = scene_path / Path("read")
+
+    file_name: str = f"read_{index + 1}.txt"
+    file_path: Path = read_path / Path(file_name)
+
+    with open(file_path, "w") as stream:
+        stream.write(read_instructions)
+
+    return file_path
+
+
+def write_commands_instructions(
+    commands_instructions: Dict[str, List[str]], scene_path: Path, index: int
+) -> Path:
+    """Writes a command instruction `yaml` file.
+
+    These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner)
+    takes as input to type commands and expect stuff.
+
+    Args:
+        commands_instructions (Dict[str, List[str]]): A dictionary of commands
+            and things to expect. Keys should be either `commands` or
+            `expect`. The values should be a list of commands and a list of
+            things to expect.
+        scene_path (Path): The path towards the scene where the
+            `commands_instructions` come from.
+        index (int): The index of the command block.
+
+    Returns:
+        Path: The path towards where the new `yaml` file has been written.
+    """
+    commands_path: Path = scene_path / Path("commands")
+    file_path: Path = commands_path / Path(f"commands_{index + 1}")
+    to_write: str = yaml.safe_dump(commands_instructions)
+
+    with open(file_path, "w") as stream:
+        stream.write(to_write)
+
+    return file_path
+
+
 def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     """Splits the main `yaml` script file in many smaller scripts.
 
@@ -264,40 +325,28 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
     Returns:
         Path: The path towards the project.
     """
-    todos: dict = config_info(parsed)
-
     # This should probably be grouped
-    for key, value in todos.items():
+    for scene_number, scene_contents in parsed.items():
 
-        scene_path: Path = Path(f"scene_{key}")
+        scene_path: Path = project_path / Path(f"scene_{scene_number}")
 
-        for key_2, value_2 in value.items():
+        for index, scene_item in enumerate(scene_contents):
 
-            write_path: Path = Path(key_2)
-
-            if "read" in key_2:
-                ext: str = ".txt"
-            else:
-                ext = ".yaml"
-
-            for index, element in enumerate(value_2):
-
+            if "read" in scene_item.keys():
+                to_read: str = scene_item["read"]
+                write_read_instructions(to_read, scene_path, index)
+            
+            if "commands" in scene_item.keys():
                 try:
-                    to_write = yaml.safe_dump(element)
-
-                except TypeError:
-                    sys.exit()
-
-                file_name: Path = Path(f"file_{index}")
-                file_path: Path = (
-                    project_path / scene_path / write_path / file_name
-                )
-
-                click.echo(f"Creating {file_path.with_suffix(ext)}")
-
-                with open(file_path.with_suffix(ext), "w") as file:
-
-                    file.write(to_write)
+                    commands: Dict[str, List[str]]= {
+                        "commands": scene_item["commands"],
+                        "expect": scene_item["expect"]
+                    }
+                    write_commands_instructions(commands, scene_path, index)
+                except KeyError as error:
+                    print(f"Missing key: {error.args[0]}")
+                    print("Scene items:")
+                    print(scene_item)
 
     return project_path
 

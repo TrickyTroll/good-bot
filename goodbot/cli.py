@@ -4,7 +4,7 @@
 import pathlib
 import click
 import os
-from goodbot import funcmodule
+from goodbot import funcmodule, render
 
 
 def in_docker() -> bool:
@@ -112,10 +112,28 @@ def record(projectpath: str) -> None:
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
         funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
 
+@click.command()
+@click.argument("projectpath", type=str)
+def render_video(projectpath: str) -> None:
+    """
+    Renders a project using pre-recorded gifs and mp3 files.
+
+    Should be used by Good Bot's CLI since the gifs are rendered
+    using an exernal program.
+    """
+    project_path = pathlib.Path(projectpath)
+
+    rec_paths = render.render_all(PROJECT_ROOT / project_path)
+
+    final_project = render.render_final(PROJECT_ROOT / project_path)
+    
+    click.echo(f"Your video has been saved under {project_path / final_project.parent / final_project.name}.")
+
 
 app.add_command(setup)
 app.add_command(echo_config)
 app.add_command(record)
+app.add_command(render_video)
 
 
 def main():
