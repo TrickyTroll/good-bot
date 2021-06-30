@@ -171,24 +171,22 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     video_name: Path = Path(f"{gif_and_audio[0].stem}.mp4")
     output_path: Path = videos_path / video_name
 
-    with tempfile.TemporaryDirectory() as tempdir:
-
-        temp_video_path: Path = Path(tempdir) / video_name
-        # Create a temporaty video
-        subprocess.run([
-            "ffmpeg",
-            "-i",
-            f"{gif_path}",
-            "-movflags",
-            "faststart",
-            "-pix_fmt",
-            "yuv420p",
-            '-vf',
-            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
-            f"{temp_video_path}"
-        ], check=True)
-
-        if gif_and_audio[1]:
+    if gif_and_audio[1]: # If there is an audio file.
+        with tempfile.TemporaryDirectory() as tempdir:
+            # Create a temporaty video
+            temp_video_path: Path = Path(tempdir) / video_name
+            subprocess.run([
+                "ffmpeg",
+                "-i",
+                f"{gif_path}",
+                "-movflags",
+                "faststart",
+                "-pix_fmt",
+                "yuv420p",
+                '-vf',
+                'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+                f"{temp_video_path}"
+            ], check=True)
             # Merge the audio too
             subprocess.run([
                 "ffmpeg",
@@ -202,6 +200,21 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 "aac",
                 f"{output_path}"
             ], check=True)
+    else:
+        # There is no audio to merge.
+        # No need to make a temp dir.
+        subprocess.run([
+            "ffmpeg",
+            "-i",
+            f"{gif_path}",
+            "-movflags",
+            "faststart",
+            "-pix_fmt",
+            "yuv420p",
+            '-vf',
+            'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+            f"{output_path}"
+        ], check=True)
 
     return output_path
 
