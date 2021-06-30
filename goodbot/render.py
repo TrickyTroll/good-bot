@@ -16,7 +16,6 @@ import os
 import sys
 import pathlib
 import tempfile
-import time
 import subprocess
 from shutil import which
 from typing import List, Tuple, Union
@@ -152,7 +151,8 @@ def remove_first_frame(gif_path: Path) -> Path:
             "#0",
             "-o",
             f"{save_path}",
-        ]
+        ],
+        check=True
     )
 
     return save_path
@@ -403,7 +403,8 @@ def render_final(project_path: Path) -> Path:
             "-af",
             "aresample=async=1",
             f"{output_path}",
-        ]
+        ],
+        check=True
     )
 
     return output_path
