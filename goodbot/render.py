@@ -328,13 +328,13 @@ def sort_videos(project_path: Path) -> List[Path]:
 
             for video in videos_path.iterdir():
 
-                if "file_" in video.name:
+                if "commands_" in video.name:
                     try:
                         video_id: int = int(video.stem.split("_")[1])
                     except ValueError:
                         continue
 
-                    if video_index == video_id:
+                    if video_index + 1 == video_id:
 
                         all_videos.append(video.absolute())
 
