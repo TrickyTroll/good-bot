@@ -87,8 +87,8 @@ def setup(config: str, project_name: str) -> None:
 
 @click.command()
 @click.argument("projectpath", type=str)
-@click.option("-l", "--language", "string", default="en-US")
-@click.option("-n", "--language-name", "string", default="en-US-Standard-C")
+@click.option("-l", "--language", type=str, default="en-US")
+@click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
 def record(projectpath: str, language: str, language_name: str) -> None:
     """
     Record a video according to the instructions provided a directory.
