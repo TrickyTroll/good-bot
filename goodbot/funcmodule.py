@@ -464,7 +464,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
 
 # Audio recording
-def record_audio(scene: Path, save_path: Path) -> Path:
+def record_audio(scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C") -> Path:
     """Records audio by reading the `read` files using Google TTS.
 
     Args:
@@ -500,7 +500,8 @@ def record_audio(scene: Path, save_path: Path) -> Path:
         synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
         voice = texttospeech.VoiceSelectionParams(
-            language_code="en-US",
+            language_code=lang,
+            name=lang_name,
             ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
         )
 
