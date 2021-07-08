@@ -158,6 +158,27 @@ def remove_first_frame(gif_path: Path) -> Path:
     return save_path
 
 def add_video_padding(video_path: Path) -> Path:
+    """Adds audio padding to previously rendered videos.
+
+    This ensures that there won’t be a shift between the
+    audio and video when rendering the final project.
+
+    This function does not edit the original video. It
+    creates a new file from the padded version of the
+    provided file.
+
+    `add_video_padding()` also **removes** the original 
+    video.
+
+    Args:
+        video_path (Path): The path towards an `mp4` which
+            will be used to create a new padded video.
+
+    Returns:
+        Path: The path towards the padded video. Those paths
+            follow this scheme:
+                [videos-path]/padded_[id].mp4
+    """
     # File stem as a format of `[name]_[id]`.
     video_id: str = video_path.stem.split("_")[1]
     output_path: Path = video_path.parent / Path(f"padded_{video_id}.mp4")
