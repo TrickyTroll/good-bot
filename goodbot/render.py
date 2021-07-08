@@ -198,14 +198,17 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
 
     The older gifs are also removed from the project.
 
+    Finally, audio padding is added to the video to help with
+    synchronization later on when rendering the final video.
+
     Args:
         gif_and_audio (Tuple[Path, Union[Path, None]]): A typle
             that contains the gif path at index `0` and the audio
             path at index `0`. The audio path can be `None`.
 
     Returns:
-        Path: The path towards the rendered video. Follows this
-            scheme:
+        Path: The path towards the rendered video (with the padding).
+            Follows this scheme:
                 [project-path]/[scene-name]/video/[video_name].mp4
     """
     gif_path: Path = remove_first_frame(gif_and_audio[0])
@@ -270,8 +273,10 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
 
     # Removing older gif (the one with too many frames.)
     os.remove(gif_and_audio[0])
+    # Adding padding
+    padded_path: Path = add_video_padding(output_path)
 
-    return output_path
+    return padded_path
 
 
 def render_all(project_path: Path) -> List[Path]:
