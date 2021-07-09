@@ -362,8 +362,9 @@ def sort_videos(project_path: Path) -> List[Path]:
 
             for video in videos_path.iterdir():
 
-                # Using padded video for final product.
+              # Using padded video for final product.
                 if "padded_" in video.name:
+      
                     try:
                         video_id: int = int(video.stem.split("_")[1])
                     except ValueError:

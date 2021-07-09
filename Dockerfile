@@ -9,10 +9,7 @@ RUN apt-get update && apt-get install -y \
 	libgconf2-dev \
 	libxtst-dev \
 	python3-pip \
-	libasound2 \
-	x11-common \
-	libgtk-3.0 \
-    asciinema \
+   	asciinema \
 	python3.9 \
 	gifsicle \
 	libnss3 \

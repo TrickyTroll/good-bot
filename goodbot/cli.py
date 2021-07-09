@@ -87,7 +87,9 @@ def setup(config: str, project_name: str) -> None:
 
 @click.command()
 @click.argument("projectpath", type=str)
-def record(projectpath: str) -> None:
+@click.option("-l", "--language", type=str, default="en-US")
+@click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
+def record(projectpath: str, language: str, language_name: str) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
@@ -110,7 +112,7 @@ def record(projectpath: str) -> None:
         click.echo(f"Working on {scene}...")
 
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
-        funcmodule.record_audio(scene, scene / pathlib.Path("audio"))
+        funcmodule.record_audio(scene, scene / pathlib.Path("audio"), language, language_name)
 
 @click.command()
 @click.argument("projectpath", type=str)
