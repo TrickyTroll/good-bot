@@ -186,14 +186,14 @@ def add_video_padding(video_path: Path) -> Path:
     subprocess.run(
         [
             "ffmpeg",
-            "-safe",
-            "0",
             "-i",
             f"{video_path}",
             "-af",
             "apad",
             "-c:v",
             "copy",
+            "-safe",
+            "0",
             "-shortest",
             "-avoid_negative_ts",
             "make_zero",
