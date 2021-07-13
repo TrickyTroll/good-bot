@@ -1,0 +1,38 @@
+1:
+  - commands:
+      - echo 'hello world'
+    expect:
+      - prompt
+    read: Hello, world.
+
+  - commands:
+      - ls -a
+    expect:
+      - prompt
+    read: I can run commands.
+2:
+  - commands:
+      - mkdir foobar
+      - cd foobar
+      - pwd
+    expect:
+      - prompt
+      - prompt
+      - prompt
+    read: In this scene, I'll show you how to create new directories.
+3:
+  - commands:
+      - mkdir newdir
+      - echo "Contents for my new file" > newdir/newfile.txt
+      - cat newdir/newfile.txt
+    expect:
+      - prompt
+      - prompt
+      - prompt
+    read: I can do all sort of shell commands. It's really up to you to create whatever you want.
+4:
+  - commands:
+      - echo "This was a short demo of Good Bot."
+    expect:
+      - prompt
+    read: I hope you liked this short demo. Goodbye!
