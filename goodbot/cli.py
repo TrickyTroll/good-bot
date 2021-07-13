@@ -112,7 +112,10 @@ def record(projectpath: str, language: str, language_name: str) -> None:
         click.echo(f"Working on {scene}...")
 
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
-        funcmodule.record_audio(scene, scene / pathlib.Path("audio"), language, language_name)
+        funcmodule.record_audio(
+            scene, scene / pathlib.Path("audio"), language, language_name
+        )
+
 
 @click.command()
 @click.argument("projectpath", type=str)
@@ -128,8 +131,10 @@ def render_video(projectpath: str) -> None:
     rec_paths = render.render_all(PROJECT_ROOT / project_path)
 
     final_project = render.render_final(PROJECT_ROOT / project_path)
-    
-    click.echo(f"Your video has been saved under {project_path / final_project.parent / final_project.name}.")
+
+    click.echo(
+        f"Your video has been saved under {project_path / final_project.parent / final_project.name}."
+    )
 
 
 app.add_command(setup)

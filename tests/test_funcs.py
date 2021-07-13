@@ -61,6 +61,7 @@ if not sample_configs:
     print("Found no valid sample.")
     sys.exit()
 
+
 class TestParser(unittest.TestCase):
     """Testing `good-bot`'s config parser.
 
