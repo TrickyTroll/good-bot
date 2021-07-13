@@ -451,6 +451,8 @@ def render_final(project_path: Path) -> Path:
             "ffmpeg",
             "-f",
             "concat",
+            "-safe",
+            "0",
             "-i",
             f"{instructions_file}",
             "-c",
