@@ -335,12 +335,12 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
             if "read" in scene_item.keys():
                 to_read: str = scene_item["read"]
                 write_read_instructions(to_read, scene_path, index)
-            
+
             if "commands" in scene_item.keys():
                 try:
-                    commands: Dict[str, List[str]]= {
+                    commands: Dict[str, List[str]] = {
                         "commands": scene_item["commands"],
-                        "expect": scene_item["expect"]
+                        "expect": scene_item["expect"],
                     }
                     write_commands_instructions(commands, scene_path, index)
                 except KeyError as error:
@@ -464,7 +464,12 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
 
 # Audio recording
-def record_audio(scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C") -> Path:
+def record_audio(
+    scene: Path,
+    save_path: Path,
+    lang: str = "en-US",
+    lang_name: str = "en-US-Standard-C",
+) -> Path:
     """Records audio by reading the `read` files using Google TTS.
 
     Args:

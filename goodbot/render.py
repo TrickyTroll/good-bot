@@ -152,10 +152,11 @@ def remove_first_frame(gif_path: Path) -> Path:
             "-o",
             f"{save_path}",
         ],
-        check=True
+        check=True,
     )
 
     return save_path
+
 
 def add_video_padding(video_path: Path) -> Path:
     """Adds audio padding to previously rendered videos.
@@ -167,7 +168,7 @@ def add_video_padding(video_path: Path) -> Path:
     creates a new file from the padded version of the
     provided file.
 
-    `add_video_padding()` also **removes** the original 
+    `add_video_padding()` also **removes** the original
     video.
 
     Args:
@@ -182,10 +183,28 @@ def add_video_padding(video_path: Path) -> Path:
     # File stem as a format of `[name]_[id]`.
     video_id: str = video_path.stem.split("_")[1]
     output_path: Path = video_path.parent / Path(f"padded_{video_id}.mp4")
-    subprocess.run(['ffmpeg', '-i', f'{video_path}', '-af', 'apad', '-c:v', 'copy', '<audio', 'encoding', 'params>', '-shortest', '-avoid_negative_ts', 'make_zero', '-fflags', '+genpts', f'{output_path}'], check=True)
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-i",
+            f"{video_path}",
+            "-af",
+            "apad",
+            "-c:v",
+            "copy",
+            "-shortest",
+            "-avoid_negative_ts",
+            "make_zero",
+            "-fflags",
+            "+genpts",
+            f"{output_path}",
+        ],
+        check=True,
+    )
     # Removing not padded video.
     os.remove(video_path)
     return output_path
+
 
 def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     """Renders and mp4 file using `ffmpeg`.
@@ -362,9 +381,9 @@ def sort_videos(project_path: Path) -> List[Path]:
 
             for video in videos_path.iterdir():
 
-              # Using padded video for final product.
+                # Using padded video for final product.
                 if "padded_" in video.name:
-      
+
                     try:
                         video_id: int = int(video.stem.split("_")[1])
                     except ValueError:
@@ -436,7 +455,7 @@ def render_final(project_path: Path) -> Path:
             "copy",
             f"{output_path}",
         ],
-        check=True
+        check=True,
     )
 
     return output_path
