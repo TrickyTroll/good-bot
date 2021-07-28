@@ -22,7 +22,7 @@ PROJECT_PATH = Path(TEMP_DIR) / Path("toto")
 PARSED = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
 CONF_INFO = funcmodule.config_info(PARSED)
 DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
-funcmodule.create_dirs(DIRS_LIST, PROJECT_PATH)
+funcmodule.create_dirs(DIRS_LIST, ".", PROJECT_PATH)
 funcmodule.split_config(PARSED, PROJECT_PATH)
 
 # Read strings samples for hypothesis
@@ -239,18 +239,19 @@ class TestCreateDirs(unittest.TestCase):
             TypeError,
             funcmodule.create_dirs,
             {"1": "This is a scene!"},
+            ".",
             TEMP_DIR,
         )
         # The second test has a wrong path to create the directories.
         self.assertRaises(
-            TypeError, funcmodule.create_dirs, DIRS_LIST, ["path", "as", "list"]
+            TypeError, funcmodule.create_dirs, DIRS_LIST, ".", ["path", "as", "list"]
         )
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
         with tempfile.TemporaryDirectory() as temp:
             returned_path = funcmodule.create_dirs(
-                DIRS_LIST, temp + "/my_project"
+                DIRS_LIST, ".", temp + "/my_project"
             )
             # This next assert would probably fail on Windows.
             self.assertTrue(

@@ -77,13 +77,13 @@ def setup(config: str, project_path: str) -> None:
     to_create = funcmodule.create_dirs_list(conf_info)
 
     path = funcmodule.create_dirs(
-        to_create, PROJECT_ROOT / pathlib.Path(project_path) / pathlib.Path(project_name)
+        to_create, project_path, PROJECT_ROOT / pathlib.Path(project_path)
     )
 
     # Splitting script
     funcmodule.split_config(parsed, path)
 
-    click.echo(f"Your project has been setup at: {path}")
+    click.echo(f"Your project has been setup at: {project_path}")
 
 
 @click.command()

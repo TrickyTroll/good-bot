@@ -172,7 +172,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
 
 def create_dirs(
-    directories: list, project_dir: Union[str, Path] = "my_project"
+        directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
 ) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
@@ -202,14 +202,14 @@ def create_dirs(
 
     if project_dir.is_dir():
 
-        click.echo(f"Directory {project_dir} exists!")
-        resp = input(f"Would you like to overwrite {project_dir}?: ")
+        click.echo(f"Directory {host_dir} exists!")
+        resp = input(f"Would you like to overwrite {host_dir}?: ")
 
         if resp.lower() == "yes":
 
             # Erase the directory
             overwrite = True
-            confirm = input(f"Are you sure you want to remove {project_dir}?: ")
+            confirm = input(f"Are you sure you want to remove {host_dir}?: ")
 
             if confirm.lower() == "yes":
                 shutil.rmtree(project_dir)
@@ -217,6 +217,9 @@ def create_dirs(
                 # Then make a new one
 
                 os.mkdir(project_dir)
+
+            else:
+                sys.exit()
 
         else:
             sys.exit()
