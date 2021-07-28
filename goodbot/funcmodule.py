@@ -218,6 +218,9 @@ def create_dirs(
 
                 os.mkdir(project_dir)
 
+            else:
+                sys.exit()
+
         else:
             sys.exit()
 
