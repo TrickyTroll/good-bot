@@ -77,7 +77,7 @@ def setup(config: str, project_path: str) -> None:
     to_create = funcmodule.create_dirs_list(conf_info)
 
     path = funcmodule.create_dirs(
-        to_create, PROJECT_ROOT / pathlib.Path(project_path)
+        to_create, project_path, PROJECT_ROOT / pathlib.Path(project_path)
     )
 
     # Splitting script
