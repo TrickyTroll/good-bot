@@ -64,6 +64,12 @@ def setup(config: str, project_path: str) -> None:
 
     """
 
+    if not project_path:
+        prompt: str ="""\
+        Please provide a name for your project.
+        """
+        project_path = input(prompt)
+
     file_name = pathlib.Path(config)
     # Creating directories
     parsed = funcmodule.config_parser(PROJECT_ROOT / file_name)
@@ -71,7 +77,7 @@ def setup(config: str, project_path: str) -> None:
     to_create = funcmodule.create_dirs_list(conf_info)
 
     path = funcmodule.create_dirs(
-        to_create, PROJECT_ROOT / pathlib.Path(project_name)
+        to_create, PROJECT_ROOT / pathlib.Path(project_path) / pathlib.Path(project_name)
     )
 
     # Splitting script
