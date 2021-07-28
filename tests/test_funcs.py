@@ -22,7 +22,7 @@ PROJECT_PATH = Path(TEMP_DIR) / Path("toto")
 PARSED = funcmodule.config_parser(CONFIGPATH / "test_conf.yaml")
 CONF_INFO = funcmodule.config_info(PARSED)
 DIRS_LIST = funcmodule.create_dirs_list(CONF_INFO)
-funcmodule.create_dirs(DIRS_LIST, "", PROJECT_PATH)
+funcmodule.create_dirs(DIRS_LIST, ".", PROJECT_PATH)
 funcmodule.split_config(PARSED, PROJECT_PATH)
 
 # Read strings samples for hypothesis
