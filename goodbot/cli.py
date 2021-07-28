@@ -83,7 +83,7 @@ def setup(config: str, project_path: str) -> None:
     # Splitting script
     funcmodule.split_config(parsed, path)
 
-    click.echo(f"Your project has been setup at: {path}")
+    click.echo(f"Your project has been setup at: {project_path}")
 
 
 @click.command()
