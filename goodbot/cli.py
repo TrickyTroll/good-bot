@@ -53,13 +53,8 @@ def echo_config(config: str) -> None:
 
 @click.command()
 @click.argument("config", type=str)
-@click.option(
-    "--project-name",
-    prompt="""\
-    Please provide a name for your project.
-    """,
-)
-def setup(config: str, project_name: str) -> None:
+@click.option("--project-path", "-p", type=str, default="")
+def setup(config: str, project_path: str) -> None:
     """
     Sets up a directory that contains everything needed to record a
     video using `good-bot`.
