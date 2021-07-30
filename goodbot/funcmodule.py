@@ -172,7 +172,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
 # TODO: Do not prompt if project_path defined as flag
 def create_dirs(
-        directories: list, host_dir: Union[str, Path] = "", project_dir: Union[str, Path] = "my_project"
+        directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
 ) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
