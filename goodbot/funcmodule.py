@@ -476,6 +476,7 @@ def record_audio(
     """
     contains: List[str] = list(scene.iterdir())
     categories: List[str] = [command.name for command in contains]
+    console: Console = Console()
 
     if not "read" in categories:
         return Path(".")
