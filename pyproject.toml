@@ -34,5 +34,5 @@ include = ["doc/"]
 exclude = ["doc/*.html"]
 
 [tool.black]
-line-length = 80
+line-length = 100
 target-version = ['py38']
