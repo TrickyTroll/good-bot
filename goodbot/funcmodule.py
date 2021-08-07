@@ -510,6 +510,6 @@ def record_audio(
 
             with open(write_path, "wb") as out:
                 out.write(response.audio_content)
-                click.echo(f"Audio content written to file {write_path.absolute()}")
+                console.log(f"Audio contents in file {item} has been recorded.")
 
     return save_path
