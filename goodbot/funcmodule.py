@@ -12,6 +12,7 @@ import subprocess
 import shutil
 import click
 import yaml
+from rich.console import Console
 from typing import List, Dict, Union, Any
 
 from google.cloud import texttospeech
@@ -485,17 +486,13 @@ def record_audio(
         click.Path: The path where the audio file is saved. This
         now includes the name of the file.
     """
-    contains = list(scene.iterdir())
-    categories = [command.name for command in contains]
+    contains: List[str]  = list(scene.iterdir())
+    categories: List[str] = [command.name for command in contains]
 
-    is_read = "read" in categories
+    if not "read" in categories:
+        return Path(".")
 
-    audio_dir = save_path
-
-    if not is_read:
-        return Path(os.getcwd())
-
-    read_path = scene / Path("read")
+    read_path: Path = scene / Path("read")
 
     for item in read_path.iterdir():
         with open(item, "r") as stream:
@@ -528,4 +525,4 @@ def record_audio(
             out.write(response.audio_content)
             click.echo(f"Audio content written to file {write_path.absolute()}")
 
-    return audio_dir
+    return save_path
