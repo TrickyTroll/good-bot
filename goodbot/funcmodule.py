@@ -54,9 +54,7 @@ def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
     return parsed_file
 
 
-def config_info(
-    parsed_config: Dict[int, List[dict]]
-) -> Dict[int, Dict[str, list]]:
+def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, list]]:
     """Gets useful information on the configuration file.
 
     Useful to find:
@@ -149,9 +147,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
             `good-bot` will record or create.
     """
     if not isinstance(all_confs, dict):
-        raise TypeError(
-            "create_dirs_list(): This function takes a dictionnary as an input."
-        )
+        raise TypeError("create_dirs_list(): This function takes a dictionnary as an input.")
 
     dirs_list: List[dict] = []
 
@@ -171,9 +167,10 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
     return dirs_list
 
+
 # TODO: Do not prompt if project_path defined as flag
 def create_dirs(
-        directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
+    directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
 ) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
@@ -191,12 +188,8 @@ def create_dirs(
     """
     if not isinstance(directories, list):
         raise TypeError("`directories` must be a list of dictionnaries.")
-    if not isinstance(
-        project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)
-    ):
-        raise TypeError(
-            f"`project_dir` must be of type `str`, not {type(project_dir)}"
-        )
+    if not isinstance(project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)):
+        raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
 
     project_dir = Path(project_dir)
     overwrite = False
@@ -250,9 +243,7 @@ def create_dirs(
     return project_dir.absolute()
 
 
-def write_read_instructions(
-    read_instructions: str, scene_path: Path, index: int
-) -> Path:
+def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
     """Writes a new `read` instructions file.
 
     The instructions come from the `read` key in the user's `yaml`
@@ -469,10 +460,7 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
 # Audio recording
 def record_audio(
-    scene: Path,
-    save_path: Path,
-    lang: str = "en-US",
-    lang_name: str = "en-US-Standard-C",
+    scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
 ) -> Path:
     """Records audio by reading the `read` files using Google TTS.
 
@@ -486,7 +474,7 @@ def record_audio(
         click.Path: The path where the audio file is saved. This
         now includes the name of the file.
     """
-    contains: List[str]  = list(scene.iterdir())
+    contains: List[str] = list(scene.iterdir())
     categories: List[str] = [command.name for command in contains]
 
     if not "read" in categories:
@@ -505,14 +493,10 @@ def record_audio(
         synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
         voice = texttospeech.VoiceSelectionParams(
-            language_code=lang,
-            name=lang_name,
-            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
+            language_code=lang, name=lang_name, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
         )
 
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
-        )
+        audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
 
         response = client.synthesize_speech(
             input=synthesis_input, voice=voice, audio_config=audio_config
