@@ -481,32 +481,35 @@ def record_audio(
         return Path(".")
 
     read_path: Path = scene / Path("read")
+    all_audio: List[str] = [item for item in read_path.iterdir()]
 
-    for item in read_path.iterdir():
-        with open(item, "r") as stream:
-            # Assuming everything to read is on one line
-            to_read = stream.readlines()[0]
-            to_read = to_read.strip()
+    with console.status("[bold green]Recording audio...") as status:
 
-        client = texttospeech.TextToSpeechClient()
+        for index, item in enumerate(all_audio):
+            with open(item, "r") as stream:
+                # Assuming everything to read is on one line
+                to_read = stream.readlines()[0]
+                to_read = to_read.strip()
 
-        synthesis_input = texttospeech.SynthesisInput(text=to_read)
+            client = texttospeech.TextToSpeechClient()
 
-        voice = texttospeech.VoiceSelectionParams(
-            language_code=lang, name=lang_name, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-        )
+            synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
-        audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
+            voice = texttospeech.VoiceSelectionParams(
+                language_code=lang, name=lang_name, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            )
 
-        response = client.synthesize_speech(
-            input=synthesis_input, voice=voice, audio_config=audio_config
-        )
+            audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
 
-        file_name = item.stem
-        write_path = (save_path / file_name).with_suffix(".mp3")
+            response = client.synthesize_speech(
+                input=synthesis_input, voice=voice, audio_config=audio_config
+            )
 
-        with open(write_path, "wb") as out:
-            out.write(response.audio_content)
-            click.echo(f"Audio content written to file {write_path.absolute()}")
+            file_name = item.stem
+            write_path = (save_path / file_name).with_suffix(".mp3")
+
+            with open(write_path, "wb") as out:
+                out.write(response.audio_content)
+                click.echo(f"Audio content written to file {write_path.absolute()}")
 
     return save_path
