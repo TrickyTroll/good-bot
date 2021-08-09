@@ -468,10 +468,10 @@ def fetch_audio(read_path: Path) -> List[Path]:
 
     Args:
         read_path (Path): A path towards the directory
-            where this function will look for mp3 files.
+        where this function will look for mp3 files.
     Returns:
         List[Path]: A list of absolute paths towards each
-            mp3 file that was found.
+        mp3 file that was found.
     """
     audio_recordings: List[Path] = []
     for rec in read_path.iterdir():
