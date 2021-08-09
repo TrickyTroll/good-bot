@@ -480,9 +480,11 @@ def fetch_audio(read_path: Path) -> List[Path]:
     return audio_recordings
 
 def fetch_scene_audio(scene_path: Path) -> List[Path]:
-    for rec_types in scene_path.iterdir():
-        if "read" in str(rec_types).lower:
-
+    scene_audio: List[Path] = []
+    for directory in scene_path.iterdir():
+        if str(directory.name).lower in ("read", "audio"):
+            scene_audio = scene_audio + fetch_audio(directory)
+    return scene_audio
 
 def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
     if not isinstance(project_path, Path):
