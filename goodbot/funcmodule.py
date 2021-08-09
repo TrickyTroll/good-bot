@@ -480,6 +480,17 @@ def fetch_audio(read_path: Path) -> List[Path]:
     return audio_recordings
 
 def fetch_scene_audio(scene_path: Path) -> List[Path]:
+    """
+    fetch_scene_audio finds every audio instructions in
+    a scene and returns it as a list.
+
+    Args:
+        scene_path (Path): The path towards the scene where this
+        function will look for text to read.
+    Returns:
+        List[Path]: A list of paths towards each file that contains
+        text to read in the provided scene.
+    """
     scene_audio: List[Path] = []
     for directory in scene_path.iterdir():
         if str(directory.name).lower in ("read", "audio"):
