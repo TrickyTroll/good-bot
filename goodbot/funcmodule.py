@@ -462,6 +462,17 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 ###################
 
 def fetch_audio(read_path: Path) -> List[Path]:
+    """
+    fetch_audio looks for files with a .mp3 suffix in
+    a directory.
+
+    Args:
+        read_path (Path): A path towards the directory
+            where this function will look for mp3 files.
+    Returns:
+        List[Path]: A list of absolute paths towards each
+            mp3 file that was found.
+    """
     audio_recordings: List[Path] = []
     for rec in read_path.iterdir():
         if rec.suffix == ".mp3":
@@ -471,6 +482,8 @@ def fetch_audio(read_path: Path) -> List[Path]:
 def fetch_scene_audio(scene_path: Path) -> List[Path]:
     for rec_types in scene_path.iterdir():
         if "read" in str(rec_types).lower:
+            pass
+    pass
 
 def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
     if not isinstance(project_path, Path):
