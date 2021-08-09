@@ -498,6 +498,17 @@ def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     return scene_audio_instructions
 
 def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
+    """
+    fetch_project_audio_instructions finds every audio instructions
+    file in a Good Bot project.
+
+    Args:
+        project_path (Union[Path, str]): A path towards a Good Bot
+        project.
+    Returns:
+        List[Path]: A list of absolute paths towards each audio
+        instructions saved under the provided project path.
+    """
     if not isinstance(project_path, Path):
         try:
             project_path = Path(project_path)
