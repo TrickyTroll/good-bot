@@ -461,13 +461,16 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 # Audio recording #
 ###################
 
-def fetch_scene_audio(scene_path: Path) -> List[Path]:
+def fetch_audio(read_path: Path) -> List[Path]:
     audio_recordings: List[Path] = []
+    for rec in read_path.iterdir():
+        if rec.suffix == ".mp3":
+            audio_recordings.append()
+    return audio_recordings
+
+def fetch_scene_audio(scene_path: Path) -> List[Path]:
     for rec_types in scene_path.iterdir():
         if "read" in str(rec_types).lower:
-            for rec in rec_types.iterdir():
-                if rec.suffix == ".mp3":
-                    audio_recordings.append()
 
 def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
     if not isinstance(project_path, Path):
