@@ -503,10 +503,11 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
             project_path = Path(project_path)
         except Error as err:
             raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+    all_audio_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            fetch_scene_audio_instructions()
-
+            all_audio_instructions = all_audio_instructions + fetch_scene_audio_instructions(scene)
+    return all_audio_instructions
 
 def record_audio(
     scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
