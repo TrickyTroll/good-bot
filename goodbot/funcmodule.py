@@ -463,19 +463,19 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
 def fetch_audio_instructions(read_path: Path) -> List[Path]:
     """
-    fetch_audio_instructions looks for files with a .mp3 suffix in
-    a directory.
+    fetch_audio_instructions looks for files that can be used as audio
+    instructions in the provided directory.
 
     Args:
-        read_path (Path): A path towards the directory
-        where this function will look for mp3 files.
+        read_path (Path): A path towards the directory where this
+        function will look for audio instructions files.
     Returns:
-        List[Path]: A list of absolute paths towards each
-        mp3 file that was found.
+        List[Path]: A list of absolute paths towards each file that
+        was found.
     """
     audio_recordings: List[Path] = []
     for rec in read_path.iterdir():
-        if rec.suffix == ".mp3":
+        if rec.suffix in ".txt" and "read" in rec.name:
             audio_recordings.append(rec.resolve())
     return audio_recordings
 
