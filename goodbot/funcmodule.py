@@ -461,6 +461,14 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 # Audio recording #
 ###################
 
+def fetch_audio(project_path: Union[Path, str]) -> List[Path]:
+    if not isinstance(project_path, Path):
+        try:
+            project_path = Path(project_path)
+        except Error as err:
+            raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+
+
 def record_audio(
     scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
 ) -> Path:
