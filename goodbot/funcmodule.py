@@ -461,9 +461,9 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 # Audio recording #
 ###################
 
-def fetch_audio(read_path: Path) -> List[Path]:
+def fetch_audio_instructions(read_path: Path) -> List[Path]:
     """
-    fetch_audio looks for files with a .mp3 suffix in
+    fetch_audio_instructions looks for files with a .mp3 suffix in
     a directory.
 
     Args:
@@ -479,7 +479,7 @@ def fetch_audio(read_path: Path) -> List[Path]:
             audio_recordings.append(rec.resolve())
     return audio_recordings
 
-def fetch_scene_audio(scene_path: Path) -> List[Path]:
+def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     """
     fetch_scene_audio finds every audio instructions in
     a scene and returns it as a list.
@@ -491,13 +491,13 @@ def fetch_scene_audio(scene_path: Path) -> List[Path]:
         List[Path]: A list of paths towards each file that contains
         text to read in the provided scene.
     """
-    scene_audio: List[Path] = []
+    scene_audio_instructions: List[Path] = []
     for directory in scene_path.iterdir():
         if str(directory.name).lower in ("read", "audio"):
-            scene_audio = scene_audio + fetch_audio(directory)
-    return scene_audio
+            scene_audio = scene_audio_instructions + fetch_audio_instructions(directory)
+    return scene_audio_instructions
 
-def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
+def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
     if not isinstance(project_path, Path):
         try:
             project_path = Path(project_path)
@@ -505,7 +505,7 @@ def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
             raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            fetch_scene_audio()
+            fetch_scene_audio_instructions()
 
 
 def record_audio(
