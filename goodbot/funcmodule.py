@@ -476,13 +476,13 @@ def fetch_audio(read_path: Path) -> List[Path]:
     audio_recordings: List[Path] = []
     for rec in read_path.iterdir():
         if rec.suffix == ".mp3":
-            audio_recordings.append()
+            audio_recordings.append(rec.absolute)
     return audio_recordings
 
 def fetch_scene_audio(scene_path: Path) -> List[Path]:
     for rec_types in scene_path.iterdir():
         if "read" in str(rec_types).lower:
-            pass
+
     pass
 
 def fetch_project_audio(project_path: Union[Path, str]) -> List[Path]:
