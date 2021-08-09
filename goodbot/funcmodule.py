@@ -457,8 +457,10 @@ def record_commands(scene: Path, save_path: Path) -> Path:
 
     return save_path
 
+###################
+# Audio recording #
+###################
 
-# Audio recording
 def record_audio(
     scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
 ) -> Path:
