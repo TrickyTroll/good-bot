@@ -9,6 +9,7 @@ from rich.console import Console
 from pathlib import Path
 from typing import List, Dict, Union, Any
 
+
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
 
@@ -73,6 +74,7 @@ def list_scenes(project_dir: Path) -> List[Path]:
 
     return all_scenes
 
+
 def is_runner_instructions(instructions_path: Path) -> bool:
     """
     is_runner_instructions checks whether or not the provided file could
@@ -135,6 +137,7 @@ def fetch_runner_instructions(instructions_path: Path) -> List[Path]:
 
     return runner_instructions
 
+
 def fetch_scene_runner_instructions(scene_path: Path) -> List[Path]:
     """
     fetch_scene_runner_instructions finds each runner instructions file
@@ -177,7 +180,9 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
     all_runner_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_runner_instructions = all_runner_instructions + fetch_scene_runner_instructions(scene)
+            all_runner_instructions = all_runner_instructions + fetch_scene_runner_instructions(
+                scene
+            )
     return all_runner_instructions
 
 
@@ -203,15 +208,7 @@ def record_commands(project: Path) -> List[Path]:
 
             save_path: Path = (asciicast_path / command.name).with_suffix(".cast")
 
-            subprocess.run(
-                [
-                    "asciinema",
-                    "rec",
-                    "-c",
-                    f"runner {command}",
-                    str(save_path)
-                ]
-            )
+            subprocess.run(["asciinema", "rec", "-c", f"runner {command}", str(save_path)])
 
             console.log(f"Video contents in file {command} has been recorded.")
             all_recordings.append(save_path)

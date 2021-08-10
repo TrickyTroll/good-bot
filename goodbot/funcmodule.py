@@ -341,4 +341,3 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                     print(scene_item)
 
     return project_path
-
