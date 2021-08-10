@@ -512,7 +512,7 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
     if not isinstance(project_path, Path):
         try:
             project_path = Path(project_path)
-        except Error as err:
+        except Exception as err:
             raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
     all_audio_instructions: List[Path] = []
     for scene in project_path.iterdir():
