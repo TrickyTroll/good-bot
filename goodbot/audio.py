@@ -97,6 +97,7 @@ def record_audio(
         now includes the name of the file.
     """
     all_audio_scripts: List[Path] = fetch_project_audio_instructions(project_path)
+    all_audio_recordings: List[Path] = []
     console: Console = Console()
 
     with console.status("[bold green]Recording audio...") as status:
@@ -127,6 +128,7 @@ def record_audio(
 
             with open(write_path, "wb") as out:
                 out.write(response.audio_content)
-                console.log(f"Audio contents in file {script} has been recorded.")
+            all_audio_recordings.append(save_path)
+            console.log(f"Audio contents in file {script} has been recorded.")
 
-    return save_path
+    return all_audio_recordings
