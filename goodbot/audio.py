@@ -103,7 +103,7 @@ def record_audio(
 
         for script in all_audio_scripts:
             #
-            save_path: Path = script.parent.parent / Path("audio")
+            save_path: Path = project_path / Path("audio")
             with open(script, "r") as stream:
                 # Assuming everything to read is on one line
                 to_read = " ".join(stream.readlines())
