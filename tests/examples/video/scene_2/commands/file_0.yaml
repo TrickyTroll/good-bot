@@ -1,0 +1,4 @@
+commands:
+- echo 'hello from another scene'
+expect:
+- prompt
