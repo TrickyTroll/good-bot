@@ -69,6 +69,26 @@ def list_scenes(project_dir: Path) -> List[Path]:
     return all_scenes
 
 def fetch_runner_instructions(instructions_path: Path) -> List[Path]:
+    """
+    fetch_runner_instructions finds each text file in a directory
+    that can be used as instructions for Good Bot's runner program.
+
+    Args:
+        instructions_path (Path): The path towards the directory that
+        may contain instructions file.
+    Returns:
+        List[Path]: A list of resolved paths towards each instructions
+        file that was found.
+    """
+    runner_instructions: List[Path] = []
+    try:
+        for instructions in instructions_path.iterdir():
+            if is_runner_instructions(instructions):
+                runner_instructions.append(instructions.resolve())
+    except FileNotFoundError:
+        return []
+
+    return runner_instructions
 
 def record_commands(project: Path) -> List[Path]:
     """Records a gif for every video in the commands directory of the
