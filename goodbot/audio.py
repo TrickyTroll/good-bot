@@ -44,8 +44,8 @@ def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     """
     scene_audio_instructions: List[Path] = []
     for directory in scene_path.iterdir():
-        if str(directory.name).lower == "read":
-            scene_audio = scene_audio_instructions + fetch_audio_instructions(directory)
+        if str(directory.name).lower() == "read":
+            scene_audio_instructions = scene_audio_instructions + fetch_audio_instructions(directory)
     return scene_audio_instructions
 
 def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
