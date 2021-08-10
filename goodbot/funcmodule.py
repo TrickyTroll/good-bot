@@ -565,11 +565,11 @@ def record_audio(
                 input=synthesis_input, voice=voice, audio_config=audio_config
             )
 
-            file_name = item.stem
+            file_name = script.stem
             write_path = (save_path / file_name).with_suffix(".mp3")
 
             with open(write_path, "wb") as out:
                 out.write(response.audio_content)
-                console.log(f"Audio contents in file {item} has been recorded.")
+                console.log(f"Audio contents in file {script} has been recorded.")
 
     return save_path
