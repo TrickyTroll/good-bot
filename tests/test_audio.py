@@ -14,17 +14,17 @@ def test_fetch_audio_instructions():
     """
     to_check = [
         {
-            "dir": AUDIO_TEST_DIR / Path("scene_1/read"),
+            "file": AUDIO_TEST_DIR / Path("scene_1/read"),
             "want": 2
         },
         {
-            "dir": AUDIO_TEST_DIR / Path("scene_2/read"),
+            "file": AUDIO_TEST_DIR / Path("scene_2/read"),
             "want": 1
         },
         {
-            "dir": AUDIO_TEST_DIR / Path("scene_3/read"),
+            "file": AUDIO_TEST_DIR / Path("scene_3/read"),
             "want": 0
         }
     ]
     for test_case in to_check:
-        assert len(audio.fetch_audio_instructions(test_case["dir"])) == test_case["want"]
+        assert len(audio.fetch_audio_instructions(test_case["file"])) == test_case["want"]
