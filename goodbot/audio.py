@@ -20,12 +20,14 @@ def fetch_audio_instructions(read_path: Path) -> List[Path]:
         List[Path]: A list of absolute paths towards each file that
         was found.
     """
-    if not read_path.exists:
-        raise ValueError(f"the read path {read_path} does not exist")
     audio_recordings: List[Path] = []
-    for rec in read_path.iterdir():
-        if rec.suffix in ".txt" and "file_" in rec.name:
-            audio_recordings.append(rec.resolve())
+    try:
+        for rec in read_path.iterdir():
+            if rec.suffix in ".txt" and "file_" in rec.name:
+                audio_recordings.append(rec.resolve())
+    except FileNotFoundError:
+        return []
+
     return audio_recordings
 
 def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
