@@ -8,6 +8,7 @@ from rich.console import Console
 from typing import List, Dict, Union, Any
 from google.cloud import texttospeech
 
+
 def fetch_audio_instructions(read_path: Path) -> List[Path]:
     """
     fetch_audio_instructions looks for files that can be used as audio
@@ -30,6 +31,7 @@ def fetch_audio_instructions(read_path: Path) -> List[Path]:
 
     return audio_recordings
 
+
 def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     """
     fetch_scene_audio finds every audio instructions in
@@ -45,8 +47,11 @@ def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     scene_audio_instructions: List[Path] = []
     for directory in scene_path.iterdir():
         if str(directory.name).lower() == "read":
-            scene_audio_instructions = scene_audio_instructions + fetch_audio_instructions(directory)
+            scene_audio_instructions = scene_audio_instructions + fetch_audio_instructions(
+                directory
+            )
     return scene_audio_instructions
+
 
 def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
     """
@@ -70,6 +75,7 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
         if "scene_" in scene.name:
             all_audio_instructions = all_audio_instructions + fetch_scene_audio_instructions(scene)
     return all_audio_instructions
+
 
 def record_audio(
     project_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"

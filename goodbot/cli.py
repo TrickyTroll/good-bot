@@ -65,7 +65,7 @@ def setup(config: str, project_path: str) -> None:
     """
 
     if not project_path:
-        prompt: str ="""\
+        prompt: str = """\
         Please provide a name for your project.
         """
         project_path = input(prompt)
@@ -113,9 +113,7 @@ def record(projectpath: str, language: str, language_name: str) -> None:
         click.echo(f"Working on {scene}...")
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
 
-    audio.record_audio(
-        dir_path, language, language_name
-    )
+    audio.record_audio(dir_path, language, language_name)
 
 
 @click.command()
