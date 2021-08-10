@@ -4,7 +4,7 @@
 import pathlib
 import click
 import os
-from goodbot import funcmodule, render
+from goodbot import funcmodule, render, audio
 
 
 def in_docker() -> bool:
@@ -113,7 +113,7 @@ def record(projectpath: str, language: str, language_name: str) -> None:
         click.echo(f"Working on {scene}...")
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
 
-    funcmodule.record_audio(
+    audio.record_audio(
         dir_path, language, language_name
     )
 
