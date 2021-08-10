@@ -1,9 +1,7 @@
 import pytest
-import shutil
 import goodbot.audio as audio
 
 from pathlib import Path
-from hypothesis import given, strategies as st
 
 AUDIO_TEST_DIR = Path("./tests/examples/audio")
 
