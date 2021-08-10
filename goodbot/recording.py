@@ -4,6 +4,8 @@ recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
 import yaml
+import subprocess
+from rich.console import Console
 from pathlib import Path
 
 def is_scene(directory: Path) -> bool:
@@ -180,7 +182,7 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
 
 def record_commands(project: Path) -> List[Path]:
     """Records a gif for every video in the commands directory of the
-    specified scene.
+    specified project.
 
     Args:
         project (pathlib.Path): The path towards the project to record.
@@ -189,20 +191,27 @@ def record_commands(project: Path) -> List[Path]:
         List[Path]: A list of paths towards each Asciinema recording
         created by this function.
     """
+    all_runner_instructions: List[Path] = fetch_project_runner_instructions(project)
+    asciicast_path: Path = project / Path("asciicasts")
+    all_recordings: List[Path] = []
+    console: Console = Console()
 
-    print(f"Recording shell commands for {str(scene)}.")
+    with console.status("[bold green]Recording audio...") as status:
 
-    for command in commands_path.iterdir():
-        file_name = Path(command.stem)
+        for command in all_runner_instructions:
 
-        subprocess.run(
-            [
-                "asciinema",
-                "rec",
-                "-c",
-                f"runner {command.absolute()}",
-                save_path / file_name.with_suffix(".cast"),
-            ]
-        )
+            save_path: Path = asciicast_path / command.name.with_suffix(".cast"),
 
-    return save_path
+            subprocess.run(
+                [
+                    "asciinema",
+                    "rec",
+                    "-c",
+                    f"runner {command}",
+                    str(save_path)
+                ]
+            )
+
+            all_recordings.append()
+
+    return all_recordings
