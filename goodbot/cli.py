@@ -111,11 +111,11 @@ def record(projectpath: str, language: str, language_name: str) -> None:
 
     for scene in all_scenes:
         click.echo(f"Working on {scene}...")
-
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
-        funcmodule.record_audio(
-            scene, scene / pathlib.Path("audio"), language, language_name
-        )
+
+    funcmodule.record_audio(
+        projectpath, language, language_name
+    )
 
 
 @click.command()
