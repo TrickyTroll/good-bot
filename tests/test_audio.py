@@ -28,3 +28,26 @@ def test_fetch_audio_instructions():
     ]
     for test_case in to_check:
         assert len(audio.fetch_audio_instructions(test_case["file"])) == test_case["want"]
+
+def test_fetch_scene_audio_instructions():
+    """
+    Testing that fetch_scene_audio_instructions returns the correct
+    amount of items.
+    """
+    to_check = [
+        {
+            "dir": AUDIO_TEST_DIR / Path("scene_1"),
+            "want": 2
+        },
+        {
+            "dir": AUDIO_TEST_DIR / Path("scene_2"),
+            "want": 1
+        },
+        {
+            "dir": AUDIO_TEST_DIR / Path("scene_3"),
+            "want": 0
+        }
+    ]
+
+    for test_case in to_check:
+        assert len(audio.fetch_scene_audio_instructions(test_case["dir"])) == test_case["want"]
