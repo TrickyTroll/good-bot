@@ -521,9 +521,13 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
     return all_audio_instructions
 
 def record_audio(
-    scene: Path, save_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
+    project_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
 ) -> Path:
-    """Records audio by reading the `read` files using Google TTS.
+    """
+    record_audio records audio by reading the `read` files using Google
+    TTS.
+
+    It records audio for a whole Good Bot project.
 
     Args:
         scene (click.Path): The path towards the files to read.
@@ -535,23 +539,17 @@ def record_audio(
         click.Path: The path where the audio file is saved. This
         now includes the name of the file.
     """
-    contains: List[str] = list(scene.iterdir())
-    categories: List[str] = [command.name for command in contains]
+    all_audio_scripts: List[Path] = fetch_project_audio_instructions(project_path)
     console: Console = Console()
-
-    if not "read" in categories:
-        return Path(".")
-
-    read_path: Path = scene / Path("read")
-    all_audio: List[str] = [item for item in read_path.iterdir()]
 
     with console.status("[bold green]Recording audio...") as status:
 
-        for index, item in enumerate(all_audio):
-            with open(item, "r") as stream:
+        for script in all_audio_scripts:
+            #
+            save_path: Path = script.parent.parent / Path("audio")
+            with open(script, "r") as stream:
                 # Assuming everything to read is on one line
-                to_read = stream.readlines()[0]
-                to_read = to_read.strip()
+                to_read = " ".join(stream.readlines())
 
             client = texttospeech.TextToSpeechClient()
 
