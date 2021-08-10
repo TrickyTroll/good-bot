@@ -165,8 +165,6 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
     return dirs_list
 
-
-# TODO: Do not prompt if project_path defined as flag
 def create_dirs(
     directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
 ) -> Path:
