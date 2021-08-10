@@ -201,7 +201,7 @@ def record_commands(project: Path) -> List[Path]:
 
         for command in all_runner_instructions:
 
-            save_path: Path = asciicast_path / command.name.with_suffix(".cast")
+            save_path: Path = (asciicast_path / command.name).with_suffix(".cast")
 
             subprocess.run(
                 [
