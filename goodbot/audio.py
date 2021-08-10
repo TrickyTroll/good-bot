@@ -23,9 +23,9 @@ def fetch_audio_instructions(read_path: Path) -> List[Path]:
     """
     audio_instructions: List[Path] = []
     try:
-        for rec in read_path.iterdir():
-            if rec.suffix in ".txt" and "file_" in rec.name:
-                audio_instructions.append(rec.resolve())
+        for instruction in read_path.iterdir():
+            if instruction.suffix in ".txt" and "file_" in instruction.name:
+                audio_instructions.append(instruction.resolve())
     except FileNotFoundError:
         return []
 
