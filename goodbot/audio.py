@@ -79,22 +79,27 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
 
 def record_audio(
     project_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
-) -> Path:
+) -> List[Path]:
     """
     record_audio records audio by reading the `read` files using Google
     TTS.
 
     It records audio for a whole Good Bot project.
 
+    See: https://cloud.google.com/text-to-speech
+
     Args:
-        scene (click.Path): The path towards the files to read.
-        Only the first line of these files will be read.
-        save_path (click.Path): The path where the mp3 audio file
-        will be saved. This does not include the file name, as it
-        will be kept from the read path.
+        project_path (Path): A path towards a project for which
+        audio will be recorded.
+        lang (str): The language code for the audio recordings.
+        These can be found on Google TTS' website. Defaults to
+        "en-US".
+        lang_name (str): The language name for the audio recordings.
+        Can also be found on Google TTS's website. Defaults to
+        "en-US-Standard-C".
     Returns:
-        click.Path: The path where the audio file is saved. This
-        now includes the name of the file.
+        List[Path]: A list of paths towards each audio recording
+        created.
     """
     all_audio_scripts: List[Path] = fetch_project_audio_instructions(project_path)
     all_audio_recordings: List[Path] = []
