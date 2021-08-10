@@ -114,7 +114,7 @@ def record(projectpath: str, language: str, language_name: str) -> None:
         funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
 
     funcmodule.record_audio(
-        projectpath, language, language_name
+        dir_path, language, language_name
     )
 
 
