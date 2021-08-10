@@ -64,7 +64,7 @@ def list_scenes(project_dir: Path) -> List[Path]:
 
         else:
 
-            click.echo(f"The directory {directory} was ignored.")
+            print(f"The directory {directory} was ignored.")
 
     return all_scenes
 
@@ -102,7 +102,7 @@ def record_commands(project: Path) -> List[Path]:
         created by this function.
     """
 
-    click.echo(f"Recording shell commands for {str(scene)}.")
+    print(f"Recording shell commands for {str(scene)}.")
 
     for command in commands_path.iterdir():
         file_name = Path(command.stem)
