@@ -196,7 +196,7 @@ def record_commands(project: Path) -> List[Path]:
     all_recordings: List[Path] = []
     console: Console = Console()
 
-    with console.status("[bold green]Recording audio...") as status:
+    with console.status("[bold green]Recording videos...") as status:
 
         for command in all_runner_instructions:
 
@@ -212,6 +212,7 @@ def record_commands(project: Path) -> List[Path]:
                 ]
             )
 
+            console.log(f"Video contents in file {command} has been recorded.")
             all_recordings.append()
 
     return all_recordings
