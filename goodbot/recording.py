@@ -131,6 +131,26 @@ def fetch_runner_instructions(instructions_path: Path) -> List[Path]:
 
     return runner_instructions
 
+def fetch_scene_runner_instructions(scene_path: Path) -> List[Path]:
+    """
+    fetch_scene_runner_instructions finds each runner instructions file
+    in a scene using fetch_runner_instructions.
+
+    Args:
+        scene_path (Path): A path towards a scene that will be scanned
+        for runner instructions.
+    Returns:
+        List[Path]: A list of paths towards each runner instructions
+        file that was found.
+    """
+    scene_runner_instructions: List[Path] = []
+    for directory in scene_path.iterdir():
+        if str(directory.name).lower() == "commands":
+            scene_runner_instructions = scene_runner_instructions + fetch_runner_instructions(
+                directory
+            )
+    return scene_runner_instructions
+
 def record_commands(project: Path) -> List[Path]:
     """Records a gif for every video in the commands directory of the
     specified scene.
