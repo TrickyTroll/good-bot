@@ -15,8 +15,6 @@ import yaml
 from rich.console import Console
 from typing import List, Dict, Union, Any
 
-from google.cloud import texttospeech
-
 Path = pathlib.Path
 
 
