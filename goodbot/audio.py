@@ -20,9 +20,10 @@ def fetch_audio_instructions(read_path: Path) -> List[Path]:
         List[Path]: A list of absolute paths towards each file that
         was found.
     """
+    breakpoint()
     audio_recordings: List[Path] = []
     for rec in read_path.iterdir():
-        if rec.suffix in ".txt" and "read" in rec.name:
+        if rec.suffix in ".txt" and "file_" in rec.name:
             audio_recordings.append(rec.resolve())
     return audio_recordings
 
