@@ -7,6 +7,7 @@ import yaml
 import subprocess
 from rich.console import Console
 from pathlib import Path
+from typing import List, Dict, Union, Any
 
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
