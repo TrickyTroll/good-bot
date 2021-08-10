@@ -4,6 +4,7 @@ recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
 import yaml
+from pathlib import Path
 
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
@@ -150,6 +151,32 @@ def fetch_scene_runner_instructions(scene_path: Path) -> List[Path]:
                 directory
             )
     return scene_runner_instructions
+
+
+def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Path]:
+    """
+    fetch_project_runner_instructions finds each runner instructions
+    file in a Good Bot project. It uses fetch_scene_runner_instructions
+    to find each instructions file scene by scene.
+
+    Args:
+        project_path (Union[Path, str]): The path towards the project
+        where this function will look for instructions files.
+    Returns:
+        List[Path]: A list of paths towards each instructions file that
+        was found.
+    """
+    if not isinstance(project_path, Path):
+        try:
+            project_path = Path(project_path)
+        except Exception as err:
+            raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+    all_runner_instructions: List[Path] = []
+    for scene in project_path.iterdir():
+        if "scene_" in scene.name:
+            all_runner_instructions = all_runner_instructions + fetch_scene_runner_instructions(scene)
+    return all_runner_instructions
+
 
 def record_commands(project: Path) -> List[Path]:
     """Records a gif for every video in the commands directory of the
