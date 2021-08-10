@@ -102,14 +102,14 @@ def record(projectpath: str, language: str, language_name: str) -> None:
     dir_path = pathlib.Path(projectpath)
 
     click.echo(f"Using project : {projectpath}")
-    all_scenes = funcmodule.list_scenes(PROJECT_ROOT / dir_path)
+    all_scenes = recording.list_scenes(PROJECT_ROOT / dir_path)
 
     click.echo(f"The project '{dir_path}' contains:")
 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_commands(scene, scene / pathlib.Path("asciicasts"))
+    recording.record_commands(dir_path)
     audio.record_audio(dir_path, language, language_name)
 
 
