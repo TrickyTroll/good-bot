@@ -413,29 +413,19 @@ def list_scenes(project_dir: Path) -> List[Path]:
     return all_scenes
 
 
-def record_commands(scene: Path, save_path: Path) -> Path:
+def record_commands(project: Path) -> List[Path]:
     """Records a gif for every video in the commands directory of the
     specified scene.
 
     Args:
-        scene (pathlib.Path): The path towards the scene to record.
-        save_path (pathlib.Path): The path towards the directory
-        where the gifs will be saved.
+        project (pathlib.Path): The path towards the project to record.
+
     Returns:
-        pathlib.Path: The path towards the gif that has been recorded.
-        If nothing has been recorded, this function returns the path
-        of the current working directory instead.
+        List[Path]: A list of paths towards each Asciinema recording
+        created by this function.
     """
 
-    contains = list(scene.iterdir())
-    categories = [command.name for command in contains]
 
-    is_commands = "commands" in categories
-
-    if not is_commands:
-        return Path(os.getcwd())
-
-    commands_path = scene / Path("commands")
 
     click.echo(f"Recording shell commands for {str(scene)}.")
 
