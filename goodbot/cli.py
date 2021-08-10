@@ -109,8 +109,8 @@ def record(projectpath: str, language: str, language_name: str) -> None:
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_commands(dir_path)
-    audio.record_audio(dir_path, language, language_name)
+    recording.record_commands(PROJECT_ROOT / dir_path)
+    audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
 
 
 @click.command()
