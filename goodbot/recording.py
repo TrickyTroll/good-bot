@@ -3,6 +3,7 @@
 recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
+import yaml
 
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
@@ -67,6 +68,46 @@ def list_scenes(project_dir: Path) -> List[Path]:
             print(f"The directory {directory} was ignored.")
 
     return all_scenes
+
+def is_runner_instructions(instructions_path: Path) -> bool:
+    """
+    is_runner_instructions checks whether or not the provided file could
+    be a instructions file for Good Bot's runner program.
+
+    The check is done by making sure that the file's extension is ".yaml"
+    and that its contents match what a standard runner script would could
+    contain.
+
+    Args:
+        instructions_path (Path): The path towards the file for which the
+        check will be performed.
+    Returns:
+        bool: Whether or not the file is an instructions file for Good
+        Bot Runner.
+    """
+    if instructions_path.suffix == ".yaml":
+        with open(instructions_path, "r") as stream:
+            contents: str = stream.read()
+            try:
+                conf: dict = yaml.safe_load(contents)
+            except Exception as err:
+                print(f"Got a problem parsing file {instructions_path}\n{err}")
+                return False
+    else:
+        return False
+
+    if len(conf.keys()) > 2:
+        return False
+    for key, value in conf.items():
+        if key not in ("commands", "expect"):
+            return False
+        # value is of type `list`
+        for item in value:
+            if not isinstance(item, (str, dict)):
+                return False
+
+    return True
+
 
 def fetch_runner_instructions(instructions_path: Path) -> List[Path]:
     """
