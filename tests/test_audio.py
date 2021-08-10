@@ -51,3 +51,11 @@ def test_fetch_scene_audio_instructions():
 
     for test_case in to_check:
         assert len(audio.fetch_scene_audio_instructions(test_case["dir"])) == test_case["want"]
+
+def test_fetch_project_audio_instructions():
+    """
+    Testing that fetch_project_audio_instructions finds the right
+    amount of files.
+    """
+    want = 3
+    assert len(audio.fetch_project_audio_instructions(AUDIO_TEST_DIR)) == want
