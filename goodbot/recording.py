@@ -214,6 +214,6 @@ def record_commands(project: Path) -> List[Path]:
             )
 
             console.log(f"Video contents in file {command} has been recorded.")
-            all_recordings.append()
+            all_recordings.append(save_path)
 
     return all_recordings
