@@ -84,7 +84,7 @@ def is_asciicast(file_path: Path) -> bool:
     return True
 
 
-def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
+def fetch_scene_asciicasts(scene_path: Path) -> List[Path]:
     """
     fetch_scene_asciiicasts finds every Asciinema recording in a Good
     Bot scene.
@@ -123,7 +123,7 @@ def fetch_project_asciicasts(project_path: Path) -> List[Path]:
 
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_paths = all_paths + fetch_scene_asciicassts(scene)
+            all_paths = all_paths + fetch_scene_asciicasts(scene)
 
     return all_paths
 
