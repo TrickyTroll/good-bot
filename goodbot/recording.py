@@ -4,6 +4,7 @@ recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
 import yaml
+import os
 import subprocess
 from rich.console import Console
 from pathlib import Path
@@ -206,6 +207,9 @@ def record_commands(project: Path) -> List[Path]:
         for command in all_runner_instructions:
 
             save_path: Path = (command.parent.parent / Path("asciicasts") / command.name).with_suffix(".cast")
+
+            if save_path.exists():
+                os.remove(save_path)
 
             subprocess.run(["asciinema", "rec", "-c", f"runner {command}", str(save_path)], stdout=subprocess.DEVNULL)
 
