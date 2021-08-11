@@ -45,3 +45,13 @@ def test_is_asciicast():
 
     for asciicast in sample_dir.iterdir():
         assert render.is_asciicast(asciicast)
+
+def test_is_asciicast_false():
+    """
+    Making sure that is_asciicast returns false when a file
+    is not an ascciinema recording.
+    """
+    sample_dir = SAMPLE_PROJECT / Path("scene_1/gifs")
+
+    for asciicast in sample_dir.iterdir():
+        assert not render.is_asciicast(asciicast)
