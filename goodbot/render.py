@@ -65,7 +65,7 @@ def is_asciicast(file_path: Path) -> bool:
         parsed: dict = json.loads(first_line)
     except Exception as err:
         return False
-    all_keys: list = parsed.keys()
+    all_keys = parsed.keys()
     want: List[str] = [
         "version",
         "width",
