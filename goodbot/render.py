@@ -83,6 +83,7 @@ def is_asciicast(file_path: Path) -> bool:
 
     return True
 
+
 def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
     """
     fetch_scene_asciiicasts finds every Asciinema recording in a Good
@@ -96,12 +97,14 @@ def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
         found in the provided scene. Those paths are absolute and
         resolved.
     """
+    all_asciicasts: List[Path] = []
     asciicast_path: Path = scene_path / "asciicasts"
 
     for potential_asciicast in asciicast_path.iterdir():
-        if potential_asciicast.suffix == ".cast":
-            pass
-    pass
+        if potential_asciicast.suffix == ".cast" and is_asciicast(potential_asciicast):
+            all_asciicasts.append(potential_asciicast)
+
+    return all_asciicasts
 
 
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
