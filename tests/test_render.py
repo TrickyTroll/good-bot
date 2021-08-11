@@ -55,3 +55,12 @@ def test_is_asciicast_false():
 
     for asciicast in sample_dir.iterdir():
         assert not render.is_asciicast(asciicast)
+
+def test_is_asciicast_wrong_version():
+    """
+    Testing is_asciicast on a file that has version=1 instead
+    of 2. is_asciicast should return false in this case.
+    """
+    sample_file = Path("./tests/examples/file_0-wrong-version.cast")
+
+    assert not render.is_asciicast(sample_file)
