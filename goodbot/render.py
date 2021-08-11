@@ -58,7 +58,7 @@ def is_asciicast(file_path: Path) -> bool:
     with open(file_path, "r") as stream:
         first_line: str = stream.readline()
 
-    parsed: dict = json.load(first_line)
+    parsed: dict = json.loads(first_line)
     all_keys: list = parsed.keys()
     want: List[str] = [
         "version",
