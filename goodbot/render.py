@@ -41,6 +41,27 @@ def check_dependencies() -> None:
         sys.exit()
 
 
+def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
+    """
+    fetch_scene_asciiicasts finds every Asciinema recording in a Good
+    Bot scene.
+
+    Args:
+        scene_path (Path): The path towards the scene from which the
+        asciicasts will be searched for.
+    Returns:
+        List[Path]: A list of paths towards each asciicast that was
+        found in the provided scene. Those paths are absolute and
+        resolved.
+    """
+    asciicast_path: Path = scene_path / "asciicasts"
+
+    for potential_asciicast in asciicast_path.iterdir():
+        if potential_asciicast.suffix == ".cast":
+            pass
+    pass
+
+
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     """Fetches each gif that has been rendered for a scene.
 
