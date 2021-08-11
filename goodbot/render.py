@@ -41,6 +41,7 @@ def check_dependencies() -> None:
     if missing:
         sys.exit()
 
+
 def is_asciicast(file_path: Path) -> bool:
     """
     is_asciicasts checks whether or not a file is an Asciinema recording
@@ -66,13 +67,7 @@ def is_asciicast(file_path: Path) -> bool:
     except Exception as err:
         return False
     all_keys = parsed.keys()
-    want: List[str] = [
-        "version",
-        "width",
-        "height",
-        "timestamp",
-        "env"
-    ]
+    want: List[str] = ["version", "width", "height", "timestamp", "env"]
 
     for item in want:
         if item not in all_keys:
@@ -108,6 +103,7 @@ def fetch_scene_asciicasts(scene_path: Path) -> List[Path]:
             all_asciicasts.append(potential_asciicast)
 
     return all_asciicasts
+
 
 def fetch_project_asciicasts(project_path: Path) -> List[Path]:
     """

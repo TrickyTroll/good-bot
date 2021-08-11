@@ -83,6 +83,7 @@ def test_fetch_project_runner_instructions():
     want = 4
     assert len(recording.fetch_project_runner_instructions(VIDEO_TEST_DIR)) == want
 
+
 def test_record_commands():
     """
     Making sure that record_commands records the correct amount of

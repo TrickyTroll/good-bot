@@ -47,6 +47,7 @@ def test_fetch_project_audio_instructions():
     want = 3
     assert len(audio.fetch_project_audio_instructions(AUDIO_TEST_DIR)) == want
 
+
 @pytest.mark.skip(reason="It costs money.")
 def test_record_audio():
     """

@@ -206,12 +206,17 @@ def record_commands(project: Path) -> List[Path]:
 
         for command in all_runner_instructions:
 
-            save_path: Path = (command.parent.parent / Path("asciicasts") / command.name).with_suffix(".cast")
+            save_path: Path = (
+                command.parent.parent / Path("asciicasts") / command.name
+            ).with_suffix(".cast")
 
             if save_path.exists():
                 os.remove(save_path)
 
-            subprocess.run(["asciinema", "rec", "-c", f"runner {command}", str(save_path)], stdout=subprocess.DEVNULL)
+            subprocess.run(
+                ["asciinema", "rec", "-c", f"runner {command}", str(save_path)],
+                stdout=subprocess.DEVNULL,
+            )
 
             console.log(f"Video contents in file {command} has been recorded.")
             all_recordings.append(save_path)

@@ -37,6 +37,7 @@ def test_fetch_scene_gifs_ignores():
 
     assert len(all_gifs_no_dummy) == len(all_gifs_with_dummy)
 
+
 def test_is_asciicast():
     """
     testing that is_asciicast returns true on real asciicast
@@ -46,6 +47,7 @@ def test_is_asciicast():
 
     for asciicast in sample_dir.iterdir():
         assert render.is_asciicast(asciicast)
+
 
 def test_is_asciicast_false():
     """
@@ -57,6 +59,7 @@ def test_is_asciicast_false():
     for asciicast in sample_dir.iterdir():
         assert not render.is_asciicast(asciicast)
 
+
 def test_is_asciicast_wrong_version():
     """
     Testing is_asciicast on a file that has version=1 instead
@@ -66,47 +69,32 @@ def test_is_asciicast_wrong_version():
 
     assert not render.is_asciicast(sample_file)
 
+
 def test_fetch_scene_asciicasts():
     """
     Testing that asciicast fetching for a scene returns the
     correct amount of files.
     """
     test_cases = [
-        {
-            "dir": SAMPLE_PROJECT / Path("scene_1"),
-            "want": 2
-        },
-        {
-            "dir": SAMPLE_PROJECT / Path("scene_2"),
-            "want": 1
-        },
-        {
-            "dir": SAMPLE_PROJECT,
-            "want": 0
-        }
+        {"dir": SAMPLE_PROJECT / Path("scene_1"), "want": 2},
+        {"dir": SAMPLE_PROJECT / Path("scene_2"), "want": 1},
+        {"dir": SAMPLE_PROJECT, "want": 0},
     ]
 
     for test in test_cases:
         assert len(render.fetch_scene_asciicasts(test["dir"])) == test["want"]
+
 
 def test_fetch_project_asciicasts():
     """
     Testing that fetch_project_asciicasts returns the right amount of
     files.
     """
-    test_cases = [
-        {
-            "dir": SAMPLE_PROJECT,
-            "want": 4
-        },
-        {
-            "dir": Path("./tests/"),
-            "want": 0
-        }
-    ]
+    test_cases = [{"dir": SAMPLE_PROJECT, "want": 4}, {"dir": Path("./tests/"), "want": 0}]
 
     for test in test_cases:
         assert len(render.fetch_project_asciicasts(test["dir"])) == test["want"]
+
 
 def test_fetch_project_asciicasts_error():
     """
