@@ -290,7 +290,7 @@ def write_commands_instructions(
         Path: The path towards where the new `yaml` file has been written.
     """
     commands_path: Path = scene_path / Path("commands")
-    file_path: Path = commands_path / Path(f"commands_{index + 1}")
+    file_path: Path = commands_path / Path(f"commands_{index + 1}").with_suffix(".yaml")
     to_write: str = yaml.safe_dump(commands_instructions)
 
     with open(file_path, "w") as stream:
