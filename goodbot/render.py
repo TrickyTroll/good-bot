@@ -56,9 +56,15 @@ def is_asciicast(file_path: Path) -> bool:
         bool: Whether or not the file is an asciicast v2 file.
     """
     with open(file_path, "r") as stream:
-        first_line: str = stream.readline()
+        try:
+            first_line: str = stream.readline()
+        except Exception as err:
+            return False
 
-    parsed: dict = json.loads(first_line)
+    try:
+        parsed: dict = json.loads(first_line)
+    except Exception as err:
+        return False
     all_keys: list = parsed.keys()
     want: List[str] = [
         "version",
