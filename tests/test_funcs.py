@@ -206,9 +206,7 @@ class TestDirsList(unittest.TestCase):
     def test_error_handling(self):
         """Testing error handling on bad input types."""
         self.assertRaises(TypeError, funcmodule.create_dirs_list, "Hi!")
-        self.assertRaises(
-            TypeError, funcmodule.create_dirs_list, ["a wrong type"]
-        )
+        self.assertRaises(TypeError, funcmodule.create_dirs_list, ["a wrong type"])
 
     def test_returns_dict(self):
         """Making sure that `create_dirs_list()` returns a list."""
@@ -236,27 +234,17 @@ class TestCreateDirs(unittest.TestCase):
         # anything else.
         # This fist tests has a wrong directory list argument.
         self.assertRaises(
-            TypeError,
-            funcmodule.create_dirs,
-            {"1": "This is a scene!"},
-            ".",
-            TEMP_DIR,
+            TypeError, funcmodule.create_dirs, {"1": "This is a scene!"}, ".", TEMP_DIR
         )
         # The second test has a wrong path to create the directories.
-        self.assertRaises(
-            TypeError, funcmodule.create_dirs, DIRS_LIST, ".", ["path", "as", "list"]
-        )
+        self.assertRaises(TypeError, funcmodule.create_dirs, DIRS_LIST, ".", ["path", "as", "list"])
 
     def test_return_type(self):
         """Testing that the returned value is of type `pathlib.Path`"""
         with tempfile.TemporaryDirectory() as temp:
-            returned_path = funcmodule.create_dirs(
-                DIRS_LIST, ".", temp + "/my_project"
-            )
+            returned_path = funcmodule.create_dirs(DIRS_LIST, ".", temp + "/my_project")
             # This next assert would probably fail on Windows.
-            self.assertTrue(
-                isinstance(returned_path, (Path, pathlib.PosixPath))
-            )
+            self.assertTrue(isinstance(returned_path, (Path, pathlib.PosixPath)))
 
 
 # Using pytest from now on.
@@ -285,9 +273,7 @@ def test_split_config_commands():
                 commands_expected += 1
 
         try:
-            commands_amount += len(
-                list((PROJECT_PATH / Path(f"scene_{i + 1}/commands")).iterdir())
-            )
+            commands_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/commands")).iterdir()))
         except FileNotFoundError:
             continue
 
@@ -312,50 +298,11 @@ def test_split_config_read():
                 read_expected += 1
 
         try:
-            read_amount += len(
-                list((PROJECT_PATH / Path(f"scene_{i + 1}/read")).iterdir())
-            )
+            read_amount += len(list((PROJECT_PATH / Path(f"scene_{i + 1}/read")).iterdir()))
         except FileNotFoundError:
             continue
 
     assert read_amount == read_expected
-
-
-def test_is_scene_false():
-    """
-    Makes sure that the `is_scene()` function does not recognize
-    a project path as a scene path.
-    """
-    not_a_scene_path = PROJECT_PATH
-    assert funcmodule.is_scene(not_a_scene_path) == False
-
-
-def test_is_scene_true():
-    """
-    Makes sure that the `is_scene()` function recognizes proper
-    scene paths.
-    """
-    a_scene_path = PROJECT_PATH / "scene_1"
-    assert funcmodule.is_scene(a_scene_path)
-
-
-def test_list_scenes():
-    """Testing that `list_scenes()` really lists every scene.
-
-    This test assumes that the previous tests passed. If they
-    didn't, this might fail even if `list_scenes()` is right.
-
-    For example, if some directories are not created by the
-    `create_dirs()` function, the amount of scenes in the file
-    and the amount of scene directories won't match.
-
-    """
-    scene_amount = len(PARSED.keys())
-    listed_scenes = funcmodule.list_scenes(PROJECT_PATH)
-    all_scenes = [PROJECT_PATH / f"scene_{i+1}" for i in range(scene_amount)]
-    assert len(all_scenes) == len(listed_scenes) and sorted(
-        all_scenes
-    ) == sorted(listed_scenes)
 
 
 @given(to_read=st.sampled_from(read_strings), file_index=st.integers())
@@ -368,9 +315,7 @@ def test_write_read_instructions_rtype(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(
-            to_read, temp_dir, file_index
-        )
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
     assert isinstance(new_file, (Path, str))
 
 
@@ -382,9 +327,7 @@ def test_write_read_instructions_path(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(
-            to_read, temp_dir, file_index
-        )
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
         assert os.path.exists(new_file)
 
 
@@ -399,9 +342,7 @@ def test_write_read_instructions_file_name(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(
-            to_read, temp_dir, file_index
-        )
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
     assert str(file_index + 1) in new_file.name
 
 
@@ -413,9 +354,7 @@ def test_read_getting_same_result(to_read, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/read")
-        new_file = funcmodule.write_read_instructions(
-            to_read, temp_dir, file_index
-        )
+        new_file = funcmodule.write_read_instructions(to_read, temp_dir, file_index)
         with open(new_file) as stream:
             read_file = stream.read()
         assert read_file == to_read
@@ -431,9 +370,7 @@ def test_write_commands(commands, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/commands")
-        new_file = funcmodule.write_commands_instructions(
-            commands, temp_dir, file_index
-        )
+        new_file = funcmodule.write_commands_instructions(commands, temp_dir, file_index)
     assert isinstance(new_file, (Path, str))
 
 
@@ -445,9 +382,7 @@ def test_write_commands_instructions_path(commands, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/commands")
-        new_file = funcmodule.write_commands_instructions(
-            commands, temp_dir, file_index
-        )
+        new_file = funcmodule.write_commands_instructions(commands, temp_dir, file_index)
         assert os.path.exists(new_file)
 
 
@@ -462,9 +397,7 @@ def test_write_commands_instructions_file_name(commands, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/commands")
-        new_file = funcmodule.write_commands_instructions(
-            commands, temp_dir, file_index
-        )
+        new_file = funcmodule.write_commands_instructions(commands, temp_dir, file_index)
     assert str(file_index + 1) in new_file.name
 
 
@@ -476,9 +409,7 @@ def test_getting_same_result(commands, file_index):
     """
     with tempfile.TemporaryDirectory() as temp_dir:
         os.mkdir(temp_dir + "/commands")
-        new_file = funcmodule.write_commands_instructions(
-            commands, temp_dir, file_index
-        )
+        new_file = funcmodule.write_commands_instructions(commands, temp_dir, file_index)
         with open(new_file) as stream:
             read_file = stream.read()
         assert yaml.safe_load(read_file) == commands

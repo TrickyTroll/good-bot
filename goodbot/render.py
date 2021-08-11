@@ -15,6 +15,7 @@ This module requires ffmpeg.
 import os
 import sys
 import pathlib
+import json
 import tempfile
 import subprocess
 from shutil import which
@@ -39,6 +40,91 @@ def check_dependencies() -> None:
         print("Missing requirement: ffmpeg")
     if missing:
         sys.exit()
+
+
+def is_asciicast(file_path: Path) -> bool:
+    """
+    is_asciicasts checks whether or not a file is an Asciinema recording
+    by looking at the contents of the file's first line. In an asciicast
+    v2 file, the first line should contain certain keys like "width",
+    "height" and others.
+
+    See: https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md
+
+    Args:
+        file_path (Path): A path towards the file that will be checked.
+    Returns:
+        bool: Whether or not the file is an asciicast v2 file.
+    """
+    with open(file_path, "r") as stream:
+        try:
+            first_line: str = stream.readline()
+        except Exception as err:
+            return False
+
+    try:
+        parsed: dict = json.loads(first_line)
+    except Exception as err:
+        return False
+    all_keys = parsed.keys()
+    want: List[str] = ["version", "width", "height", "timestamp", "env"]
+
+    for item in want:
+        if item not in all_keys:
+            return False
+
+    if parsed["version"] != 2:
+        return False
+
+    return True
+
+
+def fetch_scene_asciicasts(scene_path: Path) -> List[Path]:
+    """
+    fetch_scene_asciiicasts finds every Asciinema recording in a Good
+    Bot scene.
+
+    Args:
+        scene_path (Path): The path towards the scene from which the
+        asciicasts will be searched for.
+    Returns:
+        List[Path]: A list of paths towards each asciicast that was
+        found in the provided scene. Those paths are absolute and
+        resolved.
+    """
+    all_asciicasts: List[Path] = []
+    asciicast_path: Path = scene_path / "asciicasts"
+
+    if not asciicast_path.exists():
+        return []
+
+    for potential_asciicast in asciicast_path.iterdir():
+        if potential_asciicast.suffix == ".cast" and is_asciicast(potential_asciicast):
+            all_asciicasts.append(potential_asciicast)
+
+    return all_asciicasts
+
+
+def fetch_project_asciicasts(project_path: Path) -> List[Path]:
+    """
+    fetch_project_asciicasts finds every asciicast in a project. This
+    function uses fetch_scene_asciicasts on each scene of the project
+    to find the asciicasts.
+
+    Args:
+        project_path (Path): The path towards the directory where
+        asciicasts will be searched for.
+    Returns:
+        List[Path]: A list of paths towards each asciicast that was
+        found.
+    """
+    all_paths: List[Path] = []
+
+    for scene in project_path.iterdir():
+        if "scene_" in scene.name:
+            all_paths = all_paths + fetch_scene_asciicasts(scene)
+
+    return all_paths
 
 
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
@@ -143,15 +229,7 @@ def remove_first_frame(gif_path: Path) -> Path:
     save_path: Path = gif_path.parent / Path(gif_path.stem + "_edited" + ".gif")
     # `unoptimize` option ensures no transparent background added.
     subprocess.run(
-        [
-            "gifsicle",
-            "--unoptimize",
-            f"{gif_path}",
-            "--delete",
-            "#0",
-            "-o",
-            f"{save_path}",
-        ],
+        ["gifsicle", "--unoptimize", f"{gif_path}", "--delete", "#0", "-o", f"{save_path}"],
         check=True,
     )
 

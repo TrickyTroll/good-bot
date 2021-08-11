@@ -12,9 +12,8 @@ import subprocess
 import shutil
 import click
 import yaml
+from rich.console import Console
 from typing import List, Dict, Union, Any
-
-from google.cloud import texttospeech
 
 Path = pathlib.Path
 
@@ -53,9 +52,7 @@ def config_parser(file_path: pathlib.Path) -> Dict[int, list]:
     return parsed_file
 
 
-def config_info(
-    parsed_config: Dict[int, List[dict]]
-) -> Dict[int, Dict[str, list]]:
+def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, list]]:
     """Gets useful information on the configuration file.
 
     Useful to find:
@@ -148,9 +145,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
             `good-bot` will record or create.
     """
     if not isinstance(all_confs, dict):
-        raise TypeError(
-            "create_dirs_list(): This function takes a dictionnary as an input."
-        )
+        raise TypeError("create_dirs_list(): This function takes a dictionnary as an input.")
 
     dirs_list: List[dict] = []
 
@@ -172,7 +167,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
 
 def create_dirs(
-        directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
+    directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
 ) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
@@ -190,12 +185,8 @@ def create_dirs(
     """
     if not isinstance(directories, list):
         raise TypeError("`directories` must be a list of dictionnaries.")
-    if not isinstance(
-        project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)
-    ):
-        raise TypeError(
-            f"`project_dir` must be of type `str`, not {type(project_dir)}"
-        )
+    if not isinstance(project_dir, (str, Path, pathlib.PosixPath, pathlib.WindowsPath)):
+        raise TypeError(f"`project_dir` must be of type `str`, not {type(project_dir)}")
 
     project_dir = Path(project_dir)
     overwrite = False
@@ -249,9 +240,7 @@ def create_dirs(
     return project_dir.absolute()
 
 
-def write_read_instructions(
-    read_instructions: str, scene_path: Path, index: int
-) -> Path:
+def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
     """Writes a new `read` instructions file.
 
     The instructions come from the `read` key in the user's `yaml`
@@ -301,7 +290,7 @@ def write_commands_instructions(
         Path: The path towards where the new `yaml` file has been written.
     """
     commands_path: Path = scene_path / Path("commands")
-    file_path: Path = commands_path / Path(f"commands_{index + 1}")
+    file_path: Path = commands_path / Path(f"commands_{index + 1}").with_suffix(".yaml")
     to_write: str = yaml.safe_dump(commands_instructions)
 
     with open(file_path, "w") as stream:
@@ -352,180 +341,3 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                     print(scene_item)
 
     return project_path
-
-
-########################################################################
-#                             Video creation                           #
-########################################################################
-
-# Command execution and recording.
-def is_scene(directory: Path) -> bool:
-    """Checks if a directory is a scene that contains instructions.
-
-    To be a scene, a directory must:
-
-        * Contain files.
-        * Its name must start with `scene`.
-
-    Args
-        directory (Path): The path towards the directory to
-        check.
-    Returns:
-        bool: Whether the directory is a scene that contains elements
-        or not.
-    """
-
-    if directory.is_dir():
-        dir_name = directory.name
-        contains_something = any(directory.iterdir())
-    else:
-        return False
-
-    return dir_name[0:5] == "scene" and contains_something
-
-
-def list_scenes(project_dir: Path) -> List[Path]:
-    """Lists every scene contained in the `project_dir` path.
-
-    `list_scenes` uses the `is_scene` function to check whether
-    or not a directory si a "scene".
-
-    To be a scene, a directory must:
-
-        * Contain files.
-        * Its name must start with `scene`.
-
-    This function will also tell the user if a subdirectory of
-    `project_dir` was ignored.
-
-    Args:
-        project_dir (Path): The path towards the directory that
-            potentially contains scenes.
-
-    Returns:
-        List[Path]: A `list` of `Path`s towards each scene contained
-            in `project_dir`. If `project_dir` did not contain
-            any scene, the returned `list` will be empty.
-
-    """
-
-    all_scenes: List[Path] = []
-
-    for directory in project_dir.iterdir():
-
-        if is_scene(directory):
-
-            all_scenes.append(directory)
-
-        else:
-
-            click.echo(f"The directory {directory} was ignored.")
-
-    return all_scenes
-
-
-def record_commands(scene: Path, save_path: Path) -> Path:
-    """Records a gif for every video in the commands directory of the
-    specified scene.
-
-    Args:
-        scene (pathlib.Path): The path towards the scene to record.
-        save_path (pathlib.Path): The path towards the directory
-        where the gifs will be saved.
-    Returns:
-        pathlib.Path: The path towards the gif that has been recorded.
-        If nothing has been recorded, this function returns the path
-        of the current working directory instead.
-    """
-
-    contains = list(scene.iterdir())
-    categories = [command.name for command in contains]
-
-    is_commands = "commands" in categories
-
-    if not is_commands:
-        return Path(os.getcwd())
-
-    commands_path = scene / Path("commands")
-
-    click.echo(f"Recording shell commands for {str(scene)}.")
-
-    for command in commands_path.iterdir():
-        file_name = Path(command.stem)
-
-        subprocess.run(
-            [
-                "asciinema",
-                "rec",
-                "-c",
-                f"runner {command.absolute()}",
-                save_path / file_name.with_suffix(".cast"),
-            ]
-        )
-
-    return save_path
-
-
-# Audio recording
-def record_audio(
-    scene: Path,
-    save_path: Path,
-    lang: str = "en-US",
-    lang_name: str = "en-US-Standard-C",
-) -> Path:
-    """Records audio by reading the `read` files using Google TTS.
-
-    Args:
-        scene (click.Path): The path towards the files to read.
-        Only the first line of these files will be read.
-        save_path (click.Path): The path where the mp3 audio file
-        will be saved. This does not include the file name, as it
-        will be kept from the read path.
-    Returns:
-        click.Path: The path where the audio file is saved. This
-        now includes the name of the file.
-    """
-    contains = list(scene.iterdir())
-    categories = [command.name for command in contains]
-
-    is_read = "read" in categories
-
-    audio_dir = save_path
-
-    if not is_read:
-        return Path(os.getcwd())
-
-    read_path = scene / Path("read")
-
-    for item in read_path.iterdir():
-        with open(item, "r") as stream:
-            # Assuming everything to read is on one line
-            to_read = stream.readlines()[0]
-            to_read = to_read.strip()
-
-        client = texttospeech.TextToSpeechClient()
-
-        synthesis_input = texttospeech.SynthesisInput(text=to_read)
-
-        voice = texttospeech.VoiceSelectionParams(
-            language_code=lang,
-            name=lang_name,
-            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
-        )
-
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
-        )
-
-        response = client.synthesize_speech(
-            input=synthesis_input, voice=voice, audio_config=audio_config
-        )
-
-        file_name = item.stem
-        write_path = (save_path / file_name).with_suffix(".mp3")
-
-        with open(write_path, "wb") as out:
-            out.write(response.audio_content)
-            click.echo(f"Audio content written to file {write_path.absolute()}")
-
-    return audio_dir

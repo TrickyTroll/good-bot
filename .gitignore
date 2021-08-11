@@ -167,3 +167,9 @@ dev-scripts/
 # nodejs
 node_modules/
 package-lock.json
+
+# Dev notes
+notes/
+
+# Scripts
+fill-dirs.py

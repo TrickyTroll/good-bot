@@ -13,7 +13,8 @@ requires-python=">=3.7"
 requires = [
     "click==7.1.2",
     "google-cloud-texttospeech==2.3.0",
-    "PyYAML==5.4.1"
+    "PyYAML==5.4.1",
+    "rich==10.7.0"
 ]
 
 [tool.flit.metadata.requires-extra]
@@ -33,5 +34,5 @@ include = ["doc/"]
 exclude = ["doc/*.html"]
 
 [tool.black]
-line-length = 80
+line-length = 100
 target-version = ['py38']

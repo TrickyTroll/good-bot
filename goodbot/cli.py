@@ -4,7 +4,7 @@
 import pathlib
 import click
 import os
-from goodbot import funcmodule, render
+from goodbot import funcmodule, render, audio, recording
 
 
 def in_docker() -> bool:
@@ -65,7 +65,7 @@ def setup(config: str, project_path: str) -> None:
     """
 
     if not project_path:
-        prompt: str ="""\
+        prompt: str = """\
         Please provide a name for your project.
         """
         project_path = input(prompt)
@@ -102,20 +102,15 @@ def record(projectpath: str, language: str, language_name: str) -> None:
     dir_path = pathlib.Path(projectpath)
 
     click.echo(f"Using project : {projectpath}")
-    all_scenes = funcmodule.list_scenes(PROJECT_ROOT / dir_path)
+    all_scenes = recording.list_scenes(PROJECT_ROOT / dir_path)
 
     click.echo(f"The project '{dir_path}' contains:")
 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    for scene in all_scenes:
-        click.echo(f"Working on {scene}...")
-
-        funcmodule.record_commands(scene, scene / pathlib.Path("asciicasts"))
-        funcmodule.record_audio(
-            scene, scene / pathlib.Path("audio"), language, language_name
-        )
+    recording.record_commands(PROJECT_ROOT / dir_path)
+    audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
 
 
 @click.command()

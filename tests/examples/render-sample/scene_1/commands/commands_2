@@ -1,0 +1,4 @@
+commands:
+- ls -a
+expect:
+- prompt
