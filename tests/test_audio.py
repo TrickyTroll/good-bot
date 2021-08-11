@@ -1,7 +1,11 @@
 import pytest
+import tempfile
+import shutil
+import os
 import goodbot.audio as audio
 
 from pathlib import Path
+from distutils.dir_util import copy_tree
 
 AUDIO_TEST_DIR = Path("./tests/examples/audio")
 
@@ -42,3 +46,17 @@ def test_fetch_project_audio_instructions():
     """
     want = 3
     assert len(audio.fetch_project_audio_instructions(AUDIO_TEST_DIR)) == want
+
+@pytest.mark.skip(reason="It costs money.")
+def test_record_audio():
+    """
+    Making sure that record_audio records the right amount of files for
+    a project.
+    """
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree("./tests/examples/audio", temp)
+        project_path = Path(temp)
+        # Re-recording
+        audio_scripts = audio.fetch_project_audio_instructions(project_path)
+        recorded = audio.record_audio(project_path)
+        assert len(recorded) == len(audio_scripts)
