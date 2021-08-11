@@ -1,3 +1,5 @@
+import tempfile
+from distutils.dir_util import copy_tree
 from pathlib import Path
 from goodbot import recording
 from tests.test_funcs import PROJECT_PATH, PARSED
@@ -78,3 +80,11 @@ def test_fetch_project_runner_instructions():
     """
     want = 4
     assert len(recording.fetch_project_runner_instructions(VIDEO_TEST_DIR)) == want
+
+def test_record_commands():
+    """
+    Making sure that record_commands records the correct amount of
+    files in a project.
+    """
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree("./tests/examples/video", temp)
