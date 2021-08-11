@@ -1,0 +1,10 @@
+{"version": 2, "width": 80, "height": 24, "timestamp": 1628318513, "env": {"SHELL": null, "TERM": "linux"}}
+[0.251625, "o", "root@d4b5ee2957bd:/app# "]
+[0.471319, "o", "l"]
+[0.679823, "o", "s"]
+[0.730047, "o", " "]
+[0.902393, "o", "-"]
+[1.121857, "o", "a"]
+[1.3353, "o", "\r\n"]
+[1.336536, "o", "\u001b[0m\u001b[01;34m.\u001b[0m                   \u001b[01;34mexamples\u001b[0m     \u001b[01;34m.hypothesis\u001b[0m     \u001b[01;34m.pytest_cache\u001b[0m\r\r\n\u001b[01;34m..\u001b[0m                  \u001b[01;34m.git\u001b[0m         \u001b[01;34mimg\u001b[0m             README.md\r\r\nCONTRIBUTING.md     \u001b[01;34m.github\u001b[0m      LICENSE         .replit\r\r\ndocker-compose.yml  .gitignore   \u001b[01;34mmy_project\u001b[0m      requirements.txt\r\r\nDockerfile          .gitpod.yml  mypy.ini        \u001b[01;34mtests\u001b[0m\r\r\nDockerfile.dev      \u001b[01;34mgoodbot\u001b[0m      pyproject.toml  \u001b[01;34m.venv\u001b[0m\r\r\n"]
+[1.336775, "o", "root@d4b5ee2957bd:/app# "]
