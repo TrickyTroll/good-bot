@@ -2,6 +2,7 @@
 """Testing functions from the `render` module."""
 import pathlib
 import tempfile
+import pytest
 import os
 from goodbot import render
 
@@ -106,3 +107,20 @@ def test_fetch_project_asciicasts():
 
     for test in test_cases:
         assert len(render.fetch_project_asciicasts(test["dir"])) == test["want"]
+
+def test_fetch_project_asciicasts_error():
+    """
+    Testing fetch_project_ascicasts' error handling. Testing on a file
+    and a non-existent directory.
+    """
+    wrong_type: Path = Path("./tests/examples/no-audio.yaml")
+    not_exists: Path = Path("./foobar/foo/bar")
+
+    if not_exists.exists():
+        raise FileExistsError(f"Test case {not_exists} should not exist. Please remove it.")
+
+    with pytest.raises(FileNotFoundError):
+        render.fetch_project_asciicasts(not_exists)
+
+    with pytest.raises(NotADirectoryError):
+        render.fetch_project_asciicasts(wrong_type)
