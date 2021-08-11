@@ -87,3 +87,22 @@ def test_fetch_scene_asciicasts():
 
     for test in test_cases:
         assert len(render.fetch_scene_asciicasts(test["dir"])) == test["want"]
+
+def test_fetch_project_asciicasts():
+    """
+    Testing that fetch_project_asciicasts returns the right amount of
+    files.
+    """
+    test_cases = [
+        {
+            "dir": SAMPLE_PROJECT,
+            "want": 4
+        },
+        {
+            "dir": Path("./tests/"),
+            "want": 0
+        }
+    ]
+
+    for test in test_cases:
+        assert len(render.fetch_project_asciicasts(test["dir"])) == test["want"]
