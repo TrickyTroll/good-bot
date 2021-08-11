@@ -106,6 +106,27 @@ def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
 
     return all_asciicasts
 
+def fetch_project_asciicasts(project_path: Path) -> List[Path]:
+    """
+    fetch_project_asciicasts finds every asciicast in a project. This
+    function uses fetch_scene_asciicasts on each scene of the project
+    to find the asciicasts.
+
+    Args:
+        project_path (Path): The path towards the directory where
+        asciicasts will be searched for.
+    Returns:
+        List[Path]: A list of paths towards each asciicast that was
+        found.
+    """
+    all_paths: List[Path] = []
+
+    for scene in project_path.iterdir():
+        if "scene_" in scene.name:
+            all_paths = all_paths + fetch_scene_asciicassts(scene)
+
+    return all_paths
+
 
 def fetch_scene_gifs(scene_path: Path) -> List[Path]:
     """Fetches each gif that has been rendered for a scene.
