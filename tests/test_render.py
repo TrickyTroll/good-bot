@@ -64,3 +64,26 @@ def test_is_asciicast_wrong_version():
     sample_file = Path("./tests/examples/file_0-wrong-version.cast")
 
     assert not render.is_asciicast(sample_file)
+
+def test_fetch_scene_asciicasts():
+    """
+    Testing that asciicast fetching for a scene returns the
+    correct amount of files.
+    """
+    test_cases = [
+        {
+            "dir": SAMPLE_PROJECT / Path("scene_1"),
+            "want": 2
+        },
+        {
+            "dir": SAMPLE_PROJECT / Path("scene_2"),
+            "want": 1
+        },
+        {
+            "dir": SAMPLE_PROJECT,
+            "want": 0
+        }
+    ]
+
+    for test in test_cases:
+        assert len(render.fetch_scene_asciicasts(test["dir"])) == test["want"]
