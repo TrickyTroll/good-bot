@@ -15,6 +15,7 @@ This module requires ffmpeg.
 import os
 import sys
 import pathlib
+import json
 import tempfile
 import subprocess
 from shutil import which
@@ -40,6 +41,41 @@ def check_dependencies() -> None:
     if missing:
         sys.exit()
 
+def is_asciicast(file_path: Path) -> bool:
+    """
+    is_asciicasts checks whether or not a file is an Asciinema recording
+    by looking at the contents of the file's first line. In an asciicast
+    v2 file, the first line should contain certain keys like "width",
+    "height" and others.
+
+    See: https://github.com/asciinema/asciinema/blob/develop/doc/asciicast-v2.md
+
+    Args:
+        file_path (Path): A path towards the file that will be checked.
+    Returns:
+        bool: Whether or not the file is an asciicast v2 file.
+    """
+    with open(file_path, "r") as stream:
+        first_line: str = stream.readline()
+
+    parsed: dict = json.load(first_line)
+    all_keys: list = parsed.keys()
+    want: List[str] = [
+        "version",
+        "width",
+        "height",
+        "timestamp",
+        "env"
+    ]
+
+    for item in want:
+        if item not in all_keys:
+            return False
+
+    if parsed["version"] != 2:
+        return False
+
+    return True
 
 def fetch_scene_asciicassts(scene_path: Path) -> List[Path]:
     """
