@@ -198,7 +198,6 @@ def record_commands(project: Path) -> List[Path]:
         created by this function.
     """
     all_runner_instructions: List[Path] = fetch_project_runner_instructions(project)
-    asciicast_path: Path = project / Path("asciicasts")
     all_recordings: List[Path] = []
     console: Console = Console()
 
@@ -206,7 +205,7 @@ def record_commands(project: Path) -> List[Path]:
 
         for command in all_runner_instructions:
 
-            save_path: Path = (asciicast_path / command.name).with_suffix(".cast")
+            save_path: Path = (command.parent.parent / Path("asciicasts") / command.name).with_suffix(".cast")
 
             subprocess.run(["asciinema", "rec", "-c", f"runner {command}", str(save_path)])
 
