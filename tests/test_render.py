@@ -35,3 +35,13 @@ def test_fetch_scene_gifs_ignores():
     os.remove(dummy_path)
 
     assert len(all_gifs_no_dummy) == len(all_gifs_with_dummy)
+
+def test_is_asciicast():
+    """
+    testing that is_asciicast returns true on real asciicast
+    files.
+    """
+    sample_dir = SAMPLE_PROJECT / Path("scene_1/asciicasts")
+
+    for asciicast in sample_dir.iterdir():
+        assert render.is_asciicast(asciicast)
