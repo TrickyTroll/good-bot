@@ -1,7 +1,8 @@
 import tempfile
+import os
 from distutils.dir_util import copy_tree
 from pathlib import Path
-from goodbot import recording
+from goodbot import recording, render
 from tests.test_funcs import PROJECT_PATH, PARSED
 
 VIDEO_TEST_DIR = Path("./tests/examples/video")
@@ -88,3 +89,13 @@ def test_record_commands():
     """
     with tempfile.TemporaryDirectory() as temp:
         copy_tree("./tests/examples/video", temp)
+        project_path = Path(temp)
+        # Removing existing asciicasts
+        all_asciicasts = render.fetch_project_asciicasts(project_path)
+        for path in all_asciicasts:
+            os.remove(path)
+        # Re-recording
+        rerecorded = recording.record_commands(project_path)
+        # making sure that re-recorded is the same as the previous
+        # recordings
+        assert sorted(rerecorded) == sorted(all_asciicasts)
