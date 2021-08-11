@@ -91,7 +91,7 @@ def is_runner_instructions(instructions_path: Path) -> bool:
         bool: Whether or not the file is an instructions file for Good
         Bot Runner.
     """
-    if instructions_path.suffix == ".yaml":
+    if instructions_path.suffix == ".yaml" or instructions_path.suffix == "":
         with open(instructions_path, "r") as stream:
             contents: str = stream.read()
             try:
