@@ -3,6 +3,7 @@
 audio.py contains functions used by the cli module to record audio
 contents using Google Cloud Text to Speech.
 """
+import os
 from pathlib import Path
 from rich.console import Console
 from typing import List, Dict, Union, Any
@@ -130,6 +131,9 @@ def record_audio(
 
             file_name = script.stem
             write_path = (save_path / file_name).with_suffix(".mp3")
+
+            if write_path.exists():
+                os.remove(write_path)
 
             with open(write_path, "wb") as out:
                 out.write(response.audio_content)
