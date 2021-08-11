@@ -100,6 +100,9 @@ def fetch_scene_asciicasts(scene_path: Path) -> List[Path]:
     all_asciicasts: List[Path] = []
     asciicast_path: Path = scene_path / "asciicasts"
 
+    if not asciicast_path.exists():
+        return []
+
     for potential_asciicast in asciicast_path.iterdir():
         if potential_asciicast.suffix == ".cast" and is_asciicast(potential_asciicast):
             all_asciicasts.append(potential_asciicast)
