@@ -237,3 +237,28 @@ def test_render_all():
         assert want == len(recorded)
         for recording in recorded:
             assert recording.exists()
+
+def test_sort_videos():
+    """
+    This test could be improved.
+
+    Making sure that sort videos properly sorts videos from the
+    project. Simply checking the list again to make sure that
+    everything is in order.
+    """
+    def get_scene_id(video):
+        return video.parent.parent.name.split("_")[1]
+    def get_video_id(video):
+        return video.name.split("_")[1]
+    sorted_vids = render.sort_videos(SAMPLE_PROJECT)
+    scene_counter = 1
+    vid_counter = 1
+    for index, video in enumerate(sorted_vids):
+        assert get_scene_id(video) == scene_counter
+        assert get_video_id(video) == vid_counter
+        if index > len(sorted_vids) - 1:
+            if get_scene_id(sorted_vids[index + 1]):
+                vid_counter = 1
+                scene_counter += 1
+            else:
+                vid_counter += 1
