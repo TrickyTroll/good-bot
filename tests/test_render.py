@@ -260,8 +260,8 @@ def test_sort_videos():
         for index, video in enumerate(sorted_vids):
             assert get_scene_id(video) == scene_counter
             assert get_video_id(video) == vid_counter
-            if index > len(sorted_vids) - 1:
-                if get_scene_id(sorted_vids[index + 1]):
+            if index < len(sorted_vids) - 1:
+                if get_scene_id(sorted_vids[index + 1]) > scene_counter:
                     vid_counter = 1
                     scene_counter += 1
                 else:
