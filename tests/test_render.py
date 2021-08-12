@@ -219,3 +219,21 @@ def test_render_function():
         created = video.exists()
         os.remove(video)
         assert created
+
+def test_render_all():
+    """
+    Testing that render_all creates every video required.
+    """
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree(SAMPLE_PROJECT, temp)
+        to_record = []
+        for directory in Path(temp).iterdir():
+            if "scene_" in directory.name:
+                to_record.append(render.link_audio(directory))
+        recorded = render.render_all(Path(temp))
+        want = 0
+        for content in to_record:
+            want += len(content)
+        assert want == len(recorded)
+        for recording in recorded:
+            assert recording.exists()
