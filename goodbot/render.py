@@ -170,7 +170,10 @@ def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
     # The file name is formatted like:
     # file_[id].gif
     identifier: str = gif_path.stem.split("_")[1]
-    # This function assumes an audio path exists.
+
+    if not audio_path.exists():
+        return (gif_path, None)
+
     for audio_file in audio_path.iterdir():
 
         if identifier in audio_file.name:
