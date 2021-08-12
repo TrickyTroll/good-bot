@@ -5,6 +5,8 @@ import tempfile
 import subprocess
 import pytest
 import os
+import shutil
+from distutils.dir_util import copy_tree
 from goodbot import render
 
 Path = pathlib.Path
@@ -210,8 +212,10 @@ def test_render_function():
     """
     Testing that the function render properly creates a new video.
     """
-    gif_and_audio = render.corresponding_audio(SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif")
-    video = render.render(gif_and_audio)
-    created = video.exists()
-    os.remove(video)
-    assert created
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree(SAMPLE_PROJECT, temp)
+        gif_and_audio = render.corresponding_audio(Path(temp) / "scene_1/gifs/commands_1.gif")
+        video = render.render(gif_and_audio)
+        created = video.exists()
+        os.remove(video)
+        assert created
