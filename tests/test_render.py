@@ -186,6 +186,14 @@ def test_remove_first_frame():
     Testing that remove_first_frame really removes a frame from the GIF
     file. This test only makes sure that a frame is removed, not that it
     is the first one.
+
+    This test uses gifsicle's -I option, which gives information on a
+    GIF file. The first line of the output looks something like this:
+
+    * tests/examples/render-sample/test-rm-frame/commands_1.gif 20 images
+
+    By splitting this line on " " characters and getting the number
+    next-to-last in the list.
     """
     def get_frames_amount(gif_path):
         gifsicle_output = subprocess.run(['gifsicle', '-I', str(gif_path)], stdout=subprocess.PIPE).stdout.decode('utf-8')
