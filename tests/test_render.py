@@ -112,3 +112,35 @@ def test_fetch_project_asciicasts_error():
 
     with pytest.raises(NotADirectoryError):
         render.fetch_project_asciicasts(wrong_type)
+
+def test_corresponding_audio():
+    """
+    Making sure that corresponding audio returns the correct
+    pair of paths.
+    """
+    test_cases = [
+        {
+            "gif": SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
+            "want": (
+                SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
+                SAMPLE_PROJECT / "scene_1/audio/read_1.mp3"
+            )
+        },
+        {
+            "gif": SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
+            "want": (
+                SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
+                SAMPLE_PROJECT / "scene_1/audio/read_2.mp3"
+            )
+        },
+        {
+            "gif": SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
+            "want": (
+                SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
+                None
+            )
+        }
+    ]
+
+    for test in test_cases:
+        assert render.corresponding_audio(test["gif"]) == test["want"]
