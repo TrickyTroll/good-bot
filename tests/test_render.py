@@ -2,6 +2,7 @@
 """Testing functions from the `render` module."""
 import pathlib
 import tempfile
+import subprocess
 import pytest
 import os
 from goodbot import render
@@ -179,3 +180,20 @@ def test_link_audio():
     for test in test_cases:
         for item in render.link_audio(test["scene"]):
             assert item in test["want"]
+
+def test_remove_first_frame():
+    """
+    Testing that remove_first_frame really removes a frame from the GIF
+    file. This test only makes sure that a frame is removed, not that it
+    is the first one.
+    """
+    def get_frames_amount(gif_path):
+        gifsicle_output = subprocess.run(['gifsicle', '-I', str(gif_path)], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        first_line = gifsicle_output.split("\n")[0]
+        return first_line.split(" ")[-2]
+    gif_sample_path = SAMPLE_PROJECT / "test-rm-frame/commands_1.gif"
+    want = int(get_frames_amount(gif_sample_path)) - 1
+    shorter_gif = render.remove_first_frame(gif_sample_path)
+    got = int(get_frames_amount(shorter_gif))
+    os.remove(shorter_gif)
+    assert want == got
