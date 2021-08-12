@@ -205,3 +205,13 @@ def test_remove_first_frame():
     got = int(get_frames_amount(shorter_gif))
     os.remove(shorter_gif)
     assert want == got
+
+def test_render_function():
+    """
+    Testing that the function render properly creates a new video.
+    """
+    gif_and_audio = render.corresponding_audio(SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif")
+    video = render.render(gif_and_audio)
+    created = video.exists()
+    os.remove(video)
+    assert created
