@@ -144,3 +144,38 @@ def test_corresponding_audio():
 
     for test in test_cases:
         assert render.corresponding_audio(test["gif"]) == test["want"]
+
+def test_link_audio():
+    """
+    Testing that link_audio links the proper items together. This is
+    done by comparing each item in the returned list to the list that
+    should be returned.
+    """
+    test_cases = [
+        {
+            "scene": SAMPLE_PROJECT / "scene_1",
+            "want": [
+                (
+                    SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
+                    SAMPLE_PROJECT / "scene_1/audio/read_1.mp3"
+                ),
+                (
+                    SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
+                    SAMPLE_PROJECT / "scene_1/audio/read_2.mp3"
+                )
+            ]
+        },
+        {
+            "scene": SAMPLE_PROJECT / "scene_3",
+            "want": [
+                (
+                    SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
+                    None
+                )
+            ]
+        }
+    ]
+
+    for test in test_cases:
+        for item in render.link_audio(test["scene"]):
+            assert item in test["want"]
