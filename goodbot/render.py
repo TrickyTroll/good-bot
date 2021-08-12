@@ -431,24 +431,19 @@ def sort_videos(project_path: Path) -> List[Path]:
 
     # Sorting scenes
     scene_amount: int = 0
-    all_scenes: List[Path] = []
 
     for directory in project_path.iterdir():
         if "scene_" in directory.name:
             scene_amount += 1
 
-    for scene_index in range(scene_amount):
-        for directory in project_path.iterdir():
-            if "scene_" in directory.name:
-                try:
-                    scene_id: int = int(directory.stem.split("_")[1])
-                except ValueError:
-                    continue
-                if scene_index + 1 == scene_id:
-                    # All scenes will be in order
-                    all_scenes.append(directory)
+    scene_dict: Dict[int, Path] = {}
 
-    all_videos: List[Path] = []
+    for directory in project_path.iterdir():
+        if "scene_" in directory.name:
+            scene_id: int = int(directory.stem.split("_")[1])
+            scene_dict[scene_id] = directory
+
+    all_scenes: List[Path] = [item[1] for item in sorted(scene_dict.items())]
 
     # Sorting per scene.
     for scene in all_scenes:
@@ -476,6 +471,7 @@ def sort_videos(project_path: Path) -> List[Path]:
 
                         all_videos.append(video.absolute())
 
+    all_videos: List[Path] = []
     return all_videos
 
 
