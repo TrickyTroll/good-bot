@@ -517,7 +517,7 @@ def render_final(project_path: Path) -> Path:
             "-safe",
             "0",
             "-i",
-            f"{instructions_file}",
+            f"{instructions_file.resolve()}",
             "-c",
             "copy",
             f"{output_path}",
