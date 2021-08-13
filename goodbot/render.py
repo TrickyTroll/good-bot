@@ -453,7 +453,7 @@ def sort_videos(project_path: Path) -> List[Path]:
 
         for video in videos_path.iterdir():
             if "commands_" in video.name:
-                video_id: int = int(directory.stem.split("_")[1])
+                video_id: int = int(video.stem.split("_")[1])
                 videos_dict[video_id] = video
 
         all_videos = all_videos + [item[1] for item in sorted(videos_dict.items())]
