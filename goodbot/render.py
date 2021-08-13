@@ -19,7 +19,7 @@ import json
 import tempfile
 import subprocess
 from shutil import which
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict
 
 Path = pathlib.Path
 
@@ -170,7 +170,10 @@ def corresponding_audio(gif_path: Path) -> Tuple[Path, Union[Path, None]]:
     # The file name is formatted like:
     # file_[id].gif
     identifier: str = gif_path.stem.split("_")[1]
-    # This function assumes an audio path exists.
+
+    if not audio_path.exists():
+        return (gif_path, None)
+
     for audio_file in audio_path.iterdir():
 
         if identifier in audio_file.name:
@@ -373,9 +376,9 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     # Removing older gif (the one with too many frames.)
     os.remove(gif_and_audio[0])
     # Adding padding
-    padded_path: Path = add_video_padding(output_path)
+    # padded_path: Path = add_video_padding(output_path)
 
-    return padded_path
+    return output_path
 
 
 def render_all(project_path: Path) -> List[Path]:
@@ -428,50 +431,32 @@ def sort_videos(project_path: Path) -> List[Path]:
 
     # Sorting scenes
     scene_amount: int = 0
-    all_scenes: List[Path] = []
+
+    scene_dict: Dict[int, Path] = {}
 
     for directory in project_path.iterdir():
         if "scene_" in directory.name:
-            scene_amount += 1
+            scene_id: int = int(directory.stem.split("_")[1])
+            scene_dict[scene_id] = directory
 
-    for scene_index in range(scene_amount):
-        for directory in project_path.iterdir():
-            if "scene_" in directory.name:
-                try:
-                    scene_id: int = int(directory.stem.split("_")[1])
-                except ValueError:
-                    continue
-                if scene_index + 1 == scene_id:
-                    # All scenes will be in order
-                    all_scenes.append(directory)
-
-    all_videos: List[Path] = []
+    all_scenes: List[Path] = [item[1] for item in sorted(scene_dict.items())]
 
     # Sorting per scene.
+    all_videos: List[Path] = []
+
     for scene in all_scenes:
 
         videos_path: Path = scene / Path("videos")
         videos_amount: int = 0
 
-        for file in videos_path.iterdir():
-            if file.suffix == ".mp4":
-                videos_amount += 1
+        videos_dict: Dict[int, Path] = {}
 
-        for video_index in range(videos_amount):
+        for video in videos_path.iterdir():
+            if "commands_" in video.name:
+                video_id: int = int(video.stem.split("_")[1])
+                videos_dict[video_id] = video
 
-            for video in videos_path.iterdir():
-
-                # Using padded video for final product.
-                if "padded_" in video.name:
-
-                    try:
-                        video_id: int = int(video.stem.split("_")[1])
-                    except ValueError:
-                        continue
-
-                    if video_index + 1 == video_id:
-
-                        all_videos.append(video.absolute())
+        all_videos = all_videos + [item[1] for item in sorted(videos_dict.items())]
 
     return all_videos
 
@@ -488,7 +473,7 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
             where the `sort_videos()` function will look
             for videos.
 
-    Returns:
+
         Path: The path towards the newly created `.txt` file.
     """
     file_path: Path = project_path / Path("instructions.txt")
@@ -532,7 +517,7 @@ def render_final(project_path: Path) -> Path:
             "-safe",
             "0",
             "-i",
-            f"{instructions_file}",
+            f"{instructions_file.resolve()}",
             "-c",
             "copy",
             f"{output_path}",
