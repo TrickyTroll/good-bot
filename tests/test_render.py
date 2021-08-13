@@ -267,7 +267,7 @@ def test_sort_videos():
                 else:
                     vid_counter += 1
 
-def test_write_ffmpeg_insntructions():
+def test_write_ffmpeg_instructions():
     """
     Making sure that write_ffmpeg_instructions writes every item in
     the list created by sort_videos and that the paths in the file
@@ -288,7 +288,21 @@ def test_write_ffmpeg_insntructions():
         instructions = render.write_ffmpeg_instructions(Path(temp))
         with open(instructions, "r") as stream:
             paths = stream.readlines()
+        breakpoint()
         for index, path in enumerate(paths):
             path = trim_path(path)
             assert sorted_vids[index] == Path(temp) / Path(path)
             assert Path(path).exists()
+
+def test_render_final():
+    """
+    This test could be improved.
+
+    Testing that render_final really produces a final video at the
+    right location.
+    """
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree(SAMPLE_PROJECT, temp)
+        breakpoint()
+        render.render_final(Path(temp))
+        assert (temp / "final/final.mp4").exists()
