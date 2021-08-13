@@ -173,3 +173,6 @@ notes/
 
 # Scripts
 fill-dirs.py
+
+# Git patches
+*.patch
