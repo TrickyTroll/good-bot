@@ -376,9 +376,9 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
     # Removing older gif (the one with too many frames.)
     os.remove(gif_and_audio[0])
     # Adding padding
-    padded_path: Path = add_video_padding(output_path)
+    # padded_path: Path = add_video_padding(output_path)
 
-    return padded_path
+    return output_path
 
 
 def render_all(project_path: Path) -> List[Path]:
