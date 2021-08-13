@@ -288,7 +288,6 @@ def test_write_ffmpeg_instructions():
         instructions = render.write_ffmpeg_instructions(Path(temp))
         with open(instructions, "r") as stream:
             paths = stream.readlines()
-        breakpoint()
         for index, path in enumerate(paths):
             path = trim_path(path)
             assert sorted_vids[index] == Path(temp) / Path(path)
@@ -303,6 +302,6 @@ def test_render_final():
     """
     with tempfile.TemporaryDirectory() as temp:
         copy_tree(SAMPLE_PROJECT, temp)
-        breakpoint()
+        render.render_all(Path(temp))
         render.render_final(Path(temp))
-        assert (temp / "final/final.mp4").exists()
+        assert (Path(temp) / "final/final.mp4").exists()
