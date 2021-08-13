@@ -432,10 +432,6 @@ def sort_videos(project_path: Path) -> List[Path]:
     # Sorting scenes
     scene_amount: int = 0
 
-    for directory in project_path.iterdir():
-        if "scene_" in directory.name:
-            scene_amount += 1
-
     scene_dict: Dict[int, Path] = {}
 
     for directory in project_path.iterdir():
@@ -446,32 +442,22 @@ def sort_videos(project_path: Path) -> List[Path]:
     all_scenes: List[Path] = [item[1] for item in sorted(scene_dict.items())]
 
     # Sorting per scene.
+    all_videos: List[Path] = []
+
     for scene in all_scenes:
 
         videos_path: Path = scene / Path("videos")
         videos_amount: int = 0
 
-        for file in videos_path.iterdir():
-            if file.suffix == ".mp4":
-                videos_amount += 1
+        videos_dict: Dict[int, Path] = {}
 
-        for video_index in range(videos_amount):
+        for video in videos_path.iterdir():
+            if "commands_" in video.name:
+                video_id: int = int(directory.stem.split("_")[1])
+                videos_dict[video_id] = video
 
-            for video in videos_path.iterdir():
+        all_videos = all_videos + [item[1] for item in sorted(videos_dict.items())]
 
-                # Using padded video for final product.
-                if "padded_" in video.name:
-
-                    try:
-                        video_id: int = int(video.stem.split("_")[1])
-                    except ValueError:
-                        continue
-
-                    if video_index + 1 == video_id:
-
-                        all_videos.append(video.absolute())
-
-    all_videos: List[Path] = []
     return all_videos
 
 
@@ -487,7 +473,7 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
             where the `sort_videos()` function will look
             for videos.
 
-    Returns:
+
         Path: The path towards the newly created `.txt` file.
     """
     file_path: Path = project_path / Path("instructions.txt")
