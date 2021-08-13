@@ -266,3 +266,29 @@ def test_sort_videos():
                     scene_counter += 1
                 else:
                     vid_counter += 1
+
+def test_write_ffmpeg_insntructions():
+    """
+    Making sure that write_ffmpeg_instructions writes every item in
+    the list created by sort_videos and that the paths in the file
+    do exist.
+    """
+    def trim_path(path):
+        # The line in the file that contains the path has a format
+        # similar to this:
+        # file '[PATH]'\n
+        # To extract the path, we can split on " " to get only the
+        # "'[PATH]'\n" part and then remove the "'" and "\n" chars.
+        return path.split(" ")[1].rstrip()[1:-1]
+
+    with tempfile.TemporaryDirectory() as temp:
+        copy_tree(SAMPLE_PROJECT, temp)
+        recorded = render.render_all(Path(temp))
+        sorted_vids = render.sort_videos(Path(temp))
+        instructions = render.write_ffmpeg_instructions(Path(temp))
+        with open(instructions, "r") as stream:
+            paths = stream.readlines()
+        for index, path in enumerate(paths):
+            path = trim_path(path)
+            assert sorted_vids[index] == Path(temp) / Path(path)
+            assert Path(path).exists()
