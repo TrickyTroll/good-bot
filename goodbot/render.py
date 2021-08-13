@@ -19,7 +19,7 @@ import json
 import tempfile
 import subprocess
 from shutil import which
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Dict
 
 Path = pathlib.Path
 

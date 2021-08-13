@@ -116,6 +116,7 @@ def test_fetch_project_asciicasts_error():
     with pytest.raises(NotADirectoryError):
         render.fetch_project_asciicasts(wrong_type)
 
+
 def test_corresponding_audio():
     """
     Making sure that corresponding audio returns the correct
@@ -126,27 +127,25 @@ def test_corresponding_audio():
             "gif": SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
             "want": (
                 SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
-                SAMPLE_PROJECT / "scene_1/audio/read_1.mp3"
-            )
+                SAMPLE_PROJECT / "scene_1/audio/read_1.mp3",
+            ),
         },
         {
             "gif": SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
             "want": (
                 SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
-                SAMPLE_PROJECT / "scene_1/audio/read_2.mp3"
-            )
+                SAMPLE_PROJECT / "scene_1/audio/read_2.mp3",
+            ),
         },
         {
             "gif": SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
-            "want": (
-                SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
-                None
-            )
-        }
+            "want": (SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif", None),
+        },
     ]
 
     for test in test_cases:
         assert render.corresponding_audio(test["gif"]) == test["want"]
+
 
 def test_link_audio():
     """
@@ -160,28 +159,24 @@ def test_link_audio():
             "want": [
                 (
                     SAMPLE_PROJECT / "scene_1/gifs/commands_1.gif",
-                    SAMPLE_PROJECT / "scene_1/audio/read_1.mp3"
+                    SAMPLE_PROJECT / "scene_1/audio/read_1.mp3",
                 ),
                 (
                     SAMPLE_PROJECT / "scene_1/gifs/commands_2.gif",
-                    SAMPLE_PROJECT / "scene_1/audio/read_2.mp3"
-                )
-            ]
+                    SAMPLE_PROJECT / "scene_1/audio/read_2.mp3",
+                ),
+            ],
         },
         {
             "scene": SAMPLE_PROJECT / "scene_3",
-            "want": [
-                (
-                    SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif",
-                    None
-                )
-            ]
-        }
+            "want": [(SAMPLE_PROJECT / "scene_3/gifs/commands_1.gif", None)],
+        },
     ]
 
     for test in test_cases:
         for item in render.link_audio(test["scene"]):
             assert item in test["want"]
+
 
 def test_remove_first_frame():
     """
@@ -197,16 +192,21 @@ def test_remove_first_frame():
     By splitting this line on " " characters and getting the number
     next-to-last in the list.
     """
+
     def get_frames_amount(gif_path):
-        gifsicle_output = subprocess.run(['gifsicle', '-I', str(gif_path)], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        gifsicle_output = subprocess.run(
+            ["gifsicle", "-I", str(gif_path)], stdout=subprocess.PIPE
+        ).stdout.decode("utf-8")
         first_line = gifsicle_output.split("\n")[0]
         return first_line.split(" ")[-2]
+
     gif_sample_path = SAMPLE_PROJECT / "test-rm-frame/commands_1.gif"
     want = int(get_frames_amount(gif_sample_path)) - 1
     shorter_gif = render.remove_first_frame(gif_sample_path)
     got = int(get_frames_amount(shorter_gif))
     os.remove(shorter_gif)
     assert want == got
+
 
 def test_render_function():
     """
@@ -219,6 +219,7 @@ def test_render_function():
         created = video.exists()
         os.remove(video)
         assert created
+
 
 def test_render_all():
     """
@@ -238,6 +239,7 @@ def test_render_all():
         for recording in recorded:
             assert recording.exists()
 
+
 def test_sort_videos():
     """
     This test could be improved.
@@ -249,8 +251,10 @@ def test_sort_videos():
 
     def get_scene_id(video):
         return int(video.parent.parent.name.split("_")[1].split(".")[0])
+
     def get_video_id(video):
         return int(video.name.split("_")[1].split(".")[0])
+
     with tempfile.TemporaryDirectory() as temp:
         copy_tree(SAMPLE_PROJECT, temp)
         temp = Path(temp)
@@ -272,12 +276,14 @@ def test_sort_videos():
         for path in recorded:
             assert path in sorted_vids
 
+
 def test_write_ffmpeg_instructions():
     """
     Making sure that write_ffmpeg_instructions writes every item in
     the list created by sort_videos and that the paths in the file
     do exist.
     """
+
     def trim_path(path):
         # The line in the file that contains the path has a format
         # similar to this:
@@ -297,6 +303,7 @@ def test_write_ffmpeg_instructions():
             path = trim_path(path)
             assert sorted_vids[index] == Path(temp) / Path(path)
             assert Path(path).exists()
+
 
 def test_render_final():
     """
