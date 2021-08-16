@@ -138,6 +138,6 @@ def record_audio(
             with open(write_path, "wb") as out:
                 out.write(response.audio_content)
             all_audio_recordings.append(save_path)
-            console.log(f"Audio contents in file {script} has been recorded.")
+            console.log(f"Audio contents in file {script} have been recorded.")
 
     return all_audio_recordings

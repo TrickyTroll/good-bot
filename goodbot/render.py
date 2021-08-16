@@ -18,6 +18,7 @@ import pathlib
 import json
 import tempfile
 import subprocess
+from rich.console import Console
 from shutil import which
 from typing import List, Tuple, Union, Dict
 
@@ -289,7 +290,7 @@ def add_video_padding(video_path: Path) -> Path:
     return output_path
 
 
-def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
+def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool = False) -> Path:
     """Renders and mp4 file using `ffmpeg`.
 
     An mp4 file is created at the same location and under the same
@@ -336,6 +337,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                     "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                     f"{temp_video_path}",
                 ],
+                capture_output=not debug,
                 check=True,
             )
             # Merge the audio too
@@ -352,6 +354,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                     "aac",
                     f"{output_path}",
                 ],
+                capture_output=not debug,
                 check=True,
             )
     else:
@@ -370,6 +373,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                 f"{output_path}",
             ],
+            capture_output=not debug,
             check=True,
         )
 
@@ -395,16 +399,20 @@ def render_all(project_path: Path) -> List[Path]:
     """
     scenes: List[Path] = []
     all_renders: List[Path] = []
+    console: Console = Console()
     # Making sure that we are only adding scenes. Other
     # files could have been added by the user.
     for directory in project_path.iterdir():
         if "scene_" in directory.name:
             scenes.append(directory)
 
-    for scene in scenes:
-        scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
-        for match in scene_matches:
-            all_renders.append(render(match))
+    with console.status("[bold green]Merging audio...") as status:
+        while scenes:
+            scene = scenes.pop(0)
+            scene_matches: List[Tuple[Path, Union[Path, None]]] = link_audio(scene)
+            for match in scene_matches:
+                all_renders.append(render(match))
+            console.log(f"Merged audio for scene {scene}")
 
     return all_renders
 
@@ -486,7 +494,7 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
     return file_path
 
 
-def render_final(project_path: Path) -> Path:
+def render_final(project_path: Path, debug: bool = False) -> Path:
     """Renders the final video using `ffmpeg`.
 
     This function uses the `write_ffmpeg_instructions()` function,
@@ -502,27 +510,40 @@ def render_final(project_path: Path) -> Path:
         Path: The path towards the final video.
     """
     final_path: Path = project_path / Path("final/")
+    console: Console = Console()
+    completed: bool = False
 
     if not final_path.exists():
         os.mkdir(final_path)
 
-    instructions_file: Path = write_ffmpeg_instructions(project_path)
-    output_path: Path = final_path / Path("final.mp4")
+    with console.status("[bold green]Rendering the final video...") as status:
 
-    subprocess.run(
-        [
-            "ffmpeg",
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
-            f"{instructions_file.resolve()}",
-            "-c",
-            "copy",
-            f"{output_path}",
-        ],
-        check=True,
-    )
+        while not completed:
+
+            instructions_file: Path = write_ffmpeg_instructions(project_path)
+            output_path: Path = final_path / Path("final.mp4")
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-safe",
+                    "0",
+                    "-f",
+                    "concat",
+                    "-segment_time_metadata",
+                    "1",
+                    "-i",
+                    f"{instructions_file.resolve()}",
+                    "-vf",
+                    "select=concatdec_select",
+                    "-af",
+                    "aselect=concatdec_select,aresample=async=1",
+                    f"{output_path}",
+                ],
+                capture_output=not debug,
+                check=True,
+            )
+
+            console.log(f"Render complete!")
+            completed = True
 
     return output_path
