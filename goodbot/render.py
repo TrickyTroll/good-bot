@@ -508,21 +508,21 @@ def render_final(project_path: Path) -> Path:
 
     instructions_file: Path = write_ffmpeg_instructions(project_path)
     output_path: Path = final_path / Path("final.mp4")
-
-    subprocess.run(
-        [
-            "ffmpeg",
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
+    subprocess.run([
+            'ffmpeg',
+            '-safe',
+            '0',
+            '-f',
+            'concat',
+            '-segment_time_metadata',
+            '1',
+            '-i',
             f"{instructions_file.resolve()}",
-            "-c",
-            "copy",
-            f"{output_path}",
-        ],
-        check=True,
-    )
+            '-vf',
+            'select=concatdec_select',
+            '-af',
+            'aselect=concatdec_select,aresample=async=1',
+            f"{output_path}"
+    ], check=True)
 
     return output_path
