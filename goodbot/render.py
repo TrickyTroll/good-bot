@@ -290,7 +290,7 @@ def add_video_padding(video_path: Path) -> Path:
     return output_path
 
 
-def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool=False) -> Path:
+def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool = False) -> Path:
     """Renders and mp4 file using `ffmpeg`.
 
     An mp4 file is created at the same location and under the same
@@ -337,7 +337,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool=False) -> 
                     "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                     f"{temp_video_path}",
                 ],
-                capture_output = not debug,
+                capture_output=not debug,
                 check=True,
             )
             # Merge the audio too
@@ -354,7 +354,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool=False) -> 
                     "aac",
                     f"{output_path}",
                 ],
-                capture_output = not debug,
+                capture_output=not debug,
                 check=True,
             )
     else:
@@ -373,7 +373,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]], debug: bool=False) -> 
                 "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                 f"{output_path}",
             ],
-            capture_output = not debug,
+            capture_output=not debug,
             check=True,
         )
 
@@ -494,7 +494,7 @@ def write_ffmpeg_instructions(project_path: Path) -> Path:
     return file_path
 
 
-def render_final(project_path: Path, debug: bool=False) -> Path:
+def render_final(project_path: Path, debug: bool = False) -> Path:
     """Renders the final video using `ffmpeg`.
 
     This function uses the `write_ffmpeg_instructions()` function,
@@ -522,24 +522,26 @@ def render_final(project_path: Path, debug: bool=False) -> Path:
 
             instructions_file: Path = write_ffmpeg_instructions(project_path)
             output_path: Path = final_path / Path("final.mp4")
-            subprocess.run([
-                    'ffmpeg',
-                    '-safe',
-                    '0',
-                    '-f',
-                    'concat',
-                    '-segment_time_metadata',
-                    '1',
-                    '-i',
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-safe",
+                    "0",
+                    "-f",
+                    "concat",
+                    "-segment_time_metadata",
+                    "1",
+                    "-i",
                     f"{instructions_file.resolve()}",
-                    '-vf',
-                    'select=concatdec_select',
-                    '-af',
-                    'aselect=concatdec_select,aresample=async=1',
-                    f"{output_path}"
-            ],
-            capture_ouput = not debug,
-            check=True)
+                    "-vf",
+                    "select=concatdec_select",
+                    "-af",
+                    "aselect=concatdec_select,aresample=async=1",
+                    f"{output_path}",
+                ],
+                capture_ouput=not debug,
+                check=True,
+            )
 
             console.log(f"Render complete!")
             completed = True
