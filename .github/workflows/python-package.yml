@@ -30,8 +30,8 @@ jobs:
         python -m pip install flake8 pytest mypy black types-click types-PyYAML
         python -m pip install flit
         python -m pip install asciinema
-        apt install ffmpeg
-        apt install gifsicle
+        sudo apt install ffmpeg
+        sudo apt install gifsicle
         flit install
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
