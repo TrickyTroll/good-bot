@@ -336,6 +336,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                     "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                     f"{temp_video_path}",
                 ],
+                stdout=subprocess.DEVNULL,
                 check=True,
             )
             # Merge the audio too
@@ -352,6 +353,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                     "aac",
                     f"{output_path}",
                 ],
+                stdout=subprocess.DEVNULL,
                 check=True,
             )
     else:
@@ -370,6 +372,7 @@ def render(gif_and_audio: Tuple[Path, Union[Path, None]]) -> Path:
                 "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                 f"{output_path}",
             ],
+            stdout=subprocess.DEVNULL,
             check=True,
         )
 
@@ -523,6 +526,8 @@ def render_final(project_path: Path) -> Path:
             '-af',
             'aselect=concatdec_select,aresample=async=1',
             f"{output_path}"
-    ], check=True)
+    ],
+    stdout=subprocess.DEVNULL,
+    check=True)
 
     return output_path
