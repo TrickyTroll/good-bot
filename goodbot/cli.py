@@ -88,9 +88,10 @@ def setup(config: str, project_path: str) -> None:
 
 @click.command()
 @click.argument("projectpath", type=str)
+@click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
 @click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
-def record(projectpath: str, language: str, language_name: str) -> None:
+def record(projectpath: str, language: str, language_name: str, debug: bool) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
@@ -109,13 +110,14 @@ def record(projectpath: str, language: str, language_name: str) -> None:
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_commands(PROJECT_ROOT / dir_path)
+    recording.record_commands(PROJECT_ROOT / dir_path, debug)
     audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
 
 
 @click.command()
+@click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.argument("projectpath", type=str)
-def render_video(projectpath: str) -> None:
+def render_video(projectpath: str, debug: bool) -> None:
     """
     Renders a project using pre-recorded gifs and mp3 files.
 
@@ -126,7 +128,7 @@ def render_video(projectpath: str) -> None:
 
     rec_paths = render.render_all(PROJECT_ROOT / project_path)
 
-    final_project = render.render_final(PROJECT_ROOT / project_path)
+    final_project = render.render_final(PROJECT_ROOT / project_path, debug)
 
     click.echo(
         f"Your video has been saved under {project_path / final_project.parent / final_project.name}."

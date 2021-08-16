@@ -187,7 +187,7 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
     return all_runner_instructions
 
 
-def record_commands(project: Path) -> List[Path]:
+def record_commands(project: Path, debug: bool=False) -> List[Path]:
     """Records a gif for every video in the commands directory of the
     specified project.
 
@@ -215,7 +215,7 @@ def record_commands(project: Path) -> List[Path]:
 
             subprocess.run(
                 ["asciinema", "rec", "-c", f"runner {command}", str(save_path)],
-                stdout=subprocess.DEVNULL,
+                capture_output=not debug
             )
 
             console.log(f"Video contents in file {command} have been recorded.")
