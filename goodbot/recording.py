@@ -218,7 +218,7 @@ def record_commands(project: Path) -> List[Path]:
                 stdout=subprocess.DEVNULL,
             )
 
-            console.log(f"Video contents in file {command} has been recorded.")
+            console.log(f"Video contents in file {command} have been recorded.")
             all_recordings.append(save_path)
 
     return all_recordings
