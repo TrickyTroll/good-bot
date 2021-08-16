@@ -510,29 +510,38 @@ def render_final(project_path: Path) -> Path:
         Path: The path towards the final video.
     """
     final_path: Path = project_path / Path("final/")
+    console: Console = Console()
+    completed: bool = False
 
     if not final_path.exists():
         os.mkdir(final_path)
 
-    instructions_file: Path = write_ffmpeg_instructions(project_path)
-    output_path: Path = final_path / Path("final.mp4")
-    subprocess.run([
-            'ffmpeg',
-            '-safe',
-            '0',
-            '-f',
-            'concat',
-            '-segment_time_metadata',
-            '1',
-            '-i',
-            f"{instructions_file.resolve()}",
-            '-vf',
-            'select=concatdec_select',
-            '-af',
-            'aselect=concatdec_select,aresample=async=1',
-            f"{output_path}"
-    ],
-    stdout=subprocess.DEVNULL,
-    check=True)
+    with console.status("[bold green]Rendering the final video...") as status:
+
+        while not completed:
+
+            instructions_file: Path = write_ffmpeg_instructions(project_path)
+            output_path: Path = final_path / Path("final.mp4")
+            subprocess.run([
+                    'ffmpeg',
+                    '-safe',
+                    '0',
+                    '-f',
+                    'concat',
+                    '-segment_time_metadata',
+                    '1',
+                    '-i',
+                    f"{instructions_file.resolve()}",
+                    '-vf',
+                    'select=concatdec_select',
+                    '-af',
+                    'aselect=concatdec_select,aresample=async=1',
+                    f"{output_path}"
+            ],
+            stdout=subprocess.DEVNULL,
+            check=True)
+
+            console.log(f"Render complete!")
+            completed = True
 
     return output_path
