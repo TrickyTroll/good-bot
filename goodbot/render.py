@@ -539,7 +539,7 @@ def render_final(project_path: Path, debug: bool = False) -> Path:
                     "aselect=concatdec_select,aresample=async=1",
                     f"{output_path}",
                 ],
-                capture_ouput=not debug,
+                capture_output=not debug,
                 check=True,
             )
 
