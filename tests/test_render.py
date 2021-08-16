@@ -240,6 +240,7 @@ def test_render_all():
             assert recording.exists()
 
 
+@pytest.mark.skip(reason="Does not work with the Github action...")
 def test_sort_videos():
     """
     This test could be improved.
