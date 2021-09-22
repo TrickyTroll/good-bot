@@ -13,10 +13,15 @@ import shutil
 import click
 import yaml
 from rich.console import Console
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Tuple, Any
 
 Path = pathlib.Path
 
+ALLOWED_CONTENT_TYPES: Tupe(str) = (
+        "edit",
+        "read",
+        "commands"
+    )
 
 ########################################################################
 #                               YAML parsing                           #
@@ -297,6 +302,34 @@ def write_commands_instructions(
     with open(file_path, "w") as stream:
         stream.write(to_write)
 
+    return file_path
+    
+def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: str, id: int) -> Path:
+    """
+    write_yaml_instructions writes instructions for a certaincommand in the
+    YAML format.
+    
+    Commands should be passed as dictionnaries, where keys are instruction
+    types (command, expect, read, ...) and values are the arguments for those
+    commands.
+    
+    Args:
+        instructions (dict): The instruction dictionnary that will be written in
+        a YAML file.
+        scene_path (Path): The path towards the scene where the instructions come
+        from. Used to write the file to the proper location.
+        content_type (str): Th
+        id (int): 
+    """
+    if 
+    content_type_path: Path = scene_path / Path(content_type)
+    editor_path.mkdir(exist_ok = True)
+    file_path: Path = editor_path / Path (f"{content_type}_{index + 1}").with_suffix("yaml")
+    to_write: str = yaml.safe_dump(instructions)
+
+    with open(file_path, "w") as stream:
+        stream.write(to_write)
+        
     return file_path
 
 
