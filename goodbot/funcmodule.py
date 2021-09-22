@@ -247,7 +247,7 @@ def create_dirs(
 
 
 def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
-    """Writes a new `read` instructions file.
+    """*Deprecated, use `write_yaml_instructions` instead.*
 
     The instructions come from the `read` key in the user's `yaml`
     configuration file. Files created by this function are what is
@@ -278,7 +278,9 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 def write_commands_instructions(
     commands_instructions: Dict[str, List[str]], scene_path: Path, index: int
 ) -> Path:
-    """Writes a command instruction `yaml` file.
+    """ *Deprecated, use `write_yaml_instructions` instead.*
+    
+    Writes a command instruction `yaml` file.
 
     These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner)
     takes as input to type commands and expect stuff.
@@ -303,7 +305,7 @@ def write_commands_instructions(
         stream.write(to_write)
 
     return file_path
-    
+
 def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: str, id: int) -> Path:
     """
     write_yaml_instructions writes instructions for a certaincommand in the
@@ -318,7 +320,8 @@ def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: 
         a YAML file.
         scene_path (Path): The path towards the scene where the instructions come
         from. Used to write the file to the proper location.
-        content_type (str): Th
+        content_type (str): The type of command targetted by the instructions.
+        Allowed commands are contained in the `ALLOWED_CONTENT_TYPES` variable.
         id (int): 
     """
     if 
@@ -360,7 +363,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 
             if "read" in scene_item.keys():
                 to_read: str = scene_item["read"]
-                write_read_instructions(to_read, scene_path, index)
+                write_yaml_instructions(to_read, scene_path, index)
 
             if "commands" in scene_item.keys():
                 try:
@@ -368,7 +371,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                         "commands": scene_item["commands"],
                         "expect": scene_item["expect"],
                     }
-                    write_commands_instructions(commands, scene_path, index)
+                    write_yaml_instructions(commands, scene_path, index)
                 except KeyError as error:
                     print(f"Missing key: {error.args[0]}")
                     print("Scene items:")
