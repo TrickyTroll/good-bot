@@ -149,15 +149,16 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
     dirs_list: List[dict] = []
 
-    for key, value in all_confs.items():
+    for _, contents in all_confs.items(): # Keys are scene numbers, values is the content
 
-        # Those dirs are created no matter the content
+        # Those dirs are always created
         to_create: List[str] = ["asciicasts", "embeds", "gifs", "videos"]
 
-        for key_2, value_2 in value.items():
-            if value_2:  # There are items in the list.
-                to_create.append(key_2)
+        for content_type, instructions in contents.items():
+            if instructions:  # There are items in the list.
+                to_create.append(content_type)
 
+        # Read has been added in the previous block
         if "read" in to_create:
             to_create.append("audio")  # MP3 files
 
@@ -341,3 +342,9 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                     print(scene_item)
 
     return project_path
+
+if __name__ == "__main__":
+    conf_path = Path("./examples/basics/config.yaml")
+    parsed_config = config_parser(conf_path)
+    info = config_info(parsed_config)
+    print(info)
