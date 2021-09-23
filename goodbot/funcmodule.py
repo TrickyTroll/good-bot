@@ -322,12 +322,18 @@ def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: 
         from. Used to write the file to the proper location.
         content_type (str): The type of command targetted by the instructions.
         Allowed commands are contained in the `ALLOWED_CONTENT_TYPES` variable.
-        id (int): 
+        id (int): The id of the file. Starts at 0 and is incremented for each
+        element in a scene. It is included in the name of the file so that each
+        component can be recorded in the correct order.
+    
+    Returns:
+        Path: The path towards the newly created  YAML file.
     """
-    if 
+    if content_type not in ALLOWED_CONTENT_TYPES:
+        raise ValueError(f"The type {content_type} is not implemented.")
     content_type_path: Path = scene_path / Path(content_type)
-    editor_path.mkdir(exist_ok = True)
-    file_path: Path = editor_path / Path (f"{content_type}_{index + 1}").with_suffix("yaml")
+    content_type_path.mkdir(exist_ok = True)
+    file_path: Path = content_type_path / Path (f"{content_type}_{id + 1}").with_suffix("yaml")
     to_write: str = yaml.safe_dump(instructions)
 
     with open(file_path, "w") as stream:
