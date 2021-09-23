@@ -8,7 +8,6 @@ interface.
 import os
 import sys
 import pathlib
-import subprocess
 import shutil
 import click
 import yaml
