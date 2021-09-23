@@ -12,11 +12,11 @@ import shutil
 import click
 import yaml
 from rich.console import Console
-from typing import List, Dict, Union, Tuple, Any
+from typing import List, Dict, Union, Any
 
 Path = pathlib.Path
 
-ALLOWED_CONTENT_TYPES: Tuple(str) = (
+ALLOWED_CONTENT_TYPES: tuple = (
         "edit",
         "read",
         "commands"
