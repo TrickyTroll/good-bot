@@ -17,7 +17,7 @@ from typing import List, Dict, Union, Tuple, Any
 
 Path = pathlib.Path
 
-ALLOWED_CONTENT_TYPES: Tupe(str) = (
+ALLOWED_CONTENT_TYPES: Tuple(str) = (
         "edit",
         "read",
         "commands"
@@ -154,7 +154,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
     dirs_list: List[dict] = []
 
-    for _, contents in all_confs.items(): # Keys are scene numbers, values is the content
+    for scene_number, contents in all_confs.items(): # Keys are scene numbers, values is the content
 
         # Those dirs are always created
         to_create: List[str] = ["asciicasts", "embeds", "gifs", "videos"]
@@ -167,7 +167,7 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
         if "read" in to_create:
             to_create.append("audio")  # MP3 files
 
-        dirs_list.append({f"scene_{key}": to_create})
+        dirs_list.append({f"scene_{scene_number}": to_create})
 
     return dirs_list
 
@@ -369,7 +369,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 
             if "read" in scene_item.keys():
                 to_read: str = scene_item["read"]
-                write_yaml_instructions(to_read, scene_path, index)
+                write_yaml_instructions(to_read, scene_path, "read", index)
 
             if "commands" in scene_item.keys():
                 try:
@@ -377,11 +377,13 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                         "commands": scene_item["commands"],
                         "expect": scene_item["expect"],
                     }
-                    write_yaml_instructions(commands, scene_path, index)
+                    write_yaml_instructions(commands, scene_path, "commands", index)
                 except KeyError as error:
                     print(f"Missing key: {error.args[0]}")
                     print("Scene items:")
                     print(scene_item)
+                
+            # Add editor feature here.
 
     return project_path
 
