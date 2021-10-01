@@ -366,23 +366,31 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 
         for index, scene_item in enumerate(scene_contents):
 
-            if "read" in scene_item.keys():
+            scene_item_keys: List[str] = scene_item.keys()
+
+            # Reading text
+            if "read" in scene_item_keys:
                 to_read: str = scene_item["read"]
                 write_yaml_instructions(to_read, scene_path, "read", index)
 
-            if "commands" in scene_item.keys():
+            # Typing commands
+            if "commands" in scene_item_keys:
                 try:
                     commands: Dict[str, List[str]] = {
                         "commands": scene_item["commands"],
                         "expect": scene_item["expect"],
                     }
                     write_yaml_instructions(commands, scene_path, "commands", index)
+
                 except KeyError as error:
                     print(f"Missing key: {error.args[0]}")
                     print("Scene items:")
                     print(scene_item)
-                
-            # Add editor feature here.
+
+            # Editing text files
+            if "edit" in scene_item_keys:
+                to_edit: List[Dict[str:any]] = scene_item["edit"]
+                write_yaml_instructions(to_edit, scene_path, "edit", index)
 
     return project_path
 
