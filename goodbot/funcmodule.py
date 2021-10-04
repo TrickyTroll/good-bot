@@ -95,7 +95,7 @@ def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, lis
             "commands": [],
             "expect": [],
             "scenes": [],
-            "editor": [],
+            "edit": [],
             "slides": [],
             "read": [],
         }
@@ -114,8 +114,8 @@ def config_info(parsed_config: Dict[int, List[dict]]) -> Dict[int, Dict[str, lis
                     conf_info["read"].append(value_2)
                 elif key_2 == "slides":
                     conf_info["slides"].append(value_2)
-                elif key_2 == "editor":
-                    conf_info["editor"].append(value_2)
+                elif key_2 == "edit":
+                    conf_info["edit"].append(value_2)
                 else:
                     click.echo(f'"{key_2}" is not a supported command.')
                     sys.exit()
