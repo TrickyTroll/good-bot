@@ -332,7 +332,7 @@ def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: 
         raise ValueError(f"The type {content_type} is not implemented.")
     content_type_path: Path = scene_path / Path(content_type)
     content_type_path.mkdir(exist_ok = True)
-    file_path: Path = content_type_path / Path (f"{content_type}_{id + 1}").with_suffix("yaml")
+    file_path: Path = content_type_path / Path (f"{content_type}_{id + 1}").with_suffix(".yaml")
     to_write: str = yaml.safe_dump(instructions)
 
     with open(file_path, "w") as stream:
