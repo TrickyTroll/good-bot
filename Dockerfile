@@ -37,6 +37,8 @@ RUN wget https://github.com/TrickyTroll/good-bot-runner/archive/refs/tags/v1.1.0
 	&& unzip v1.1.0.zip
 WORKDIR  /install/good-bot-runner-1.1.0
 RUN pip3 install .
+# Installing ezvi
+RUN pip3 install ezvi
 
 WORKDIR /app
 COPY . /app/
