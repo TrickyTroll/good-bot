@@ -170,7 +170,7 @@ class TestInfo(unittest.TestCase):
         ["commands", "expect", "scenes", "editor", "slides", "read"]
         ```
         """
-        all_keys = ["commands", "expect", "scenes", "editor", "slides", "read"]
+        all_keys = ["commands", "expect", "scenes", "edit", "slides", "read"]
 
         for item in self.VALUES:
             for key in item.keys():
