@@ -1,0 +1,22 @@
+1:
+    - commands:
+        - echo 'Welcome to this tutorial!'
+      expect:
+        - prompt
+      read: Hello, and welcome to this tutorial on using Good Bot runner.
+2:
+    - edit:
+        - write_line: "commands:"
+        - write_line: "- echo 'hello world'"
+        - write_line: "- ls"
+        - write_line: "expect:"
+        - write_line: "- prompt"
+        - write_line: "- prompt"
+        - write_file: "config.yaml"
+      read: So the first thing you're gonna want to do is write a configuration file.
+3:
+    - commands:
+        - runner config.yaml
+      expect:
+        - prompt
+      read: Then, simply use runner and pass the configuration file as an argument.
