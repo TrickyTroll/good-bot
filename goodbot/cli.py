@@ -4,7 +4,7 @@
 import pathlib
 import click
 import os
-from goodbot import funcmodule, render, audio, recording
+from goodbot import funcmodule, render, audio, recording, utils
 
 
 def in_docker() -> bool:
@@ -103,7 +103,7 @@ def record(projectpath: str, language: str, language_name: str, debug: bool) -> 
     dir_path = pathlib.Path(projectpath)
 
     click.echo(f"Using project : {projectpath}")
-    all_scenes = recording.list_scenes(PROJECT_ROOT / dir_path)
+    all_scenes = utils.list_scenes(PROJECT_ROOT / dir_path)
 
     click.echo(f"The project '{dir_path}' contains:")
 
