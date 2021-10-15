@@ -305,7 +305,7 @@ def write_commands_instructions(
 
     return file_path
 
-def write_yaml_instructions(instructions: dict, scene_path: Path, content_type: str, id: int) -> Path:
+def write_yaml_instructions(instructions: any, scene_path: Path, content_type: str, id: int) -> Path:
     """
     write_yaml_instructions writes instructions for a certaincommand in the
     YAML format.
@@ -389,7 +389,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 
             # Editing text files
             if "edit" in scene_item_keys:
-                to_edit: List[Dict[str:any]] = scene_item["edit"]
+                to_edit: List[dict] = scene_item["edit"]
                 write_yaml_instructions(to_edit, scene_path, "edit", index)
 
     return project_path
