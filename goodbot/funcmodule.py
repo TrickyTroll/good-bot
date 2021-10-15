@@ -12,7 +12,7 @@ import shutil
 import click
 import yaml
 from rich.console import Console
-from typing import List, Dict, Union, Any
+from typing import List, Dict, Union, Any, KeysView
 
 Path = pathlib.Path
 
@@ -305,7 +305,7 @@ def write_commands_instructions(
 
     return file_path
 
-def write_yaml_instructions(instructions: any, scene_path: Path, content_type: str, id: int) -> Path:
+def write_yaml_instructions(instructions: Any, scene_path: Path, content_type: str, id: int) -> Path:
     """
     write_yaml_instructions writes instructions for a certaincommand in the
     YAML format.
@@ -366,7 +366,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
 
         for index, scene_item in enumerate(scene_contents):
 
-            scene_item_keys: List[str] = scene_item.keys()
+            scene_item_keys: KeysView[Any] = scene_item.keys()
 
             # Reading text
             if "read" in scene_item_keys:
