@@ -9,6 +9,7 @@ import subprocess
 from rich.console import Console
 from pathlib import Path
 from typing import List, Dict, Union, Any
+from ezvi.funcmodule import check_config
 
 from goodbot import utils
 
