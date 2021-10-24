@@ -3,21 +3,23 @@
 recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
-import yaml
-import os
-import subprocess
-from rich.console import Console
 from pathlib import Path
-from typing import List, Dict, Union, Any
-from ezvi.funcmodule import check_config
+from typing import List, Union
 
 from goodbot import utils
 
 def is_editor_instructions(editor_script_path: Path) -> bool:
-    if editor_script_path in utils.ALLOWED_INSTRUCTION_SUFFIX:
+    """
+    is_editor_instructions v
+    """
+    if editor_script_path in utils.ALLOWED_INSTRUCTIONS_SUFFIX:
         # ezvi check here
         return
     return
+
+def fetch_scene_editor_instructions():
+    # TODO: Implement this function
+    pass
 
 def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Path]:
     """
@@ -37,10 +39,10 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
             project_path = Path(project_path)
         except Exception as err:
             raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
-    all_runner_instructions: List[Path] = []
+    all_editor_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_runner_instructions = all_runner_instructions + fetch_scene_runner_instructions(
+            all_editor_instructions = all_editor_instructions + fetch_scene_editor_instructions(
                 scene
             )
-    return all_runner_instructions
+    return all_editor_instructions
