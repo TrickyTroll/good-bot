@@ -91,8 +91,8 @@ def fetch_scene_runner_instructions(scene_path: Path) -> List[Path]:
     scene_runner_instructions: List[Path] = []
     for directory in scene_path.iterdir():
         if str(directory.name).lower() == "commands":
-            scene_runner_instructions = scene_runner_instructions + fetch_runner_instructions(
-                directory
+            scene_runner_instructions = (
+                scene_runner_instructions + fetch_runner_instructions(directory)
             )
     return scene_runner_instructions
 
@@ -114,14 +114,17 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
         try:
             project_path = Path(project_path)
         except Exception as err:
-            raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+            raise TypeError(
+                f"Could not convert the provided argument to a Path object:\n{err}"
+            )
     all_runner_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_runner_instructions = all_runner_instructions + fetch_scene_runner_instructions(
-                scene
+            all_runner_instructions = (
+                all_runner_instructions + fetch_scene_runner_instructions(scene)
             )
     return all_runner_instructions
+
 
 def record_commands(project: Path, debug: bool = False) -> List[Path]:
     """Records a gif for every video in the commands directory of the

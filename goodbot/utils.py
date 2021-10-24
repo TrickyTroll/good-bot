@@ -7,6 +7,7 @@ from typing import List
 
 ALLOWED_INSTRUCTIONS_SUFFIX = (".yaml", ".txt", "")
 
+
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.
 

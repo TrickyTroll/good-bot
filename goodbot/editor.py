@@ -29,7 +29,7 @@ def is_editor_instructions(editor_script_path: Path) -> bool:
         try:
             check_ezvi_config(editor_script_path)
 
-        except TypeError: # The file's format is probabaly invalid.
+        except TypeError:  # The file's format is probabaly invalid.
             return False
         except NotImplementedError:
             # The format is valid, but the user want's to use commands
@@ -37,6 +37,7 @@ def is_editor_instructions(editor_script_path: Path) -> bool:
             return False
 
     return True
+
 
 def fetch_scene_editor_instructions(scene_path: Path) -> List[Path]:
     """
@@ -84,11 +85,13 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
         try:
             project_path = Path(project_path)
         except Exception as err:
-            raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+            raise TypeError(
+                f"Could not convert the provided argument to a Path object:\n{err}"
+            )
     all_editor_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_editor_instructions = all_editor_instructions + fetch_scene_editor_instructions(
-                scene
+            all_editor_instructions = (
+                all_editor_instructions + fetch_scene_editor_instructions(scene)
             )
     return all_editor_instructions

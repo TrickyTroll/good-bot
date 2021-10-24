@@ -233,7 +233,15 @@ def remove_first_frame(gif_path: Path) -> Path:
     save_path: Path = gif_path.parent / Path(gif_path.stem + "_edited" + ".gif")
     # `unoptimize` option ensures no transparent background added.
     subprocess.run(
-        ["gifsicle", "--unoptimize", f"{gif_path}", "--delete", "#0", "-o", f"{save_path}"],
+        [
+            "gifsicle",
+            "--unoptimize",
+            f"{gif_path}",
+            "--delete",
+            "#0",
+            "-o",
+            f"{save_path}",
+        ],
         check=True,
     )
 

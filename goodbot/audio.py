@@ -48,8 +48,8 @@ def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
     scene_audio_instructions: List[Path] = []
     for directory in scene_path.iterdir():
         if str(directory.name).lower() == "read":
-            scene_audio_instructions = scene_audio_instructions + fetch_audio_instructions(
-                directory
+            scene_audio_instructions = (
+                scene_audio_instructions + fetch_audio_instructions(directory)
             )
     return scene_audio_instructions
 
@@ -70,11 +70,15 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
         try:
             project_path = Path(project_path)
         except Exception as err:
-            raise TypeError(f"Could not convert the provided argument to a Path object:\n{err}")
+            raise TypeError(
+                f"Could not convert the provided argument to a Path object:\n{err}"
+            )
     all_audio_instructions: List[Path] = []
     for scene in project_path.iterdir():
         if "scene_" in scene.name:
-            all_audio_instructions = all_audio_instructions + fetch_scene_audio_instructions(scene)
+            all_audio_instructions = (
+                all_audio_instructions + fetch_scene_audio_instructions(scene)
+            )
     return all_audio_instructions
 
 
@@ -120,10 +124,14 @@ def record_audio(
             synthesis_input = texttospeech.SynthesisInput(text=to_read)
 
             voice = texttospeech.VoiceSelectionParams(
-                language_code=lang, name=lang_name, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+                language_code=lang,
+                name=lang_name,
+                ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
             )
 
-            audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
+            audio_config = texttospeech.AudioConfig(
+                audio_encoding=texttospeech.AudioEncoding.MP3
+            )
 
             response = client.synthesize_speech(
                 input=synthesis_input, voice=voice, audio_config=audio_config

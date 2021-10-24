@@ -16,11 +16,7 @@ from typing import List, Dict, Union, Any, KeysView
 
 Path = pathlib.Path
 
-ALLOWED_CONTENT_TYPES: tuple = (
-        "edit",
-        "read",
-        "commands"
-    )
+ALLOWED_CONTENT_TYPES: tuple = ("edit", "read", "commands")
 
 ########################################################################
 #                               YAML parsing                           #
@@ -149,18 +145,23 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
             `good-bot` will record or create.
     """
     if not isinstance(all_confs, dict):
-        raise TypeError("create_dirs_list(): This function takes a dictionnary as an input.")
+        raise TypeError(
+            "create_dirs_list(): This function takes a dictionnary as an input."
+        )
 
     dirs_list: List[dict] = []
 
-    for scene_number, contents in all_confs.items(): # Keys are scene numbers, values is the content
+    for (
+        scene_number,
+        contents,
+    ) in all_confs.items():  # Keys are scene numbers, values is the content
 
         # Those dirs are always created
         to_create: List[str] = ["asciicasts", "embeds", "gifs", "videos"]
 
         for content_type, instructions in contents.items():
             if instructions:  # There are items in the list.
-                to_create.append(content_type)
+                to_create.append(content_type)  # Things like the editor are added here.
 
         # Read has been added in the previous block
         if "read" in to_create:
@@ -172,7 +173,9 @@ def create_dirs_list(all_confs: Dict[int, Dict[str, list]]) -> List[dict]:
 
 
 def create_dirs(
-    directories: list, host_dir: Union[str, Path], project_dir: Union[str, Path] = "my_project"
+    directories: list,
+    host_dir: Union[str, Path],
+    project_dir: Union[str, Path] = "my_project",
 ) -> Path:
     """Creates directories for the project. This function should be
     called on the host's computer, not in the container. Docker will
@@ -245,7 +248,9 @@ def create_dirs(
     return project_dir.absolute()
 
 
-def write_read_instructions(read_instructions: str, scene_path: Path, index: int) -> Path:
+def write_read_instructions(
+    read_instructions: str, scene_path: Path, index: int
+) -> Path:
     """*Deprecated, use `write_yaml_instructions` instead.*
 
     The instructions come from the `read` key in the user's `yaml`
@@ -277,8 +282,8 @@ def write_read_instructions(read_instructions: str, scene_path: Path, index: int
 def write_commands_instructions(
     commands_instructions: Dict[str, List[str]], scene_path: Path, index: int
 ) -> Path:
-    """ *Deprecated, use `write_yaml_instructions` instead.*
-    
+    """*Deprecated, use `write_yaml_instructions` instead.*
+
     Writes a command instruction `yaml` file.
 
     These are the files that [`runner`](github.com/TrickyTroll/good-bot-runner)
@@ -305,15 +310,18 @@ def write_commands_instructions(
 
     return file_path
 
-def write_yaml_instructions(instructions: Any, scene_path: Path, content_type: str, id: int) -> Path:
+
+def write_yaml_instructions(
+    instructions: Any, scene_path: Path, content_type: str, id: int
+) -> Path:
     """
     write_yaml_instructions writes instructions for a certaincommand in the
     YAML format.
-    
+
     Commands should be passed as dictionnaries, where keys are instruction
     types (command, expect, read, ...) and values are the arguments for those
     commands.
-    
+
     Args:
         instructions (dict): The instruction dictionnary that will be written in
         a YAML file.
@@ -324,20 +332,22 @@ def write_yaml_instructions(instructions: Any, scene_path: Path, content_type: s
         id (int): The id of the file. Starts at 0 and is incremented for each
         element in a scene. It is included in the name of the file so that each
         component can be recorded in the correct order.
-    
+
     Returns:
         Path: The path towards the newly created  YAML file.
     """
     if content_type not in ALLOWED_CONTENT_TYPES:
         raise ValueError(f"The type {content_type} is not implemented.")
     content_type_path: Path = scene_path / Path(content_type)
-    content_type_path.mkdir(exist_ok = True)
-    file_path: Path = content_type_path / Path (f"{content_type}_{id + 1}").with_suffix(".yaml")
+    content_type_path.mkdir(exist_ok=True)
+    file_path: Path = content_type_path / Path(f"{content_type}_{id + 1}").with_suffix(
+        ".yaml"
+    )
     to_write: str = yaml.safe_dump(instructions)
 
     with open(file_path, "w") as stream:
         stream.write(to_write)
-        
+
     return file_path
 
 
@@ -393,6 +403,7 @@ def split_config(parsed: Dict[int, List[dict]], project_path: Path) -> Path:
                 write_yaml_instructions(to_edit, scene_path, "edit", index)
 
     return project_path
+
 
 if __name__ == "__main__":
     conf_path = Path("./examples/basics/config.yaml")
