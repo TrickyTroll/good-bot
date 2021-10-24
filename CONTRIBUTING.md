@@ -2,7 +2,7 @@
 
 ## Installing development dependencies
 
-### Using `flit`
+### TODO: Update this section
 
 `good-bot` is packaged using
 [`flit`](https://flit.readthedocs.io/en/latest/index.html).
