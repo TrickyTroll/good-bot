@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-utils.py
+utils.py module. Contains utility functions.
 """
+from pathlib import Path
+from typing import List
 
 ALLOWED_INSTRUCTIONS_SUFFIX = (".yaml", ".txt", "")
 
