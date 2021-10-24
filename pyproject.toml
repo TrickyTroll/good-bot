@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "good-bot"
+name = "goodbot"
 version = "0.1.0"
 description = "Automating the recording of documentation videos."
 authors = ["Étienne Parent <53831454+TrickyTroll@users.noreply.github.com>"]
@@ -18,3 +18,6 @@ ezvi = "^0.1.7"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+good-bot = "goodbot.cli:main"
