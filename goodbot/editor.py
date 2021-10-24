@@ -100,7 +100,21 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
     return all_editor_instructions
 
 def record_editor(project_path: Path, debug: bool = False) -> List[Path]:
+    """
+    Records ezvi running for each instructions file in a project.
 
+    The files to record a found using `fetch_project_editor_instructions()`.
+
+    Args:
+        project_path (Path): The path towards the project from which the
+        `ezvi` instructions will be recorded.
+        debug (bool, optional): Whether or not to use this function in
+        debug mode. Debug mode shows `ezvi`'s output on the user's terminal.
+        Defaults to False.
+
+    Returns:
+        List[Path]: A list of paths towards each recording that has been created.
+    """
     all_editor_instructions: List[Path] = fetch_project_editor_instructions(project_path)
     all_editor_recordings: List[Path] = []
     console: Console = Console()
