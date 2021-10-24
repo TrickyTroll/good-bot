@@ -29,7 +29,7 @@ def is_runner_instructions(instructions_path: Path) -> bool:
         bool: Whether or not the file is an instructions file for Good
         Bot Runner.
     """
-    if instructions_path.suffix in utils.ALLOWED_INSTRUCTION_SUFFIX:
+    if instructions_path.suffix in utils.ALLOWED_INSTRUCTIONS_SUFFIX:
         with open(instructions_path, "r") as stream:
             contents: str = stream.read()
             try:
