@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-recording.py contains functions used by the cli module to create
-Asciinema recordings using Good Bot's runner program.
+editor.py contains functions used by the cli module to create
+Asciinema recordings of text files being edited. It uses the
+`ezvi` program to automate typing in the `vi` editor.
 """
 import os
 import subprocess
