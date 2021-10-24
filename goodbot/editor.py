@@ -3,10 +3,13 @@
 recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
+import os
+import subprocess
 from pathlib import Path
+from rich.console import Console
 from typing import List, Union
-
 from ezvi.funcmodule import check_ezvi_config
+
 from goodbot import utils
 
 
@@ -95,3 +98,30 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
                 all_editor_instructions + fetch_scene_editor_instructions(scene)
             )
     return all_editor_instructions
+
+def record_editor(project_path: Path, debug: bool = False) -> List[Path]:
+
+    all_editor_instructions: List[Path] = fetch_project_editor_instructions(project_path)
+    all_editor_recordings: List[Path] = []
+    console: Console = Console()
+
+    with console.status("[bold green]Recording editor...") as status:
+
+        for instruction in  all_editor_instructions:
+
+            save_path: Path = (
+                instruction.parent.parent / Path("asciicasts") / instruction.name
+            ).with_suffix(".cast")
+
+            if save_path.exists():
+                os.remove(save_path)
+
+            subprocess.run(
+                ["asciinema", "rec", "-c", f"runner {instruction}", str(save_path)],
+                capture_output=not debug,
+            )
+
+            console.log(f"Video contents in file {instruction} have been recorded.")
+            all_editor_recordings.append(save_path)
+
+    return all_editor_recordings
