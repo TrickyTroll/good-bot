@@ -1,9 +1,6 @@
-import tempfile
-import os
-import shutil
 from distutils.dir_util import copy_tree
 from pathlib import Path
-from goodbot import recording, render
+from goodbot import utils
 from tests.test_funcs import PROJECT_PATH, PARSED
 
 VIDEO_TEST_DIR = Path("./tests/examples/video")
@@ -15,7 +12,7 @@ def test_is_scene_false():
     a project path as a scene path.
     """
     not_a_scene_path = PROJECT_PATH
-    assert recording.is_scene(not_a_scene_path) == False
+    assert utils.is_scene(not_a_scene_path) == False
 
 
 def test_is_scene_true():
@@ -24,7 +21,7 @@ def test_is_scene_true():
     scene paths.
     """
     a_scene_path = PROJECT_PATH / "scene_1"
-    assert recording.is_scene(a_scene_path)
+    assert utils.is_scene(a_scene_path)
 
 
 def test_list_scenes():
@@ -39,6 +36,6 @@ def test_list_scenes():
 
     """
     scene_amount = len(PARSED.keys())
-    listed_scenes = recording.list_scenes(PROJECT_PATH)
+    listed_scenes = utils.list_scenes(PROJECT_PATH)
     all_scenes = [PROJECT_PATH / f"scene_{i+1}" for i in range(scene_amount)]
     assert len(all_scenes) == len(listed_scenes) and sorted(all_scenes) == sorted(listed_scenes)
