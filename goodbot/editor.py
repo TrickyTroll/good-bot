@@ -6,20 +6,66 @@ Asciinema recordings using Good Bot's runner program.
 from pathlib import Path
 from typing import List, Union
 
+from ezvi.funcmodule import check_ezvi_config
 from goodbot import utils
+
 
 def is_editor_instructions(editor_script_path: Path) -> bool:
     """
-    is_editor_instructions v
+    Checks if the filed saved under `editor_script_path` is a valid
+    `ezvi` configuration file.
+
+    The check is made using a config checker function from `ezvi`.
+
+    Args:
+        editor_script_path (Path): The path towards the file that
+        will be checked.
+
+    Returns:
+        bool: Whether or not the file is an `ezvi` instructions file.
     """
     if editor_script_path in utils.ALLOWED_INSTRUCTIONS_SUFFIX:
         # ezvi check here
-        return
-    return
+        try:
+            check_ezvi_config(editor_script_path)
 
-def fetch_scene_editor_instructions():
-    # TODO: Implement this function
-    pass
+        except TypeError: # The file's format is probabaly invalid.
+            return False
+        except NotImplementedError:
+            # The format is valid, but the user want's to use commands
+            # that have not been implemented.
+            return False
+
+    return True
+
+def fetch_scene_editor_instructions(scene_path: Path) -> List[Path]:
+    """
+    fetch_scene_editor_instructions finds each `ezvi` instructions
+    files in a scene.
+
+    To check if a file is an `ezvi` instructions file, this function
+    uses `is_editor_instructions()`.
+
+    This function can then be used by `fetch_project_editor_instructions()`
+    to get all `ezvi` instructions files in a project.
+
+    Args:
+        scene_path (Path): The path towards the scene that will be searched.
+
+    Returns:
+        List[Path]: A list of paths towards each `ezvi` instructions file
+        that was found.
+    """
+    scene_editor_instructions: List[Path] = []
+    editor_contents_dir: Path = scene_path / "editor"
+
+    if editor_contents_dir.exists():
+        for file in editor_contents_dir.iterdir():
+            if is_editor_instructions(file):
+                scene_editor_instructions.append(file)
+
+    return scene_editor_instructions
+
 
 def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Path]:
     """
