@@ -3,11 +3,12 @@
 recording.py contains functions used by the cli module to create
 Asciinema recordings using Good Bot's runner program.
 """
-import yaml
 import os
-import subprocess
-from rich.console import Console
 from pathlib import Path
+import subprocess
+import yaml
+
+from rich.console import Console
 from typing import List, Dict, Union, Any
 
 from goodbot import utils
