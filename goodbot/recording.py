@@ -1,3 +1,4 @@
+from pathlib import Path
 # Each recording module has to be imported here
 from goodbot import editor, shell_commands, audio
 from goodbot.utils import is_scene
