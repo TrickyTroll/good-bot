@@ -31,8 +31,15 @@ else:
 
 
 @click.group()
-def app():
+@click.option("--docker/--no-docker", default=False)
+def app(docker: bool):
     """Automating the recording of documentation videos."""
+    # Allowing users to redefine this param. This is especially useful
+    # if someone's dev environment is in a container (Gitpod for example).
+    if docker:
+        PROJECT_ROOT = pathlib.Path("/project")
+    else:
+        PROJECT_ROOT = pathlib.Path(".")
 
 
 @click.command()
