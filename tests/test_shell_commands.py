@@ -3,7 +3,7 @@ import os
 import shutil
 from distutils.dir_util import copy_tree
 from pathlib import Path
-from goodbot import recording, render
+from goodbot import shell_commands, render
 from tests.test_funcs import PROJECT_PATH, PARSED
 
 VIDEO_TEST_DIR = Path("./tests/examples/video")
@@ -21,7 +21,7 @@ def test_fetch_runner_instructions():
         {"file": VIDEO_TEST_DIR / Path("scene_fake/commands"), "want": 0},
     ]
     for test_case in to_check:
-        assert len(recording.fetch_runner_instructions(test_case["file"])) == test_case["want"]
+        assert len(shell_commands.fetch_runner_instructions(test_case["file"])) == test_case["want"]
 
 
 def test_fetch_scene_runner_instructions():
@@ -37,7 +37,7 @@ def test_fetch_scene_runner_instructions():
     ]
 
     for test_case in to_check:
-        assert len(recording.fetch_scene_runner_instructions(test_case["dir"])) == test_case["want"]
+        assert len(shell_commands.fetch_scene_runner_instructions(test_case["dir"])) == test_case["want"]
 
 
 def test_fetch_project_runner_instructions():
@@ -46,7 +46,7 @@ def test_fetch_project_runner_instructions():
     amount of files.
     """
     want = 4
-    assert len(recording.fetch_project_runner_instructions(VIDEO_TEST_DIR)) == want
+    assert len(shell_commands.fetch_project_runner_instructions(VIDEO_TEST_DIR)) == want
 
 
 def test_record_commands():
@@ -64,7 +64,7 @@ def test_record_commands():
         for path in all_asciicasts:
             os.remove(path)
         # Re-recording
-        rerecorded = recording.record_commands(project_path)
+        rerecorded = shell_commands.record_commands(project_path)
         # making sure that re-recorded is the same as the previous
         # recordings
         for asciicast in all_asciicasts:
