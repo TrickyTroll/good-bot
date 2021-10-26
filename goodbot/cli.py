@@ -6,14 +6,10 @@ import click
 import os
 from goodbot import funcmodule, render, audio, recording, utils
 
-if utils.in_docker():
-    PROJECT_ROOT = pathlib.Path("/project")
-else:
-    PROJECT_ROOT = pathlib.Path(".")
-
+PROJECT_ROOT = pathlib.Path(".")
 
 @click.group()
-@click.option("--docker/--no-docker", default=False)
+@click.option("--docker/--no-docker", default=True)
 def app(docker: bool):
     """Automating the recording of documentation videos."""
     # Allowing users to redefine this param. This is especially useful
