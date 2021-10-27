@@ -9,6 +9,7 @@ from typing import List
 
 ALLOWED_INSTRUCTIONS_SUFFIX = (".yaml", ".txt", "")
 
+
 def in_docker() -> bool:
     """Checks if code is currently running in a Docker container.
 
@@ -24,6 +25,7 @@ def in_docker() -> bool:
         or os.path.isfile(path)
         and any("docker" in line for line in open(path))
     )
+
 
 def is_scene(directory: Path) -> bool:
     """Checks if a directory is a scene that contains instructions.

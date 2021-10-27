@@ -100,6 +100,7 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_editor_instructions
 
+
 def record_editor(project_path: Path, debug: bool = False) -> List[Path]:
     """
     Records ezvi running for each instructions file in a project.
@@ -116,13 +117,15 @@ def record_editor(project_path: Path, debug: bool = False) -> List[Path]:
     Returns:
         List[Path]: A list of paths towards each recording that has been created.
     """
-    all_editor_instructions: List[Path] = fetch_project_editor_instructions(project_path)
+    all_editor_instructions: List[Path] = fetch_project_editor_instructions(
+        project_path
+    )
     all_editor_recordings: List[Path] = []
     console: Console = Console()
 
     with console.status("[bold green]Recording editor...") as status:
 
-        for instruction in  all_editor_instructions:
+        for instruction in all_editor_instructions:
 
             save_path: Path = (
                 instruction.parent.parent / Path("asciicasts") / instruction.name
