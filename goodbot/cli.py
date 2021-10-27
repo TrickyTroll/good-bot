@@ -3,7 +3,6 @@
 
 import pathlib
 import click
-import os
 from goodbot import funcmodule, render, audio, shell_commands, utils
 
 
