@@ -5,6 +5,12 @@
         - prompt
       read: Hello, and welcome to this tutorial on using Good Bot runner.
 2:
+    - commands:
+        - echo 'Here is how to edit a text file'
+      expect:
+        - prompt
+      read: Here is how you can edit text files with Good Bot.
+
     - edit:
         - write_line: "commands:"
         - write_line: "- echo 'hello world'"
