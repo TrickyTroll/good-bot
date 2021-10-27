@@ -15,10 +15,8 @@ def app(docker):
     # if someone's dev environment is in a container (Gitpod for example).
     global PROJECT_ROOT
     if docker:
-        click.echo("Using '/project' as your project path.")
         PROJECT_ROOT = pathlib.Path("/project")
     else:
-        click.echo("Using '.' as your project path.")
         PROJECT_ROOT = pathlib.Path(".")
 
 
