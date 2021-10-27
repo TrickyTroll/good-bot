@@ -4,23 +4,25 @@
 import pathlib
 import click
 import os
-from goodbot import funcmodule, render, audio, recording, utils
+from goodbot import funcmodule, render, audio, shell_commands, utils
 
-PROJECT_ROOT = pathlib.Path(".")
 
 @click.group()
 @click.option("--docker/--no-docker", default=True)
-def app(docker: bool):
+def app(docker):
     """Automating the recording of documentation videos."""
     # Allowing users to redefine this param. This is especially useful
     # if someone's dev environment is in a container (Gitpod for example).
+    global PROJECT_ROOT
     if docker:
+        click.echo("Using '/project' as your project path.")
         PROJECT_ROOT = pathlib.Path("/project")
     else:
+        click.echo("Using '.' as your project path.")
         PROJECT_ROOT = pathlib.Path(".")
 
 
-@click.command()
+@app.command()
 @click.argument("config", type=str)
 def echo_config(config: str) -> None:
     """Prints a configuration file as seen by `good-bot`.
@@ -36,7 +38,7 @@ def echo_config(config: str) -> None:
     click.echo(parsed)
 
 
-@click.command()
+@app.command()
 @click.argument("config", type=str)
 @click.option("--project-path", "-p", type=str, default="")
 def setup(config: str, project_path: str) -> None:
@@ -71,7 +73,7 @@ def setup(config: str, project_path: str) -> None:
     click.echo(f"Your project has been setup at: {project_path}")
 
 
-@click.command()
+@app.command()
 @click.argument("projectpath", type=str)
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
@@ -95,11 +97,11 @@ def record(projectpath: str, language: str, language_name: str, debug: bool) -> 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_commands(PROJECT_ROOT / dir_path, debug)
+    shell_commands.record_commands(PROJECT_ROOT / dir_path, debug)
     audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
 
 
-@click.command()
+@app.command()
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.argument("projectpath", type=str)
 def render_video(projectpath: str, debug: bool) -> None:
@@ -111,7 +113,7 @@ def render_video(projectpath: str, debug: bool) -> None:
     """
     project_path = pathlib.Path(projectpath)
 
-    rec_paths = render.render_all(PROJECT_ROOT / project_path)
+    render.render_all(PROJECT_ROOT / project_path)
 
     final_project = render.render_final(PROJECT_ROOT / project_path, debug)
 
