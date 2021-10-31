@@ -22,7 +22,7 @@ def get_content_file_id(content_file: Path) -> int:
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
-    content_map: Dict[int, Path] = []
+    content_map: Dict[int, Path] = {}
 
     for content_file in content_file_paths:
 
