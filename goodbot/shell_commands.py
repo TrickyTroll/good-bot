@@ -126,6 +126,36 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_runner_instructions
 
+def record_command(instructions_file: Path, debug: bool = False) -> Path:
+    """Records a single command video from the specified instructions file.
+
+    This function uses Good Bot's runner program to simulate a human typing
+    the commands in the specified instructions file.
+
+    Args:
+        instructions_file (pathlib.Path): The path towards the Good-Bot
+        runner instructions file to use.
+        debug (bool): Whether or not to print the output of the command.
+        Defaults to False.
+
+    Returns:
+        pathlib.Path: The path towards the Asciinema recording created
+        by this function.
+    """
+    save_path: Path = (
+        instructions_file.parent.parent / Path("asciicasts") / instructions_file.name
+    ).with_suffix(".cast")
+
+    if save_path.exists():
+        os.remove(save_path)
+
+    subprocess.run(
+        ["asciinema", "rec", "-c", f"runner {instructions_file}", str(save_path)],
+        capture_output=not debug,
+    )
+
+    return save_path
+
 
 def record_commands(project: Path, debug: bool = False) -> List[Path]:
     """Records a gif for every video in the commands directory of the
