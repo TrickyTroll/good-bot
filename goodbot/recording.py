@@ -32,7 +32,7 @@ def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
     for content_file in content_file_paths:
 
         try:
-            content_map[get_content_file_id(content_file)] = content_file.name
+            content_map[get_content_file_id(content_file)] = content_file
         except ValueError as error:
             print(error)
             print("The file has been excluded from the list of things to record.")
