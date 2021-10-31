@@ -100,46 +100,18 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_editor_instructions
 
+def record_editor(instruction_file: Path, debug: bool = False) -> Path:
 
-def record_all_editor(project_path: Path, debug: bool = False) -> List[Path]:
-    """
-    Records ezvi running for each instructions file in a project.
+    save_path: Path = (
+        instruction_file.parent.parent / Path("asciicasts") / instruction_file.name
+    ).with_suffix(".cast")
 
-    The files to record a found using `fetch_project_editor_instructions()`.
+    if save_path.exists():
+        os.remove(save_path)
 
-    Args:
-        project_path (Path): The path towards the project from which the
-        `ezvi` instructions will be recorded.
-        debug (bool, optional): Whether or not to use this function in
-        debug mode. Debug mode shows `ezvi`'s output on the user's terminal.
-        Defaults to False.
-
-    Returns:
-        List[Path]: A list of paths towards each recording that has been created.
-    """
-    all_editor_instructions: List[Path] = fetch_project_editor_instructions(
-        project_path
+    subprocess.run(
+        ["asciinema", "rec", "-c", f"ezvi yaml {instruction_file}", str(save_path)],
+        capture_output=not debug,
     )
-    all_editor_recordings: List[Path] = []
-    console: Console = Console()
 
-    with console.status("[bold green]Recording editor...") as status:
-
-        for instruction in all_editor_instructions:
-
-            save_path: Path = (
-                instruction.parent.parent / Path("asciicasts") / instruction.name
-            ).with_suffix(".cast")
-
-            if save_path.exists():
-                os.remove(save_path)
-
-            subprocess.run(
-                ["asciinema", "rec", "-c", f"runner {instruction}", str(save_path)],
-                capture_output=not debug,
-            )
-
-            console.log(f"Video contents in file {instruction} have been recorded.")
-            all_editor_recordings.append(save_path)
-
-    return all_editor_recordings
+    return save_path
