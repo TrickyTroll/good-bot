@@ -101,7 +101,17 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
     return all_editor_instructions
 
 def record_editor(instruction_file: Path, debug: bool = False) -> Path:
+    """record_editor records an editor script using the `ezvi` program.
 
+    Args:
+        instruction_file (Path): The path towards the file that will be
+        used to record the editor script. (An `ezvi` instructions file.)
+        debug (bool, optional): Whether to show ezvi's output on screen
+        or not. Defaults to False.
+
+    Returns:
+        Path: The path towards the newly recorded Asciinema file.
+    """
     save_path: Path = (
         instruction_file.parent.parent / Path("asciicasts") / instruction_file.name
     ).with_suffix(".cast")
