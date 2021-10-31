@@ -21,6 +21,8 @@ def get_content_file_id(content_file: Union[Path, str]) -> int:
         return int(file_name.split("_")[1])
     except ValueError:
         raise ValueError(f"{content_file} does not seem to follow Good-Bot's naming scheme.")
+    except IndexError:
+        raise ValueError(f"{content_file} does not seem to follow Good-Bot's naming scheme.")
 
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
