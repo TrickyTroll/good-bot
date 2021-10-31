@@ -101,7 +101,7 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
     return all_editor_instructions
 
 
-def record_editor(project_path: Path, debug: bool = False) -> List[Path]:
+def record_all_editor(project_path: Path, debug: bool = False) -> List[Path]:
     """
     Records ezvi running for each instructions file in a project.
 
