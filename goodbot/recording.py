@@ -18,7 +18,7 @@ def get_content_file_id(content_file: Path) -> int:
         return int(file_name.split("_")[1])
     except ValueError:
         raise ValueError(f"{content_file} does not seem to follow Good-Bot's naming scheme.")
-        
+
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
@@ -31,7 +31,7 @@ def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
         except ValueError as error:
             print(error)
             print("The file has been excluded from the list of things to record.")
-    
+
     return [content_map[key] for key in sorted(content_map)]
 
 def directory_content_files(content_dir: Path) -> List[Path]:
@@ -41,7 +41,7 @@ def directory_content_files(content_dir: Path) -> List[Path]:
     for file in content_dir.iterdir():
         if file.suffix in (".txt", ".yaml"):
             all_content_files.append(file)
-    
+
     return all_content_files
 
 
@@ -52,17 +52,25 @@ def find_to_record(scene_path: Path) -> List[Path]:
     for directory in scene_path.iterdir():
         if directory.name in ALLOWED_CONTENT_TYPES:
             to_record_in_scene += directory_content_files(directory)
-    
+
     return sort_content_files(to_record_in_scene)
-    
+
 
 def record_scene(scene_path: Path):
-    # TODO: Record each command in a scene in order.
-    pass
+    # Things in a scene are already numbered starting at 1
+    to_record_sorted: List[Path] = find_to_record(scene_path)
 
+    for file_to_record in to_record_sorted:
+        if file_to_record.parent.name == "commands":
+            shell_commands.record_command(file_to_record)
+        elif file_to_record.parent.name == "editor":
+            editor.record_editor(file_to_record)
+        # Each type of content to record goes here.
+    
 
 def record_project(project_path: Path):
     for potential_scene in project_path.iterdir():
         if is_scene(potential_scene):
             record_scene(potential_scene)
+    audio.record_audio(project_path)
     pass
