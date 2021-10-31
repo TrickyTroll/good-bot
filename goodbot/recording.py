@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Union
 
 # Each recording module has to be imported here
 from goodbot import editor, shell_commands, audio
@@ -10,7 +10,10 @@ from goodbot.funcmodule import ALLOWED_CONTENT_TYPES
 # that should be followed when recording. They start at
 # 1.
 
-def get_content_file_id(content_file: Path) -> int:
+def get_content_file_id(content_file: Union[Path, str]) -> int:
+
+    if isinstance(content_file, str):
+        content_file = Path(content_file)
 
     file_name: str = content_file.stem
 
