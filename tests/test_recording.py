@@ -1,4 +1,5 @@
 from pathlib import Path
+import pytest
 
 from goodbot import recording
 
@@ -25,3 +26,13 @@ def test_get_content_file_id():
 
     for sample in all_samples:
         assert recording.get_content_file_id(sample[0]) == sample[1]
+
+def test_get_content_file_id_raises():
+    """
+    Makes sure that `get_content_file_id()` raises an error
+    if the file name does not contain a `_` character followed
+    by an integer value.
+    """
+
+    with pytest.raises(ValueError):
+        recording.get_content_file_id("commands.yaml")
