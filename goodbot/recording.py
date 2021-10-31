@@ -12,7 +12,7 @@ from goodbot.funcmodule import ALLOWED_CONTENT_TYPES
 
 def get_content_file_id(content_file: Path) -> int:
 
-    file_name: str = content_file.name
+    file_name: str = content_file.stem
 
     try:
         return int(file_name.split("_")[1])
@@ -22,7 +22,7 @@ def get_content_file_id(content_file: Path) -> int:
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
-    content_map: Dict[int, Path]
+    content_map: Dict[int, Path] = []
 
     for content_file in content_file_paths:
 
@@ -36,7 +36,7 @@ def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
 def directory_content_files(content_dir: Path) -> List[Path]:
 
-    all_content_files: List[Path]
+    all_content_files: List[Path] = []
 
     for file in content_dir.iterdir():
         if file.suffix in (".txt", ".yaml"):
@@ -47,7 +47,7 @@ def directory_content_files(content_dir: Path) -> List[Path]:
 
 def find_to_record(scene_path: Path) -> List[Path]:
 
-    to_record_in_scene: List[Path]
+    to_record_in_scene: List[Path] = []
 
     for directory in scene_path.iterdir():
         if directory.name in ALLOWED_CONTENT_TYPES:
