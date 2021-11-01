@@ -55,7 +55,8 @@ def find_to_record(scene_path: Path) -> List[Path]:
     to_record_in_scene: List[Path] = []
 
     for directory in scene_path.iterdir():
-        if directory.name in ALLOWED_CONTENT_TYPES:
+        if directory.name in ALLOWED_CONTENT_TYPES and directory.name != "read":
+            to_record_in_scene += directory_content_files(directory)
             to_record_in_scene += directory_content_files(directory)
 
     return sort_content_files(to_record_in_scene)
