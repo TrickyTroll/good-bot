@@ -36,3 +36,24 @@ def test_get_content_file_id_raises():
 
     with pytest.raises(ValueError):
         recording.get_content_file_id("commands.yaml")
+
+def test_sort_content_files():
+    """
+    Making sure that `sort_content_files()` returns a list
+    of paths sorted by the file id when it receives a list
+    of Path objects as an input.
+    """
+
+    samples = [
+        ([Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")]),
+        ([Path("../example/commands_2.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")]),
+        ([Path("../example/commands_0.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml")]),
+        ([Path("../example/commands_1.yaml"), Path("../example/commands_0.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml")]),
+    ]
+
+    for sample in samples:
+        assert recording.sort_content_files(sample[0]) == sample[1]
