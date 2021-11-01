@@ -57,3 +57,38 @@ def test_sort_content_files():
 
     for sample in samples:
         assert recording.sort_content_files(sample[0]) == sample[1]
+
+def test_directory_content_files():
+    """
+    Making sure that `directory_content_files()` returns each
+    `.yaml` and `.txt` files in the provided directory.
+
+    Missing test cases for `.txt` files.
+    """
+
+    scene_dir = Path("./tests/examples/recording-sample/scene_2/")
+    scene_2_want_commands = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml"), Path("./tests/example/recording-sample/scene_2/commands_1.yaml")]
+    scene_2_want_editor = [Path("./tests/examples/recording-sample/scene_2/edit/edit_2.yaml")]
+
+    for item in recording.directory_content_files(scene_dir / "commands"):
+        assert item in scene_2_want_commands
+    for item in recording.directory_content_files(scene_dir / "edit"):
+        assert item in scene_2_want_editor
+    
+def tests_find_to_record():
+    """
+    Testing that `find_to_record()` finds each file to record in a project.
+    Audio instructions aren't covered by this function.
+    """
+
+    scene_dir_2 = Path("./tests/examples/recording-sample/scene_2/")
+    scene_2_want = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml"), Path("./tests/example/recording-sample/scene_2/commands_1.yaml"), Path("./tests/examples/recording-sample/scene_2/edit/edit_2.yaml")]
+
+    for item in recording.find_to_record(scene_dir_2):
+        assert item in scene_2_want
+
+    scene_dir_1 = Path("./tests/examples/recording-sample/scene_1/")
+    scene_1_want = [Path("./tests/examples/recording-sample/scene_1/commands/commands_1.yaml")]
+
+    for item in recording.find_to_record(scene_dir_1):
+        assert item in scene_1_want
