@@ -1,0 +1,4 @@
+commands:
+- echo 'Welcome to this tutorial!'
+expect:
+- prompt

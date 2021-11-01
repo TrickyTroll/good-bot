@@ -1,0 +1,4 @@
+commands:
+- runner config.yaml
+expect:
+- prompt
