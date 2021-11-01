@@ -3,7 +3,7 @@
 
 import pathlib
 import click
-from goodbot import funcmodule, render, audio, shell_commands, utils
+from goodbot import funcmodule, render, audio, shell_commands, utils, recording
 
 
 @click.group()
@@ -94,8 +94,7 @@ def record(projectpath: str, language: str, language_name: str, debug: bool) -> 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    shell_commands.record_commands(PROJECT_ROOT / dir_path, debug)
-    audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
+    recording.record_project(PROJECT_ROOT / dir_path)
 
 
 @app.command()
