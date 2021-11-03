@@ -7,19 +7,22 @@ from goodbot import funcmodule, render, audio, shell_commands, utils, recording
 
 
 @click.group()
-@click.option("--docker/--no-docker", default=True)
-def app(docker):
+@click.option("--docker", default=False, help="Override the automatic environment selection.")
+@click.option("--no-docker", default=False, help="Override the automatic environment selection.")
+def app(docker, no_docker):
     """Automating the recording of documentation videos."""
     # Allowing users to redefine this param. This is especially useful
     # if someone's dev environment is in a container (Gitpod for example).
     global PROJECT_ROOT
-    if docker:
+    if utils.in_docker():
         PROJECT_ROOT = pathlib.Path("/project")
     else:
-        if utils.in_docker():
-            PROJECT_ROOT = pathlib.Path("/project")
-        else:
-            PROJECT_ROOT = pathlib.Path(".")
+        PROJECT_ROOT = pathlib.Path(".")
+
+    if docker:
+        PROJECT_ROOT = pathlib.Path("/project")
+    elif no_docker:
+        PROJECT_ROOT = pathlib.Path(".")
 
 
 @app.command()
