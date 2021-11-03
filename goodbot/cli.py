@@ -16,7 +16,10 @@ def app(docker):
     if docker:
         PROJECT_ROOT = pathlib.Path("/project")
     else:
-        PROJECT_ROOT = pathlib.Path(".")
+        if utils.in_docker():
+            PROJECT_ROOT = pathlib.Path("/project")
+        else:
+            PROJECT_ROOT = pathlib.Path(".")
 
 
 @app.command()
