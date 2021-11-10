@@ -72,11 +72,10 @@ def record_scene(scene_path: Path):
         elif file_to_record.parent.name == "editor":
             editor.record_editor(file_to_record)
         # Each type of content to record goes here.
-    
+
 
 def record_project(project_path: Path):
     for potential_scene in project_path.iterdir():
         if is_scene(potential_scene):
             record_scene(potential_scene)
     audio.record_audio(project_path)
-    pass
