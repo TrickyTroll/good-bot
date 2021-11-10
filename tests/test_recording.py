@@ -67,14 +67,21 @@ def test_directory_content_files():
     """
 
     scene_dir = Path("./tests/examples/recording-sample/scene_2/")
-    scene_2_want_commands = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml"), Path("./tests/example/recording-sample/scene_2/commands_1.yaml")]
+    scene_2_want_commands = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml")]
     scene_2_want_editor = [Path("./tests/examples/recording-sample/scene_2/edit/edit_2.yaml")]
+    commands = recording.directory_content_files(scene_dir / "commands")
 
-    for item in recording.directory_content_files(scene_dir / "commands"):
+    for item in commands:
         assert item in scene_2_want_commands
-    for item in recording.directory_content_files(scene_dir / "edit"):
+
+    assert len(commands) == len(scene_2_want_commands)
+    editor = recording.directory_content_files(scene_dir / "edit")
+
+    for item in editor:
         assert item in scene_2_want_editor
-    
+
+    assert len(editor) == len(scene_2_want_editor)
+
 def tests_find_to_record():
     """
     Testing that `find_to_record()` finds each file to record in a project.
