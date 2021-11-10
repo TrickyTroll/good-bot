@@ -69,7 +69,7 @@ def record_scene(scene_path: Path):
     for file_to_record in to_record_sorted:
         if file_to_record.parent.name == "commands":
             shell_commands.record_command(file_to_record)
-        elif file_to_record.parent.name == "editor":
+        elif file_to_record.parent.name == "edit":
             editor.record_editor(file_to_record)
         # Each type of content to record goes here.
 
