@@ -126,7 +126,7 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_runner_instructions
 
-def record_command(instructions_file: Path, debug: bool = False) -> Path:
+def record_command(instructions_file: Path, debug: bool = False, docker: bool = False, no_docker: bool = False) -> Path:
     """Records a single command video from the specified instructions file.
 
     This function uses Good Bot's runner program to simulate a human typing
@@ -137,6 +137,10 @@ def record_command(instructions_file: Path, debug: bool = False) -> Path:
         runner instructions file to use.
         debug (bool): Whether or not to print the output of the command.
         Defaults to False.
+        docker (bool): If this option is active, the `--docker` flag will
+        be passed to the runner program. Defaults to False.
+        no_docker(bool): If this option is active, the `--no-docker` flag
+        will be passed to the runner program. Defaults to False.
 
     Returns:
         pathlib.Path: The path towards the Asciinema recording created
@@ -149,8 +153,13 @@ def record_command(instructions_file: Path, debug: bool = False) -> Path:
     if save_path.exists():
         os.remove(save_path)
 
+    if docker:
+        docker_flag = "--docker" 
+    elif no_docker:
+        docker_flag = "--no-docker"
+
     subprocess.run(
-        ["asciinema", "rec", "-c", f"runner {instructions_file}", str(save_path)],
+        ["asciinema", "rec", "-c", "runner", docker_flag, instructions_file, str(save_path)],
         capture_output=not debug,
     )
 
