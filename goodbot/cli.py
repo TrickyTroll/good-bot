@@ -93,7 +93,7 @@ def setup(config: str, project_path: str) -> None:
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
 @click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
-def record(projectpath: str, language: str, language_name: str, debug: bool) -> None:
+def record(projectpath: str, language: str, language_name: str, debug: bool, docker: bool, no_docker: bool) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
@@ -112,7 +112,7 @@ def record(projectpath: str, language: str, language_name: str, debug: bool) -> 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_project(PROJECT_ROOT / dir_path)
+    recording.record_project(PROJECT_ROOT / dir_path, docker, no_docker)
 
 
 @app.command()

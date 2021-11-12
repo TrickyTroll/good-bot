@@ -62,20 +62,20 @@ def find_to_record(scene_path: Path) -> List[Path]:
     return sort_content_files(to_record_in_scene)
 
 
-def record_scene(scene_path: Path):
+def record_scene(scene_path: Path, docker: bool = False, no_docker: bool = False):
     # Things in a scene are already numbered starting at 1
     to_record_sorted: List[Path] = find_to_record(scene_path)
 
     for file_to_record in to_record_sorted:
         if file_to_record.parent.name == "commands":
-            shell_commands.record_command(file_to_record)
+            shell_commands.record_command(file_to_record, docker, no_docker)
         elif file_to_record.parent.name == "edit":
             editor.record_editor(file_to_record)
         # Each type of content to record goes here.
 
 
-def record_project(project_path: Path):
+def record_project(project_path: Path, docker: bool = False, no_docker: bool = False):
     for potential_scene in project_path.iterdir():
         if is_scene(potential_scene):
-            record_scene(potential_scene)
+            record_scene(potential_scene, docker, no_docker)
     audio.record_audio(project_path)
