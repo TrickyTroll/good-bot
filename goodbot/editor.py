@@ -100,6 +100,7 @@ def fetch_project_editor_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_editor_instructions
 
+
 def record_editor(instruction_file: Path, debug: bool = False) -> Path:
     """record_editor records an editor script using the `ezvi` program.
 

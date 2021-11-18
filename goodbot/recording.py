@@ -10,6 +10,7 @@ from goodbot.funcmodule import ALLOWED_CONTENT_TYPES
 # that should be followed when recording. They start at
 # 1.
 
+
 def get_content_file_id(content_file: Union[Path, str]) -> int:
 
     if isinstance(content_file, str):
@@ -20,9 +21,13 @@ def get_content_file_id(content_file: Union[Path, str]) -> int:
     try:
         return int(file_name.split("_")[1])
     except ValueError:
-        raise ValueError(f"{content_file} does not seem to follow Good-Bot's naming scheme.")
+        raise ValueError(
+            f"{content_file} does not seem to follow Good-Bot's naming scheme."
+        )
     except IndexError:
-        raise ValueError(f"{content_file} does not seem to follow Good-Bot's naming scheme.")
+        raise ValueError(
+            f"{content_file} does not seem to follow Good-Bot's naming scheme."
+        )
 
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
@@ -38,6 +43,7 @@ def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
             print("The file has been excluded from the list of things to record.")
 
     return [content_map[key] for key in sorted(content_map)]
+
 
 def directory_content_files(content_dir: Path) -> List[Path]:
 

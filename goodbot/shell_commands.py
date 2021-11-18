@@ -126,7 +126,13 @@ def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Pa
             )
     return all_runner_instructions
 
-def record_command(instructions_file: Path, docker: bool = False, no_docker: bool = False, debug: bool = False, ) -> Path:
+
+def record_command(
+    instructions_file: Path,
+    docker: bool = False,
+    no_docker: bool = False,
+    debug: bool = False,
+) -> Path:
     """Records a single command video from the specified instructions file.
 
     This function uses Good Bot's runner program to simulate a human typing
@@ -154,14 +160,22 @@ def record_command(instructions_file: Path, docker: bool = False, no_docker: boo
         os.remove(save_path)
 
     if docker:
-        docker_flag = "--docker" 
+        docker_flag = "--docker"
     elif no_docker:
         docker_flag = "--no-docker"
     else:
         docker_flag = ""
 
     subprocess.run(
-        ["asciinema", "rec", "-c", "runner", docker_flag, instructions_file, str(save_path)],
+        [
+            "asciinema",
+            "rec",
+            "-c",
+            "runner",
+            docker_flag,
+            instructions_file,
+            str(save_path),
+        ],
         capture_output=not debug,
     )
 

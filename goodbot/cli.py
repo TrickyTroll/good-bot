@@ -7,6 +7,7 @@ from goodbot import funcmodule, render, audio, shell_commands, utils, recording
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(".")
 
+
 @click.group()
 @click.option(
     "--docker",
@@ -93,7 +94,14 @@ def setup(config: str, project_path: str) -> None:
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
 @click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
-def record(projectpath: str, language: str, language_name: str, debug: bool, docker: bool = False, no_docker: bool = False) -> None:
+def record(
+    projectpath: str,
+    language: str,
+    language_name: str,
+    debug: bool,
+    docker: bool = False,
+    no_docker: bool = False,
+) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
