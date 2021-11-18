@@ -78,10 +78,3 @@ def record_scene(scene_path: Path, docker: bool = False, no_docker: bool = False
         elif file_to_record.parent.name == "edit":
             editor.record_editor(file_to_record)
         # Each type of content to record goes here.
-
-
-def record_project(project_path: Path, docker: bool = False, no_docker: bool = False):
-    for potential_scene in project_path.iterdir():
-        if is_scene(potential_scene):
-            record_scene(potential_scene, docker, no_docker)
-    audio.record_audio(project_path)
