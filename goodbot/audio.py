@@ -109,6 +109,26 @@ def record_audio(file_path: Path, lang: str = "en-US", lang_name: str = "en-US-S
     
     return write_path
 
+def record_scene_audio(scene_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C") -> List[Path]:
+    """Records all audio instructions in a scene.
+
+    This function uses `record_audio()` on each audio file that was
+    found in the provided scene.
+
+    Args:
+        scene_path (Path): The path towards the scene where the audio will be recorded.
+        lang (str, optional): The language used to record the audio. Defaults to "en-US".
+        lang_name (str, optional): The voice used to record the audio. Defaults to "en-US-Standard-C".
+
+    Returns:
+        List[Path]: Paths towards each audio file that was recorded.
+    """
+    recorded: List[Path] = []
+    to_record: List[Path] = fetch_scene_audio_instructions(scene_path)
+    for instruction in to_record:
+        recorded.append(record_audio(instruction, lang, lang_name))
+    return recorded
+
 
 def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
     """
