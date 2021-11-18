@@ -120,7 +120,12 @@ def record(
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_project(PROJECT_ROOT / dir_path, docker, no_docker)
+    # recording each scene individually
+    for scene in (PROJECT_ROOT / dir_path).iterdir():
+        if utils.is_scene(scene):
+            click.echo(f"Recording scene: {scene.name}")
+            recording.record_scene(scene, docker, no_docker)
+            audio.record_scene_audio(scene, language, language_name)
 
 
 @click.command()
