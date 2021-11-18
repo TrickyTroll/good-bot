@@ -3,36 +3,39 @@
 
 import pathlib
 import click
-import os
-from goodbot import funcmodule, render, audio, recording, utils
+from goodbot import funcmodule, render, audio, shell_commands, utils, recording
 
-
-def in_docker() -> bool:
-    """Checks if code is currently running in a Docker container.
-
-    Checks if Docker is in control groups or if there is a `.dockerenv`
-    file at the filesystem's root directory.
-
-    Returns:
-        bool: Whether or not the code is running in a Docker container.
-    """
-    path = "/proc/self/cgroup"
-    return (
-        os.path.exists("/.dockerenv")
-        or os.path.isfile(path)
-        and any("docker" in line for line in open(path))
-    )
-
-
-if in_docker():
-    PROJECT_ROOT = pathlib.Path("/project")
-else:
-    PROJECT_ROOT = pathlib.Path(".")
+PROJECT_ROOT: pathlib.Path = pathlib.Path(".")
 
 
 @click.group()
-def app():
+@click.option(
+    "--docker",
+    type=bool,
+    default=False,
+    is_flag=True,
+    help="Override the automatic environment selection.",
+)
+@click.option(
+    "--no-docker",
+    type=bool,
+    default=False,
+    is_flag=True,
+    help="Override the automatic environment selection.",
+)
+def app(docker, no_docker):
     """Automating the recording of documentation videos."""
+    # Allowing users to redefine this param. This is especially useful
+    # if someone's dev environment is in a container (Gitpod for example).
+    if utils.in_docker():
+        PROJECT_ROOT = pathlib.Path("/project")
+    else:
+        PROJECT_ROOT = pathlib.Path(".")
+
+    if docker:
+        PROJECT_ROOT = pathlib.Path("/project")
+    elif no_docker:
+        PROJECT_ROOT = pathlib.Path(".")
 
 
 @click.command()
@@ -91,7 +94,14 @@ def setup(config: str, project_path: str) -> None:
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
 @click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
-def record(projectpath: str, language: str, language_name: str, debug: bool) -> None:
+def record(
+    projectpath: str,
+    language: str,
+    language_name: str,
+    debug: bool,
+    docker: bool = False,
+    no_docker: bool = False,
+) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
@@ -110,8 +120,7 @@ def record(projectpath: str, language: str, language_name: str, debug: bool) -> 
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    recording.record_commands(PROJECT_ROOT / dir_path, debug)
-    audio.record_audio(PROJECT_ROOT / dir_path, language, language_name)
+    recording.record_project(PROJECT_ROOT / dir_path, docker, no_docker)
 
 
 @click.command()
@@ -126,7 +135,7 @@ def render_video(projectpath: str, debug: bool) -> None:
     """
     project_path = pathlib.Path(projectpath)
 
-    rec_paths = render.render_all(PROJECT_ROOT / project_path)
+    render.render_all(PROJECT_ROOT / project_path)
 
     final_project = render.render_final(PROJECT_ROOT / project_path, debug)
 

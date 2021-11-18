@@ -1,164 +1,87 @@
-# -*- coding: utf-8 -*-
-"""
-recording.py contains functions used by the cli module to create
-Asciinema recordings using Good Bot's runner program.
-"""
-import os
 from pathlib import Path
-import subprocess
-import yaml
+from typing import List, Dict, Union
 
-from rich.console import Console
-from typing import List, Dict, Union, Any
+# Each recording module has to be imported here
+from goodbot import editor, shell_commands, audio
+from goodbot.utils import is_scene
+from goodbot.funcmodule import ALLOWED_CONTENT_TYPES
 
-from goodbot import utils
-
-
-def is_runner_instructions(instructions_path: Path) -> bool:
-    """
-    is_runner_instructions checks whether or not the provided file could
-    be a instructions file for Good Bot's runner program.
-
-    The check is done by making sure that the file's extension is ".yaml"
-    and that its contents match what a standard runner script would could
-    contain.
-
-    Args:
-        instructions_path (Path): The path towards the file for which the
-        check will be performed.
-    Returns:
-        bool: Whether or not the file is an instructions file for Good
-        Bot Runner.
-    """
-    if instructions_path.suffix in utils.ALLOWED_INSTRUCTIONS_SUFFIX:
-        with open(instructions_path, "r") as stream:
-            contents: str = stream.read()
-            try:
-                conf: dict = yaml.safe_load(contents)
-            except Exception as err:
-                print(f"Got a problem parsing file {instructions_path}\n{err}")
-                return False
-    else:
-        return False
-
-    if len(conf.keys()) > 2:
-        return False
-    for key, value in conf.items():
-        if key not in ("commands", "expect"):
-            return False
-        # value is of type `list`
-        for item in value:
-            if not isinstance(item, (str, dict)):
-                return False
-
-    return True
+# Each element in a scene has an id. The id is the order
+# that should be followed when recording. They start at
+# 1.
 
 
-def fetch_runner_instructions(instructions_path: Path) -> List[Path]:
-    """
-    fetch_runner_instructions finds each text file in a directory
-    that can be used as instructions for Good Bot's runner program.
+def get_content_file_id(content_file: Union[Path, str]) -> int:
 
-    Args:
-        instructions_path (Path): The path towards the directory that
-        may contain instructions file.
-    Returns:
-        List[Path]: A list of resolved paths towards each instructions
-        file that was found.
-    """
-    runner_instructions: List[Path] = []
+    if isinstance(content_file, str):
+        content_file = Path(content_file)
+
+    file_name: str = content_file.stem
+
     try:
-        for instructions in instructions_path.iterdir():
-            if is_runner_instructions(instructions):
-                runner_instructions.append(instructions.resolve())
-    except FileNotFoundError:
-        return []
-
-    return runner_instructions
-
-
-def fetch_scene_runner_instructions(scene_path: Path) -> List[Path]:
-    """
-    fetch_scene_runner_instructions finds each runner instructions file
-    in a scene using fetch_runner_instructions.
-
-    Args:
-        scene_path (Path): A path towards a scene that will be scanned
-        for runner instructions.
-    Returns:
-        List[Path]: A list of paths towards each runner instructions
-        file that was found.
-    """
-    scene_runner_instructions: List[Path] = []
-    for directory in scene_path.iterdir():
-        if str(directory.name).lower() == "commands":
-            scene_runner_instructions = (
-                scene_runner_instructions + fetch_runner_instructions(directory)
-            )
-    return scene_runner_instructions
+        return int(file_name.split("_")[1])
+    except ValueError:
+        raise ValueError(
+            f"{content_file} does not seem to follow Good-Bot's naming scheme."
+        )
+    except IndexError:
+        raise ValueError(
+            f"{content_file} does not seem to follow Good-Bot's naming scheme."
+        )
 
 
-def fetch_project_runner_instructions(project_path: Union[Path, str]) -> List[Path]:
-    """
-    fetch_project_runner_instructions finds each runner instructions
-    file in a Good Bot project. It uses fetch_scene_runner_instructions
-    to find each instructions file scene by scene.
+def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
-    Args:
-        project_path (Union[Path, str]): The path towards the project
-        where this function will look for instructions files.
-    Returns:
-        List[Path]: A list of paths towards each instructions file that
-        was found.
-    """
-    if not isinstance(project_path, Path):
+    content_map: Dict[int, Path] = {}
+
+    for content_file in content_file_paths:
+
         try:
-            project_path = Path(project_path)
-        except Exception as err:
-            raise TypeError(
-                f"Could not convert the provided argument to a Path object:\n{err}"
-            )
-    all_runner_instructions: List[Path] = []
-    for scene in project_path.iterdir():
-        if "scene_" in scene.name:
-            all_runner_instructions = (
-                all_runner_instructions + fetch_scene_runner_instructions(scene)
-            )
-    return all_runner_instructions
+            content_map[get_content_file_id(content_file)] = content_file
+        except ValueError as error:
+            print(error)
+            print("The file has been excluded from the list of things to record.")
+
+    return [content_map[key] for key in sorted(content_map)]
 
 
-def record_commands(project: Path, debug: bool = False) -> List[Path]:
-    """Records a gif for every video in the commands directory of the
-    specified project.
+def directory_content_files(content_dir: Path) -> List[Path]:
 
-    Args:
-        project (pathlib.Path): The path towards the project to record.
+    all_content_files: List[Path] = []
 
-    Returns:
-        List[Path]: A list of paths towards each Asciinema recording
-        created by this function.
-    """
-    all_runner_instructions: List[Path] = fetch_project_runner_instructions(project)
-    all_recordings: List[Path] = []
-    console: Console = Console()
+    for file in content_dir.iterdir():
+        if file.suffix in (".txt", ".yaml"):
+            all_content_files.append(file)
 
-    with console.status("[bold green]Recording videos...") as status:
+    return all_content_files
 
-        for command in all_runner_instructions:
 
-            save_path: Path = (
-                command.parent.parent / Path("asciicasts") / command.name
-            ).with_suffix(".cast")
+def find_to_record(scene_path: Path) -> List[Path]:
 
-            if save_path.exists():
-                os.remove(save_path)
+    to_record_in_scene: List[Path] = []
 
-            subprocess.run(
-                ["asciinema", "rec", "-c", f"runner {command}", str(save_path)],
-                capture_output=not debug,
-            )
+    for directory in scene_path.iterdir():
+        if directory.name in ALLOWED_CONTENT_TYPES and directory.name != "read":
+            to_record_in_scene += directory_content_files(directory)
+            to_record_in_scene += directory_content_files(directory)
 
-            console.log(f"Video contents in file {command} have been recorded.")
-            all_recordings.append(save_path)
+    return sort_content_files(to_record_in_scene)
 
-    return all_recordings
+
+def record_scene(scene_path: Path, docker: bool = False, no_docker: bool = False):
+    # Things in a scene are already numbered starting at 1
+    to_record_sorted: List[Path] = find_to_record(scene_path)
+
+    for file_to_record in to_record_sorted:
+        if file_to_record.parent.name == "commands":
+            shell_commands.record_command(file_to_record, docker, no_docker)
+        elif file_to_record.parent.name == "edit":
+            editor.record_editor(file_to_record)
+        # Each type of content to record goes here.
+
+
+def record_project(project_path: Path, docker: bool = False, no_docker: bool = False):
+    for potential_scene in project_path.iterdir():
+        if is_scene(potential_scene):
+            record_scene(potential_scene, docker, no_docker)
+    audio.record_audio(project_path)

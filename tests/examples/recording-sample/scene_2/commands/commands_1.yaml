@@ -1,0 +1,4 @@
+commands:
+- echo 'Here is how to edit a text file'
+expect:
+- prompt

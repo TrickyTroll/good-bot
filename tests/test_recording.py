@@ -1,71 +1,101 @@
-import tempfile
-import os
-import shutil
-from distutils.dir_util import copy_tree
 from pathlib import Path
-from goodbot import recording, render
-from tests.test_funcs import PROJECT_PATH, PARSED
+import pytest
 
-VIDEO_TEST_DIR = Path("./tests/examples/video")
+from goodbot import recording
 
-
-def test_fetch_runner_instructions():
+def test_get_content_file_id_works_with_strings():
     """
-    Making sure that fetch_runner_instructions finds enough instructions
-    files
+    Test that get_content_file_id works with strings
     """
-    to_check = [
-        {"file": VIDEO_TEST_DIR / Path("scene_1/commands"), "want": 2},
-        {"file": VIDEO_TEST_DIR / Path("scene_2/commands"), "want": 1},
-        {"file": VIDEO_TEST_DIR / Path("scene_3/commands"), "want": 1},
-        {"file": VIDEO_TEST_DIR / Path("scene_fake/commands"), "want": 0},
-    ]
-    for test_case in to_check:
-        assert len(recording.fetch_runner_instructions(test_case["file"])) == test_case["want"]
+    assert recording.get_content_file_id("commands_1.yaml") == 1
 
+def test_get_content_file_id():
+    """
+    Test that `get_content_file_id()` returns the correct
+    value for different paths.
 
-def test_fetch_scene_runner_instructions():
+    A file id is the integer value after a `_` character in
+    a file name.
     """
-    Testing that fetch_scene_runner_instructions returns the correct
-    amount of items.
-    """
-    to_check = [
-        {"dir": VIDEO_TEST_DIR / Path("scene_1"), "want": 2},
-        {"dir": VIDEO_TEST_DIR / Path("scene_2"), "want": 1},
-        {"dir": VIDEO_TEST_DIR / Path("scene_3"), "want": 1},
-        {"dir": VIDEO_TEST_DIR / Path("scene_fake"), "want": 0},
+    all_samples = [
+        (Path("/foo/bar_1.yaml"), 1),
+        (Path("/foo/bar_2.yaml"), 2),
+        ("/foo/bar_3.yaml", 3),
+        ("../example/commands_0.yaml", 0)
     ]
 
-    for test_case in to_check:
-        assert len(recording.fetch_scene_runner_instructions(test_case["dir"])) == test_case["want"]
+    for sample in all_samples:
+        assert recording.get_content_file_id(sample[0]) == sample[1]
 
+def test_get_content_file_id_raises():
+    """
+    Makes sure that `get_content_file_id()` raises an error
+    if the file name does not contain a `_` character followed
+    by an integer value.
+    """
 
-def test_fetch_project_runner_instructions():
-    """
-    Testing that fetch_project_runner_instructions finds the right
-    amount of files.
-    """
-    want = 4
-    assert len(recording.fetch_project_runner_instructions(VIDEO_TEST_DIR)) == want
+    with pytest.raises(ValueError):
+        recording.get_content_file_id("commands.yaml")
 
+def test_sort_content_files():
+    """
+    Making sure that `sort_content_files()` returns a list
+    of paths sorted by the file id when it receives a list
+    of Path objects as an input.
+    """
 
-def test_record_commands():
+    samples = [
+        ([Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")]),
+        ([Path("../example/commands_2.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml"), Path("../example/commands_2.yaml")]),
+        ([Path("../example/commands_0.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml")]),
+        ([Path("../example/commands_1.yaml"), Path("../example/commands_0.yaml"), Path("../example/commands_0.yaml")],
+        [Path("../example/commands_0.yaml"), Path("../example/commands_1.yaml")]),
+    ]
+
+    for sample in samples:
+        assert recording.sort_content_files(sample[0]) == sample[1]
+
+def test_directory_content_files():
     """
-    Making sure that record_commands records the correct amount of
-    files in a project.
+    Making sure that `directory_content_files()` returns each
+    `.yaml` and `.txt` files in the provided directory.
+
+    Missing test cases for `.txt` files.
     """
-    with tempfile.TemporaryDirectory() as temp:
-        copy_tree("./tests/examples/video", temp)
-        project_path = Path(temp)
-        # Removing the fake scene
-        shutil.rmtree(project_path / ("scene_fake"))
-        # Removing existing asciicasts
-        all_asciicasts = render.fetch_project_asciicasts(project_path)
-        for path in all_asciicasts:
-            os.remove(path)
-        # Re-recording
-        rerecorded = recording.record_commands(project_path)
-        # making sure that re-recorded is the same as the previous
-        # recordings
-        for asciicast in all_asciicasts:
-            assert asciicast in rerecorded
+
+    scene_dir = Path("./tests/examples/recording-sample/scene_2/")
+    scene_2_want_commands = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml")]
+    scene_2_want_editor = [Path("./tests/examples/recording-sample/scene_2/edit/edit_2.yaml")]
+    commands = recording.directory_content_files(scene_dir / "commands")
+
+    for item in commands:
+        assert item in scene_2_want_commands
+
+    assert len(commands) == len(scene_2_want_commands)
+    editor = recording.directory_content_files(scene_dir / "edit")
+
+    for item in editor:
+        assert item in scene_2_want_editor
+
+    assert len(editor) == len(scene_2_want_editor)
+
+def tests_find_to_record():
+    """
+    Testing that `find_to_record()` finds each file to record in a project.
+    Audio instructions aren't covered by this function.
+    """
+
+    scene_dir_2 = Path("./tests/examples/recording-sample/scene_2/")
+    scene_2_want = [Path("./tests/examples/recording-sample/scene_2/commands/commands_1.yaml"), Path("./tests/example/recording-sample/scene_2/commands_1.yaml"), Path("./tests/examples/recording-sample/scene_2/edit/edit_2.yaml")]
+
+    for item in recording.find_to_record(scene_dir_2):
+        assert item in scene_2_want
+
+    scene_dir_1 = Path("./tests/examples/recording-sample/scene_1/")
+    scene_1_want = [Path("./tests/examples/recording-sample/scene_1/commands/commands_1.yaml")]
+
+    for item in recording.find_to_record(scene_dir_1):
+        assert item in scene_1_want
