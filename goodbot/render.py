@@ -463,7 +463,6 @@ def sort_videos(project_path: Path) -> List[Path]:
     for scene in all_scenes:
 
         videos_path: Path = scene / Path("videos")
-        videos_amount: int = 0
 
         videos_dict: Dict[int, Path] = {}
 

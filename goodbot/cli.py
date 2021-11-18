@@ -37,7 +37,7 @@ def app(docker, no_docker):
         PROJECT_ROOT = pathlib.Path(".")
 
 
-@app.command()
+@click.command()
 @click.argument("config", type=str)
 def echo_config(config: str) -> None:
     """Prints a configuration file as seen by `good-bot`.
@@ -53,7 +53,7 @@ def echo_config(config: str) -> None:
     click.echo(parsed)
 
 
-@app.command()
+@click.command()
 @click.argument("config", type=str)
 @click.option("--project-path", "-p", type=str, default="")
 def setup(config: str, project_path: str) -> None:
@@ -88,12 +88,12 @@ def setup(config: str, project_path: str) -> None:
     click.echo(f"Your project has been setup at: {project_path}")
 
 
-@app.command()
+@click.command()
 @click.argument("projectpath", type=str)
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.option("-l", "--language", type=str, default="en-US")
 @click.option("-n", "--language-name", type=str, default="en-US-Standard-C")
-def record(projectpath: str, language: str, language_name: str, debug: bool, docker: bool, no_docker: bool) -> None:
+def record(projectpath: str, language: str, language_name: str, debug: bool, docker: bool = False, no_docker: bool = False) -> None:
     """
     Record a video according to the instructions provided a directory.
     The directory should be created by the `setup` command.
@@ -115,7 +115,7 @@ def record(projectpath: str, language: str, language_name: str, debug: bool, doc
     recording.record_project(PROJECT_ROOT / dir_path, docker, no_docker)
 
 
-@app.command()
+@click.command()
 @click.option("-d", "debug", default=False, show_default=True, type=bool)
 @click.argument("projectpath", type=str)
 def render_video(projectpath: str, debug: bool) -> None:
