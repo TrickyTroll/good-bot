@@ -53,9 +53,67 @@ def fetch_scene_audio_instructions(scene_path: Path) -> List[Path]:
             )
     return scene_audio_instructions
 
+def record_audio(file_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C") -> Path:
+    """Records an audio file using Google TTS.
+
+    This function records a single text file by sending the contents to
+    Google Text to Speech.
+
+    The output is an `mp3` file that is saved in the same scene as the
+    provided file, but under the `audio` directory.
+
+    See: https://cloud.google.com/text-to-speech
+
+    Args:
+        file_path (Path): The path towards the text file that will be read.
+        lang (str, optional): The language that will be used to record. Defaults to "en-US".
+        lang_name (str, optional): The voice used to record. Defaults to "en-US-Standard-C".
+
+    Returns:
+        Path: The path towards the audio file that was recorded.
+    """
+    scene_path: Path = file_path.parent
+    project_path = scene_path.parent
+
+    save_path: Path = project_path / scene_path / Path("audio")
+    with open(file_path, "r") as stream:
+        # Assuming everything to read is on one line
+        to_read = " ".join(stream.readlines())
+
+    client = texttospeech.TextToSpeechClient()
+
+    synthesis_input = texttospeech.SynthesisInput(text=to_read)
+
+    voice = texttospeech.VoiceSelectionParams(
+        language_code=lang,
+        name=lang_name,
+        ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
+    )
+
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.MP3
+    )
+
+    response = client.synthesize_speech(
+        input=synthesis_input, voice=voice, audio_config=audio_config
+    )
+
+    file_name = file_path.stem
+    write_path = (save_path / file_name).with_suffix(".mp3")
+
+    if write_path.exists():
+        os.remove(write_path)
+
+    with open(write_path, "wb") as out:
+        out.write(response.audio_content)
+    
+    return write_path
+
 
 def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Path]:
     """
+    Deprecated.
+
     fetch_project_audio_instructions finds every audio instructions
     file in a Good Bot project.
 
@@ -82,10 +140,12 @@ def fetch_project_audio_instructions(project_path: Union[Path, str]) -> List[Pat
     return all_audio_instructions
 
 
-def record_audio(
+def old_record_audio(
     project_path: Path, lang: str = "en-US", lang_name: str = "en-US-Standard-C"
 ) -> List[Path]:
     """
+    Deprecated. 
+
     record_audio records audio by reading the `read` files using Google
     TTS.
 
