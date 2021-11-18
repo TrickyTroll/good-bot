@@ -157,6 +157,8 @@ def record_command(instructions_file: Path, docker: bool = False, no_docker: boo
         docker_flag = "--docker" 
     elif no_docker:
         docker_flag = "--no-docker"
+    else:
+        docker_flag = ""
 
     subprocess.run(
         ["asciinema", "rec", "-c", "runner", docker_flag, instructions_file, str(save_path)],
