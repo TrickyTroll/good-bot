@@ -12,7 +12,22 @@ from goodbot.funcmodule import ALLOWED_CONTENT_TYPES
 
 
 def get_content_file_id(content_file: Union[Path, str]) -> int:
+    """Get a Good-Bot's content file's id.
 
+    The id is always after the last underscore in the file name.
+
+    Args:
+        content_file (Union[Path, str]): A path towards a Good Bot's content file.
+
+    Raises:
+        ValueError: If a file does not follow the `[name]_[id].[ext]` pattern because
+            the id is not an integer (it cannot be converted to an `int`).
+        ValueError: If a file does not follow the `[name]_[id].[ext]` pattern because
+            there is no underscore in the file name.
+
+    Returns:
+        int: The file's id.
+    """
     if isinstance(content_file, str):
         content_file = Path(content_file)
 
@@ -31,6 +46,21 @@ def get_content_file_id(content_file: Union[Path, str]) -> int:
 
 
 def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
+    """Sort content files by their id.
+
+    The sorting is done by creating a map of the ids and their corresponding
+    file names. Then, the files are sorted by the ids.
+
+    If two files have the same id, there is no real guarantee on which one
+    will be first.
+
+    Args:
+        content_file_paths (List[Path]): A list of paths towards multiple
+            content files.
+
+    Returns:
+        List[Path]: A list of paths towards each file, but sorted by their id.
+    """
 
     content_map: Dict[int, Path] = {}
 
@@ -46,6 +76,18 @@ def sort_content_files(content_file_paths: List[Path]) -> List[Path]:
 
 
 def directory_content_files(content_dir: Path) -> List[Path]:
+    """Get all content files in a directory.
+
+    A content file is a file with a `.txt` or `.yaml` extension.
+
+    Args:
+        content_dir (Path): The path towards the directory where
+            the content files are located.
+
+    Returns:
+        List[Path]: A list of paths towards each content file that
+            was found.
+    """
 
     all_content_files: List[Path] = []
 
@@ -57,6 +99,22 @@ def directory_content_files(content_dir: Path) -> List[Path]:
 
 
 def find_to_record(scene_path: Path) -> List[Path]:
+    """Finds each content file to record in a scene.
+
+    This function uses `directory_content_files()` and `sort_content_files()`
+    on each directory in the scene that is also in the `ALLOWED_CONTENT_TYPES`
+    tuple.
+
+    The content files are returned in the order that they should be recorded.
+
+    Args:
+        scene_path (Path): The path towards the scene where the content files
+            are located.
+
+    Returns:
+        List[Path]: An ordered list of paths towards each content file that was 
+            found.
+    """
 
     to_record_in_scene: List[Path] = []
 
@@ -69,6 +127,25 @@ def find_to_record(scene_path: Path) -> List[Path]:
 
 
 def record_scene(scene_path: Path, docker: bool = False, no_docker: bool = False):
+    """Record each content file in a scene.
+
+    Uses `find_to_record()` to find each content file to record in the scene.
+    Then, either the `record_command()` or the `record_editor()` is used depending
+    on the content type.
+
+    This function is where other functionalities for Good-Bot should be added.
+
+    Args:
+        scene_path (Path): The path towards the scene to record.
+        docker (bool, optional): Whether or not to pass the `--docker` flag to the
+            `record_command()` function. This will override Good-Bot's docker detection
+            feature and force the program to assume that it is running in a container.
+            Defaults to False.
+        no_docker (bool, optional): Whether or not to pass the `--no-docker` flag to
+            the `record_command()` function. This will override Good-Bot's docker
+            detection feature and force the program to assume that it is **not** running
+            in a container. Defaults to False.
+    """
     # Things in a scene are already numbered starting at 1
     to_record_sorted: List[Path] = find_to_record(scene_path)
 
