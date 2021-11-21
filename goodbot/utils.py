@@ -87,6 +87,6 @@ def list_scenes(project_dir: Path) -> List[Path]:
 
         else:
 
-            print(f"The directory {directory} was ignored.")
+            print(f"The directory {directory} was ignored since it is not a valid Good-Bot scene.")
 
     return all_scenes
