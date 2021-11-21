@@ -90,3 +90,18 @@ def list_scenes(project_dir: Path) -> List[Path]:
             print(f"The directory {directory} was ignored since it is not a valid Good-Bot scene.")
 
     return all_scenes
+
+
+def sort_scenes(scenes: List[Path]) -> List[Path]:
+    """Sorts a list of scenes.
+
+    Sorts a list of scenes by their name.
+
+    Args:
+        scenes (List[Path]): A `list` of `Path`s towards the scenes
+            to sort.
+
+    Returns:
+        List[Path]: A `list` of `Path`s towards the sorted scenes.
+    """
+    return sorted(scenes, key=lambda scene: scene.name)
