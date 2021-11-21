@@ -166,16 +166,7 @@ def record_command(
     else:
         docker_flag = ""
 
-    subprocess.run(
-        [
-            "asciinema",
-            "rec",
-            "-c",
-            "runner",
-            docker_flag,
-            instructions_file,
-            str(save_path),
-        ],
+    subprocess.run(["asciinema", "rec", "-c", f"runner {docker_flag} {instructions_file}", str(save_path)],
         capture_output=not debug,
     )
 

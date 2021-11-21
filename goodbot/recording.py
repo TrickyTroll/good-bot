@@ -151,7 +151,11 @@ def record_scene(scene_path: Path, docker: bool = False, no_docker: bool = False
 
     for file_to_record in to_record_sorted:
         if file_to_record.parent.name == "commands":
-            shell_commands.record_command(file_to_record, docker, no_docker)
+            shell_commands.record_command(file_to_record, docker, no_docker, debug=True)
         elif file_to_record.parent.name == "edit":
             editor.record_editor(file_to_record)
         # Each type of content to record goes here.
+
+# Debugging
+if __name__ == "__main__":
+    record_scene(Path("./toto/scene_1"))
