@@ -3,6 +3,7 @@
 
 import pathlib
 import click
+from typing import List
 from goodbot import funcmodule, render, audio, shell_commands, utils, recording
 
 PROJECT_ROOT: pathlib.Path = pathlib.Path(".")
@@ -120,12 +121,13 @@ def record(
     for scene in all_scenes:
         click.echo(f"- {scene.name}")
 
-    # recording each scene individually
-    for scene in (PROJECT_ROOT / dir_path).iterdir():
-        if utils.is_scene(scene):
-            click.echo(f"Recording scene: {scene.name}")
-            recording.record_scene(scene, docker, no_docker)
-            audio.record_scene_audio(scene, language, language_name)
+    # recording each scene individually and in order.
+    sorted_scenes = utils.sort_scenes(all_scenes)
+
+    for scene in sorted_scenes:
+        click.echo(f"Recording scene: {scene.name}")
+        recording.record_scene(scene, docker, no_docker)
+        audio.record_scene_audio(scene, language, language_name)
 
 
 @click.command()
